@@ -1,0 +1,13 @@
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/UnityEngine.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/UnityEditor.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/UnityEngine.UI.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/UnityEngine.Networking.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Unity.DataContract.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Mono.Cecil.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Unity.SerializationLogic.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Unity.UNetWeaver.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Unity.CecilTools.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Temp/bin/Debug/Mono.Cecil.Mdb.dll
