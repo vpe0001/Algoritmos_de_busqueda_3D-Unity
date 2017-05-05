@@ -16,7 +16,7 @@ public class Hybrid_a_estrella : ControladorCoche {
 		m_WheelColliders [3].steerAngle = 0f;
 	}
 
-	public override bool cierto () {
-		return false;
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float x_pos, float x_neg, float z_pos, float z_neg) {
+		return new Vector3[4];
 	}
 }
