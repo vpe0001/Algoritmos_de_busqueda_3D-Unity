@@ -5,6 +5,33 @@
 \section{Estructura de directorios}
 
 \section{Manual del programador}
+Instalación:
+
+Unity en su versión linux puede instalarse de dos maneras: con el archivo .deb y a través de un instalador en forma de script. Ambos archivos se suministran desde la web oficial y se pueden obtener desde el siguiente enlace:
+
+\href{https://forum.unity3d.com/threads/unity-on-linux-release-notes-and-known-issues.350256/}{Web oficial con las versiones de Unity para linux}
+
+La versión utilizada ha sido la 5.3.6f1 que se puede encontrar en:
+
+\href{https://forum.unity3d.com/threads/unity-on-linux-release-notes-and-known-issues.350256/#post-2717623}{Post de la web oficial para la versión 5.3.6f1}
+
+Y descargar de los siguientes enlaces:
+
+Archivo deb: \href{http://download.unity3d.com/download_unity/linux/unity-editor-5.3.6f1+20160720_amd64.deb}{Archivo deb para versión 5.3.6f1}
+
+Instalador: \href{http://download.unity3d.com/download_unity/linux/unity-editor-installer-5.3.6f1+20160720.sh}{Instalador para versión 5.3.6f1}
+
+Ambos archivos: \href{http://files.unity3d.com/levi/unity-editor-5.3.6f1+20160720.torrent}{Archivo torrent con ambos archivos}
+
+Para realizar la instalación hemos usado el archivo instalador con los siguientes pasos:
+1 Darle permisos de ejecución con chmod +x al archivo instalador
+2 Ejecutar el archivo como superusuario. Crea un diretorio donde lo ejecutemos donde se encontraran todos los archivos de Unity.
+
+Para ejecutarlo hay que ir al nuevo directorio que creo el instalador y ejecutar el ejecutable del editor de Unity que se encuentra dentro de Editor/ 
+
+Para poder usar Monodevelop con la version de Unity, hay que instalar ademas de la versión que viene con el instalador el resto de archivos de monodevelop. Con el comando sudo apt-get install mono-complete se instalan desde los repositorios todos los archivos necesarios.
+
+Para comprobar que Unity abrirá el monodevelop con su versión para unity desde el menu Edit->Preferences, en la seccion External Tools, comprobamos que el editor de  los scripts seleccionado es internal. Aunque se puede usar cualquier editor para realizar los scripts, es recomendable usar monodevelop de este forma porque hay diferencias entre los lenguajes de programación estandar y las versiones de ellos que usa Unity.
 
 \section{Compilación, instalación y ejecución del proyecto}
 
