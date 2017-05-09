@@ -27,6 +27,8 @@ public class MoverCoche : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Vector3[] trayectoria;
+
 		// get the car controller reference
 		if (hybrid_a_estrella) {
 			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
@@ -39,13 +41,19 @@ public class MoverCoche : MonoBehaviour {
 
 		// Sumamos 0.1f a la altura del suelo para que no se produzca flickering
 		// al dibujar la linea
-		vertices [0] = new Vector3 (0.0f, 0.0f + 0.1f, 0.0f);
-		vertices [1] = new Vector3 (-5.0f, 0.0f + 0.1f, 10.0f);
-		vertices [2] = new Vector3 (-10.0f, 0.0f + 0.1f, 20.0f);
-		vertices [3] = new Vector3 (-5.0f, 0.0f + 0.1f, 30.0f);
-		vertices [4] = new Vector3 (0.0f, 0.0f + 0.1f, 40.0f);
+		//vertices [0] = new Vector3 (0.0f, 0.0f + 0.1f, 0.0f);
+		//vertices [1] = new Vector3 (-5.0f, 0.0f + 0.1f, 10.0f);
+		//vertices [2] = new Vector3 (-10.0f, 0.0f + 0.1f, 20.0f);
+		//vertices [3] = new Vector3 (-5.0f, 0.0f + 0.1f, 30.0f);
+		//vertices [4] = new Vector3 (0.0f, 0.0f + 0.1f, 40.0f);
 
-		DibujarTrayectoria (vertices);
+		//DibujarTrayectoria (vertices, 5);
+
+		trayectoria = script_algoritmo.CalcularRuta (new Vector3 (0.0f, 0.0f, 0.0f), new Vector3 (0.0f, 0.0f, 4.0f), 5.0f, -5.0f, 5.0f, -5.0f);
+
+		Debug.Log (trayectoria.Length);
+
+		DibujarTrayectoria (trayectoria, trayectoria.Length);
 	}
 	
 	// Update is called once per frame
@@ -58,10 +66,10 @@ public class MoverCoche : MonoBehaviour {
 	}
 
 	// Dibujamos la trayectoria
-	void DibujarTrayectoria (Vector3[] vertices) {
+	void DibujarTrayectoria (Vector3[] vertices, int num_vertices) {
 		
 		//m_LineRenderer.
-		m_LineRenderer.SetVertexCount(5);
+		m_LineRenderer.SetVertexCount(num_vertices);
 		m_LineRenderer.SetPositions (vertices);
 	}
 }

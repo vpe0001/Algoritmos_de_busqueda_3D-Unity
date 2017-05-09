@@ -44,61 +44,67 @@ public class A_estrella : ControladorCoche {
 
 	// A*
 	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float x_pos, float x_neg, float z_pos, float z_neg) {
-		LinkedList <Nodo> abiertos = new LinkedList <Nodo> ();
-		LinkedList <Nodo> cerrados = new LinkedList <Nodo> ();
-		LinkedList <Nodo> sucesores = new LinkedList <Nodo> ();
+		Cerrados cerrados = new Cerrados ();
+		List <Nodo> sucesores = new List <Nodo> ();
 		bool meta_encontrada = false;
-		//Queue <Nodo> otra = new Queue<Nodo> ();
-
+		Abiertos abiertos = new Abiertos ();
 
 		rellenarMapaPrueba ();
 
-		Nodo n_actual;
+		Nodo nodo_final = null;
+		Nodo n_actual = null;
 		Nodo n_inicio = new Nodo ();
 		n_inicio.vector = inicio;
 		n_inicio.padre = null;
-		n_inicio.coste_padre = 0;
 		n_inicio.coste = 0;
 
-		abiertos.AddLast (n_inicio);
+		abiertos.add (n_inicio);
 
-		while (abiertos.Count > 0 && !meta_encontrada) {
-			n_actual = abiertos.First.Value;
-			abiertos.RemoveFirst ();
-			cerrados.AddLast(n_actual);
+		while (abiertos.count() > 0 && !meta_encontrada) {
+			n_actual = abiertos.getFirst ();
+			cerrados.add (n_actual);
 
-			if (n_actual.vector.x == meta.x && n_actual.vector.x == meta.x && n_actual.vector.x == meta.x) {
+			if (esMeta (n_actual, meta)) {
 				meta_encontrada = true;
+				nodo_final = n_actual;
+				Debug.Log ("Es meta" + n_actual.vector + "Padre:" + n_actual.padre.vector);
 			} else {
-				sucesores = CalcularSucesores (n_actual, x_pos, x_neg, z_pos, z_neg);
+				sucesores = CalcularSucesores (n_actual, meta, x_pos, x_neg, z_pos, z_neg);
+				Debug.Log ("Sucesores: " + sucesores.Count);
 
 				foreach (Nodo siguiente in sucesores) {
-					if (!abiertos.Contains (siguiente) && !cerrados.Contains (siguiente)) {
-						abiertos.AddLast (siguiente);
+					if (!abiertos.comprobar (siguiente) && !cerrados.comprobar (siguiente)) {
+						abiertos.add (siguiente);
+						Debug.Log ("No es ni en abiertos ni en cerrados");
 					} else {
 						Nodo anterior;
 						Nodo mover_padre;
 
-						if (abiertos.Contains (siguiente)) {
-							anterior = abiertos.Find (siguiente).Value;	
+						if (abiertos.comprobar (siguiente)) {
+							Debug.Log ("Esta en abiertos");
+							anterior = abiertos.find (siguiente);	
 
 							if (anterior.coste > siguiente.coste) {
+								Debug.Log ("Anterior1 coste = " + anterior.coste);
 								anterior.padre = n_actual;
 								anterior.coste = siguiente.coste;
-								anterior.coste_padre = siguiente.coste_padre;
+								anterior = abiertos.find (siguiente);
+								Debug.Log ("siguiente coste = " + siguiente.coste);
+								Debug.Log ("Anterior2 coste = " + anterior.coste);
 							}
 						} else {
-							if (cerrados.Contains (siguiente)) {
-								anterior = cerrados.Find (siguiente).Value;	
+							if (cerrados.comprobar (siguiente)) {
+								Debug.Log ("Esta en cerrados");
+								anterior = cerrados.find (siguiente);	
 
 								if (anterior.coste > siguiente.coste) {
 									anterior.padre = n_actual;
 									anterior.coste = siguiente.coste;
-									anterior.coste_padre = siguiente.coste_padre;
 
-									mover_padre = cerrados.Find (siguiente.padre);
-									cerrados.Remove (mover_padre);
-									abiertos.AddLast (mover_padre);
+
+									mover_padre = cerrados.find (siguiente.padre);
+									cerrados.delete (mover_padre);
+									abiertos.add (mover_padre);
 								}
 							}
 						}
@@ -107,24 +113,27 @@ public class A_estrella : ControladorCoche {
 
 				}
 
-				//Reordenar abiertos
+
 			}
 		}
 
 
-
-		//int tamanio = trayectoria.Count();
-		int tamanio = 1;
-		Vector3 [] v_trayectoria = new Vector3[tamanio];
+		Vector3 [] v_trayectoria = vectoresCamino (nodo_final);
 
 		return v_trayectoria;
 	}
 
-	private LinkedList <Nodo> CalcularSucesores (Nodo n_actual, float x_pos, float x_neg, float z_pos, float z_neg) {
-		LinkedList <Nodo> sucesores = new LinkedList<Nodo> ();
+	private List <Nodo> CalcularSucesores (Nodo n_actual, Vector3 meta, float x_pos, float x_neg, float z_pos, float z_neg) {
+		List <Nodo> sucesores = new List <Nodo> ();
+		int num_sucesores = 8; //las 8 direcciones posibles
 
 		//cada nodo 8 posibles sucesores
-		Nodo[] sucesor = new Nodo[8];
+		Nodo[] sucesor = new Nodo[num_sucesores];
+
+		for (int i=0; i < num_sucesores; i++){
+			sucesor [i] = new Nodo ();
+		}
+
 		sucesor[0].vector.x = n_actual.vector.x - 1;
 		sucesor[0].vector.y = n_actual.vector.y;
 		sucesor[0].vector.z = n_actual.vector.z - 1;
@@ -160,27 +169,39 @@ public class A_estrella : ControladorCoche {
 		sucesores = SucesoresValidos (sucesor, x_pos, x_neg, z_pos, z_neg);
 
 		foreach (Nodo sucesor_valido in sucesores) {
+			float coste = 0.0f;
 			sucesor_valido.padre = n_actual;
-			sucesor_valido.coste_padre = n_actual.coste;
-			// Falta h y g
-			sucesor_valido.coste = sucesor_valido.coste_padre + 1;
+
+			coste = funcionG (sucesor_valido) + funcionH (sucesor_valido, meta);
+			sucesor_valido.coste = coste + sucesor_valido.padre.coste;
 		}
 
 		return sucesores;
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
-	private LinkedList <Nodo> SucesoresValidos (Nodo[] sucesor, float x_pos, float x_neg, float z_pos, float z_neg){
-		LinkedList <Nodo> sucesores = new LinkedList<Nodo> ();
+	private List <Nodo> SucesoresValidos (Nodo[] sucesor, float x_pos, float x_neg, float z_pos, float z_neg){
+		List <Nodo> sucesores = new List<Nodo> ();
 
 		foreach (Nodo sucesor_valido in sucesor) {
 			
-			if (sucesor_valido.vector.x < x_neg || sucesor_valido.vector.x > x_pos || sucesor_valido.vector.z < z_neg || sucesor_valido.vector.z > z_neg){
-				//sucesor fuera de los limites	
+			if (sucesor_valido.vector.x < x_neg || sucesor_valido.vector.x > x_pos || sucesor_valido.vector.z < z_neg || sucesor_valido.vector.z > z_pos){
+				//sucesor fuera de los limites
+
+				//Debug.Log ("Fuera de los limites");
+				//Debug.Log (sucesor_valido.vector.x + "<" + x_neg);
+				//Debug.Log (sucesor_valido.vector.x + ">" + x_pos);
+				//Debug.Log (sucesor_valido.vector.z + "<" + z_neg);
+				//Debug.Log (sucesor_valido.vector.z + ">" + z_pos);
 			}else{
+				//Debug.Log ("¿Obstaculo?");
 				if (!esObstaculo(sucesor_valido)){
-					sucesores.AddLast (sucesor_valido);
+					//Debug.Log ("Sucesor valido" + sucesor_valido.vector);
+					sucesores.Add (sucesor_valido);
 				}
+
+				//Tambien se puede comprobar que la distancia del vector a un obstaculo sea al menos
+				//la mitad del ancho del coche
 			}
 		}
 
@@ -197,11 +218,72 @@ public class A_estrella : ControladorCoche {
 		posicion_mapa [0] = (int) (sucesor.vector.z - 5) * (-1);
 		posicion_mapa [1] = (int) (sucesor.vector.x + 5);
 
+		//Debug.Log ("Sucesor: " + sucesor.vector);
+		//Debug.Log ("Posicion mapa:" + posicion_mapa [0] + " | " +posicion_mapa [1]);
+
 		if (mapa [posicion_mapa [0], posicion_mapa [1]] == 3) {
-			obstaculo = true;			
+			obstaculo = true;
+			Debug.Log ("OBSTACULO");
 		}
 
 		return obstaculo;
+	}
+
+	private bool esMeta(Nodo nodo, Vector3 meta) {
+		bool es_meta = false;
+
+		if (nodo.vector == meta){
+			es_meta = true;
+		}
+
+		return es_meta;
+	}
+
+	private float funcionG(Nodo nodo){
+		float coste = 0;
+		Vector3 distancia;
+
+		if (nodo.padre != null) { 
+			distancia = nodo.vector - nodo.padre.vector;
+		}else {
+			distancia = new Vector3(0.0f, 0.0f, 0.0f);
+		}
+
+		coste = distancia.magnitude;
+			
+		return coste;
+	}
+
+	private float funcionH(Nodo nodo, Vector3 meta){
+		float coste = 0;
+
+		Vector3 distancia;
+		distancia = nodo.vector - meta;
+		coste = distancia.magnitude;
+
+		return coste;
+	}
+
+	private Vector3[] vectoresCamino (Nodo nodo_final){
+		int size = 0;
+		int i = 0;
+		Nodo meta = nodo_final;
+
+		while (meta != null){
+			size++;
+			meta = meta.padre;
+		}
+
+		Vector3 [] camino = new Vector3[size];
+		meta = nodo_final;
+		while (meta != null){
+			Debug.Log ("Meta: " + meta.vector);
+			camino [i] = meta.vector;
+			i++;
+			meta = meta.padre;
+		}
+
+		return camino;
 	}
 
 	// Rellena el mapa de prueba
@@ -226,9 +308,235 @@ public class A_estrella : ControladorCoche {
 	private class Nodo {
 		public Vector3 vector;
 		public Nodo padre;
-		public int coste_padre;
-		public int coste;
+		public float coste;
+
+		public Nodo (){}
+
+		public Nodo (Vector3 _vector, Nodo _padre, int _coste){
+			vector = _vector;
+			padre = _padre;
+			coste = _coste;
+		}
 	}
+
+	private class Abiertos {
+		private List <Nodo> abiertos;
+		private IComparer <Nodo> comparador;
+
+		public Abiertos (){
+			abiertos = new List <Nodo> ();
+			comparador = new ComparadorNodos ();
+		}
+
+		public bool add (Nodo nodo) {
+			bool existe = false;
+
+			existe = comprobar (nodo);
+
+			if (!existe) {
+				abiertos.Add (nodo);
+				abiertos.Sort (comparador);
+			}
+
+			return existe;
+		}
+
+		public bool comprobar (Nodo nodo) {
+			bool existe = false;
+
+			foreach (Nodo busqueda in abiertos ) {
+				if (busqueda.vector == nodo.vector) {
+					existe = true;
+					break;
+				}
+			}
+
+			return existe;
+		}
+
+		public bool delete (Nodo nodo) {
+			bool existe = false;
+
+			foreach (Nodo busqueda in abiertos ) {
+				if (busqueda.vector == nodo.vector) {
+					abiertos.Remove (busqueda);
+					abiertos.Sort (comparador);
+					existe = true;
+					break;
+				}
+			}
+
+			return existe;
+		}
+
+		public Nodo find (Nodo nodo) {
+			Nodo encontrado = null;
+
+			foreach (Nodo busqueda in abiertos ) {
+				if (busqueda.vector == nodo.vector) {
+					encontrado = busqueda;
+
+					break;
+				}
+			}
+
+			return encontrado;
+		}
+
+		public Nodo getFirst (){
+			Nodo primero = null;
+
+			if (count() > 0) {
+				primero = abiertos [0];
+				abiertos.RemoveAt (0);
+			}
+
+			return primero;
+		}
+
+		public Nodo getIndex (int index){
+			Nodo primero = null;
+
+			if (index < count() ){
+				primero = abiertos [index];
+			}
+
+			return primero;
+		}
+
+		public List<Nodo>.Enumerator GetEnumerator(){
+			return abiertos.GetEnumerator();
+		}
+
+		public int count (){
+			return abiertos.Count;
+		}
+			
+	}
+
+	private class Cerrados {
+		private List <Nodo> cerrados;
+
+
+		public Cerrados (){
+			cerrados = new List <Nodo> ();
+		}
+
+		public bool add (Nodo nodo) {
+			bool existe = false;
+
+			existe = comprobar (nodo);
+
+			if (!existe) {
+				cerrados.Add (nodo);
+			}
+
+			return existe;
+		}
+
+		public bool comprobar (Nodo nodo) {
+			bool existe = false;
+
+			foreach (Nodo busqueda in cerrados ) {
+				if (busqueda.vector == nodo.vector) {
+					existe = true;
+					break;
+				}
+			}
+
+			return existe;
+		}
+
+		public bool delete (Nodo nodo) {
+			bool existe = false;
+
+			foreach (Nodo busqueda in cerrados ) {
+				if (busqueda.vector == nodo.vector) {
+					cerrados.Remove (busqueda);
+
+					existe = true;
+					break;
+				}
+			}
+
+			return existe;
+		}
+
+		public Nodo find (Nodo nodo) {
+			Nodo encontrado = null;
+
+			foreach (Nodo busqueda in cerrados ) {
+				if (busqueda.vector == nodo.vector) {
+					encontrado = busqueda;
+
+					break;
+				}
+			}
+
+			return encontrado;
+		}
+			
+		public Nodo getIndex (int index){
+			Nodo primero = null;
+
+			if (index < count() ){
+				primero = cerrados [index];
+			}
+
+			return primero;
+		}
+
+		public List<Nodo>.Enumerator GetEnumerator(){
+			return cerrados.GetEnumerator();
+		}
+
+		public int count (){
+			return cerrados.Count;
+		}
+
+		public Vector3[] toArray(){
+			int size = 0;
+			int i = 0;
+			Nodo meta = cerrados [count () - 1];
+
+			while (meta != null){
+				size++;
+				meta = meta.padre;
+			}
+
+			Vector3 [] camino = new Vector3[size];
+			meta = cerrados [size - 1];
+			while (meta != null){
+				Debug.Log ("MEta: " + meta.vector);
+				camino [i] = meta.vector;
+				i++;
+				meta = meta.padre;
+			}
+				
+			return camino;
+		}
+
+
+	}
+
+	private class ComparadorNodos : IComparer<Nodo> {
+		// 0 si son iguales 
+		// -1 si x es menor
+		// 1 si x es mayor
+
+		public int Compare(Nodo x, Nodo y) {
+			int mayor = 0;
+
+			if (x.coste < y.coste){
+				mayor = -1;
+			}else if (x.coste > y.coste) {
+				mayor = 1;
+			}
+
+			return mayor;
+		}
+	}
+
 }
 
 /*
@@ -245,4 +553,65 @@ public class A_estrella : ControladorCoche {
  -4                                                                      
  -5
   Z
+*/
+
+/*
+Nodo nodo_prueba_padre = new Nodo ();
+Nodo nodo_prueba = new Nodo ();
+Nodo nodo_prueba2 = new Nodo ();
+Nodo nodo_prueba3 = new Nodo ();
+
+nodo_prueba_padre.coste = 0;
+nodo_prueba_padre.padre = null;
+nodo_prueba_padre.vector = new Vector3 (0.0f, 1.0f, 2.0f);
+
+nodo_prueba.coste = 10;
+nodo_prueba.padre = nodo_prueba_padre;
+nodo_prueba.vector = new Vector3 (1.0f, 2.0f, 3.0f);
+
+nodo_prueba2.coste = 12;
+nodo_prueba2.padre = nodo_prueba;
+nodo_prueba2.vector = new Vector3 (2.0f, 3.0f, 4.0f);
+
+nodo_prueba3.coste = 3;
+nodo_prueba3.padre = null;
+nodo_prueba3.vector = new Vector3 (2.0f, 3.0f, 4.0f);
+
+abiertos.add (nodo_prueba);
+abiertos.add (nodo_prueba_padre);
+abiertos.add (nodo_prueba2);
+
+foreach (Nodo _nodo in abiertos) {
+	Debug.Log (_nodo.vector);
+}
+
+if (abiertos.comprobar (nodo_prueba2)) {
+	Debug.Log ("Comprobar1 true");
+} else {
+	Debug.Log ("Comprobar1 false");
+}
+
+if (abiertos.comprobar (nodo_prueba3)) {
+	Debug.Log ("Comprobar2 true");
+} else {
+	Debug.Log ("Comprobar2 false");
+}
+
+Debug.Log ("Count: " + abiertos.count());
+
+if (abiertos.delete (nodo_prueba3)) {
+	Debug.Log ("Delete true");
+} else {
+	Debug.Log ("Delete false");
+}
+
+Debug.Log ("Count: " + abiertos.count());
+
+Nodo primero;
+primero = abiertos.getFirst ();
+Debug.Log (primero.vector);
+Debug.Log ("Count: " + abiertos.count());
+primero = abiertos.getFirst ();
+Debug.Log (primero.vector);
+Debug.Log ("Count: " + abiertos.count());
 */
