@@ -19,7 +19,7 @@ public class A_estrella : ControladorCoche {
 	// Mide 3 de ancho asi que se choca con el en 0,0,18.5 o 0,0,18 en la aproximacion
 	// Mide 10 de largo asi que va desde la -5,0,20 hasta la 5,0,20
 	// Al final se ha dibujado el mapa para mas claridad
-	private int [,] mapa = new int[11,11];
+	private int [,] mapa_ = new int[11,11];
 
 	public override void MoverCoche (WheelCollider[] m_WheelColliders, GameObject[] m_WheelMeshes) {
 		float thrustTorque = 5000000f; 
@@ -42,12 +42,17 @@ public class A_estrella : ControladorCoche {
 		}
 	}
 
+	public override void MoverCoche (GameObject coche, Vector3 posicion){
+		coche.transform.position = posicion;
+	}
+
 	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float x_pos, float x_neg, float z_pos, float z_neg) {
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa) {
 		Cerrados cerrados = new Cerrados ();
 		List <Nodo> sucesores = new List <Nodo> ();
 		bool meta_encontrada = false;
 		Abiertos abiertos = new Abiertos ();
+		//Buscar cola de prioridad
 
 		rellenarMapaPrueba ();
 
@@ -67,34 +72,34 @@ public class A_estrella : ControladorCoche {
 			if (esMeta (n_actual, meta)) {
 				meta_encontrada = true;
 				nodo_final = n_actual;
-				Debug.Log ("Es meta" + n_actual.vector + "Padre:" + n_actual.padre.vector);
+				//Debug.Log ("Es meta" + n_actual.vector + "Padre:" + n_actual.padre.vector);
 			} else {
-				sucesores = CalcularSucesores (n_actual, meta, x_pos, x_neg, z_pos, z_neg);
-				Debug.Log ("Sucesores: " + sucesores.Count);
+				sucesores = CalcularSucesores (n_actual, meta, mapa);
+				//Debug.Log ("Sucesores: " + sucesores.Count);
 
 				foreach (Nodo siguiente in sucesores) {
 					if (!abiertos.comprobar (siguiente) && !cerrados.comprobar (siguiente)) {
 						abiertos.add (siguiente);
-						Debug.Log ("No es ni en abiertos ni en cerrados");
+						//Debug.Log ("No es ni en abiertos ni en cerrados");
 					} else {
 						Nodo anterior;
 						Nodo mover_padre;
 
 						if (abiertos.comprobar (siguiente)) {
-							Debug.Log ("Esta en abiertos");
+							//Debug.Log ("Esta en abiertos");
 							anterior = abiertos.find (siguiente);	
 
 							if (anterior.coste > siguiente.coste) {
-								Debug.Log ("Anterior1 coste = " + anterior.coste);
+								//Debug.Log ("Anterior1 coste = " + anterior.coste);
 								anterior.padre = n_actual;
 								anterior.coste = siguiente.coste;
 								anterior = abiertos.find (siguiente);
-								Debug.Log ("siguiente coste = " + siguiente.coste);
-								Debug.Log ("Anterior2 coste = " + anterior.coste);
+								//Debug.Log ("siguiente coste = " + siguiente.coste);
+								//Debug.Log ("Anterior2 coste = " + anterior.coste);
 							}
 						} else {
 							if (cerrados.comprobar (siguiente)) {
-								Debug.Log ("Esta en cerrados");
+								//Debug.Log ("Esta en cerrados");
 								anterior = cerrados.find (siguiente);	
 
 								if (anterior.coste > siguiente.coste) {
@@ -123,17 +128,31 @@ public class A_estrella : ControladorCoche {
 		return v_trayectoria;
 	}
 
-	private List <Nodo> CalcularSucesores (Nodo n_actual, Vector3 meta, float x_pos, float x_neg, float z_pos, float z_neg) {
+	private List <Nodo> CalcularSucesores (Nodo n_actual, Vector3 meta, ObtenerMapa mapa) {
 		List <Nodo> sucesores = new List <Nodo> ();
-		int num_sucesores = 8; //las 8 direcciones posibles
+		const int num_sucesores = 8; //las 8 direcciones posibles
+		Vector3[] movimientos = new Vector3[num_sucesores] {
+			new Vector3 (0.0f, 0.0f, 1.0f),   // adelante
+			new Vector3 (-1.0f, 0.0f, 1.0f),   // adelante derecha
+			new Vector3 (-1.0f, 0.0f, 0.0f),   // derecha
+			new Vector3 (-1.0f, 0.0f, -1.0f),  // atras derecha
+			new Vector3 (0.0f, 0.0f, -1.0f),  // atras
+			new Vector3 (1.0f, 0.0f, -1.0f), // atras izquierda
+			new Vector3 (1.0f, 0.0f, 0.0f),  // izquiera
+			new Vector3 (1.0f, 0.0f, 1.0f)   // adelante izquierda
+		};
 
 		//cada nodo 8 posibles sucesores
 		Nodo[] sucesor = new Nodo[num_sucesores];
 
 		for (int i=0; i < num_sucesores; i++){
 			sucesor [i] = new Nodo ();
+			sucesor [i].vector = n_actual.vector + movimientos[i];
 		}
 
+
+		//Cambiar por un bucle
+		/*
 		sucesor[0].vector.x = n_actual.vector.x - 1;
 		sucesor[0].vector.y = n_actual.vector.y;
 		sucesor[0].vector.z = n_actual.vector.z - 1;
@@ -165,8 +184,9 @@ public class A_estrella : ControladorCoche {
 		sucesor[7].vector.x = n_actual.vector.x + 1;
 		sucesor[7].vector.y = n_actual.vector.y;
 		sucesor[7].vector.z = n_actual.vector.z + 1;
+		*/
 
-		sucesores = SucesoresValidos (sucesor, x_pos, x_neg, z_pos, z_neg);
+		sucesores = SucesoresValidos (sucesor, mapa);
 
 		foreach (Nodo sucesor_valido in sucesores) {
 			float coste = 0.0f;
@@ -180,59 +200,30 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
-	private List <Nodo> SucesoresValidos (Nodo[] sucesor, float x_pos, float x_neg, float z_pos, float z_neg){
+	private List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
 		List <Nodo> sucesores = new List<Nodo> ();
 
 		foreach (Nodo sucesor_valido in sucesor) {
 			
-			if (sucesor_valido.vector.x < x_neg || sucesor_valido.vector.x > x_pos || sucesor_valido.vector.z < z_neg || sucesor_valido.vector.z > z_pos){
-				//sucesor fuera de los limites
-
-				//Debug.Log ("Fuera de los limites");
-				//Debug.Log (sucesor_valido.vector.x + "<" + x_neg);
-				//Debug.Log (sucesor_valido.vector.x + ">" + x_pos);
-				//Debug.Log (sucesor_valido.vector.z + "<" + z_neg);
-				//Debug.Log (sucesor_valido.vector.z + ">" + z_pos);
-			}else{
-				//Debug.Log ("¿Obstaculo?");
-				if (!esObstaculo(sucesor_valido)){
-					//Debug.Log ("Sucesor valido" + sucesor_valido.vector);
-					sucesores.Add (sucesor_valido);
-				}
-
-				//Tambien se puede comprobar que la distancia del vector a un obstaculo sea al menos
-				//la mitad del ancho del coche
+			if ( mapa.esRecorrible(sucesor_valido.vector) ){
+				sucesores.Add (sucesor_valido);
 			}
 		}
 
 		return sucesores;
 	}
 
-	// Comprueba que no sea una posicion valida y no un obstaculo
-	private bool esObstaculo(Nodo sucesor) {
-		int[] posicion_mapa = new int[2];
-		bool obstaculo = false;
-
-		// El mapa esta en coordenadas de eje x y eje z, ademas al ser un vector las posiciones no son negativas
-		// y las coordenadas de los vectores pueden serlo, asi que hacemos una conversion para poder compararlo
-		posicion_mapa [0] = (int) (sucesor.vector.z - 5) * (-1);
-		posicion_mapa [1] = (int) (sucesor.vector.x + 5);
-
-		//Debug.Log ("Sucesor: " + sucesor.vector);
-		//Debug.Log ("Posicion mapa:" + posicion_mapa [0] + " | " +posicion_mapa [1]);
-
-		if (mapa [posicion_mapa [0], posicion_mapa [1]] == 3) {
-			obstaculo = true;
-			Debug.Log ("OBSTACULO");
-		}
-
-		return obstaculo;
-	}
 
 	private bool esMeta(Nodo nodo, Vector3 meta) {
 		bool es_meta = false;
 
+		/*
 		if (nodo.vector == meta){
+			es_meta = true;
+		}
+		*/
+
+		if (nodo.vector.x == meta.x && nodo.vector.z == meta.z){
 			es_meta = true;
 		}
 
@@ -277,7 +268,7 @@ public class A_estrella : ControladorCoche {
 		Vector3 [] camino = new Vector3[size];
 		meta = nodo_final;
 		while (meta != null){
-			Debug.Log ("Meta: " + meta.vector);
+			//Debug.Log ("Meta: " + meta.vector);
 			camino [i] = meta.vector;
 			i++;
 			meta = meta.padre;
@@ -294,15 +285,15 @@ public class A_estrella : ControladorCoche {
 		// 3 = Obstaculo
 		for (int i=0; i<11; i++){
 			for (int j=0; j<11; j++){
-				mapa [i, j] = 0;
+				mapa_ [i, j] = 0;
 			}	
 		}
 
-		mapa [1 , 5] = 2;
-		mapa [5 , 5] = 1;
-		mapa [3 , 4] = 3;
-		mapa [3 , 5] = 3;
-		mapa [3 , 6] = 3;
+		mapa_ [1 , 5] = 2;
+		mapa_ [5 , 5] = 1;
+		mapa_ [3 , 4] = 3;
+		mapa_ [3 , 5] = 3;
+		mapa_ [3 , 6] = 3;
 	}
 
 	private class Nodo {
@@ -507,7 +498,7 @@ public class A_estrella : ControladorCoche {
 			Vector3 [] camino = new Vector3[size];
 			meta = cerrados [size - 1];
 			while (meta != null){
-				Debug.Log ("MEta: " + meta.vector);
+				//Debug.Log ("MEta: " + meta.vector);
 				camino [i] = meta.vector;
 				i++;
 				meta = meta.padre;
