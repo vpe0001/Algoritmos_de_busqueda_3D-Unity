@@ -20,8 +20,20 @@ public class Hybrid_a_estrella : ControladorCoche {
 		
 	}
 
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa) {
+	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla) {
+	}
+
+	public override bool pasoAestrella () {
+		return false;
+	}
+
+	public override Vector3[] getTrayectoria (){
+		return new Vector3[1];
+	}
+
+
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla) {
 		
-		return new Vector3[4];
+		return new Vector3[1];
 	}
 }

@@ -8,6 +8,9 @@ TagManager:
   - Obstaculo
   - Meta
   - Coche
+  - Parrilla
+  - CasillaCerrados
+  - CasillaAbiertos
   layers:
   - Default
   - TransparentFX

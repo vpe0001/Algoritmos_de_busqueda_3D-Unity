@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.5.2)  8 MAY 2017 02:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.5.2)  15 MAY 2017 04:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1612,30 +1612,66 @@ Package babel Info: Redefining spanish shorthand "?
 
 
 ]
+Overfull \hbox (14.00533pt too wide) in paragraph at lines 59--61
+[]\OT1/cmr/m/n/10.95 Para ins-ta-lar-lo, hay que ir a la web ofi-cial /hrefhttp
+s://www.zenhub.com/Web
+ []
+
+LaTeX Info: Redefining \. on input line 64.
+LaTeX Info: Redefining \% on input line 64.
+
+Overfull \vbox (0.8521pt too high) has occurred while \output is active []
+
 Package babel Info: Redefining spanish shorthand <<
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand >>
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "=
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "~
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "!
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "?
-(babel)             in language append on input line 36.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand <<
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand >>
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "=
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "~
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "!
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
 Package babel Info: Redefining spanish shorthand "?
-(babel)             in language append on input line 38.
+(babel)             in language append on input line 64.
+
+[5]
+Package babel Info: Redefining spanish shorthand <<
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand >>
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand "=
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand "~
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand "!
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand "?
+(babel)             in language append on input line 64.
+Package babel Info: Redefining spanish shorthand <<
+(babel)             in language append on input line 66.
+Package babel Info: Redefining spanish shorthand >>
+(babel)             in language append on input line 66.
+Package babel Info: Redefining spanish shorthand "=
+(babel)             in language append on input line 66.
+Package babel Info: Redefining spanish shorthand "~
+(babel)             in language append on input line 66.
+Package babel Info: Redefining spanish shorthand "!
+(babel)             in language append on input line 66.
+Package babel Info: Redefining spanish shorthand "?
+(babel)             in language append on input line 66.
 )
 LaTeX Info: Redefining \. on input line 386.
 LaTeX Info: Redefining \% on input line 386.
@@ -1667,7 +1703,7 @@ Package babel Info: Redefining spanish shorthand "!
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 386.
 
-[5]
+[6]
 \openout2 = `./tex/E_Manual_usuario.aux'.
 
  (./tex/E_Manual_usuario.tex
@@ -1756,7 +1792,7 @@ Package babel Info: Redefining spanish shorthand "!
 (babel)             in language append on input line 387.
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 387.
- [6
+ [7
 
 
 
@@ -1798,9 +1834,9 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 393.
  ) 
 Here is how much of TeX's memory you used:
- 10900 strings out of 493029
- 150971 string characters out of 6136235
- 292282 words of memory out of 5000000
+ 10901 strings out of 493029
+ 150977 string characters out of 6136235
+ 292283 words of memory out of 5000000
  14237 multiletter control sequences out of 15000+600000
  12650 words of font info for 44 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1815,10 +1851,10 @@ t/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts
 /public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmssi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmti12.pfb>
-Output written on anexos.pdf (11 pages, 337278 bytes).
+Output written on anexos.pdf (12 pages, 340650 bytes).
 PDF statistics:
- 563 PDF objects out of 1000 (max. 8388607)
- 523 compressed objects within 6 object streams
- 41 named destinations out of 1000 (max. 500000)
+ 569 PDF objects out of 1000 (max. 8388607)
+ 528 compressed objects within 6 object streams
+ 42 named destinations out of 1000 (max. 500000)
  235 words of extra memory for PDF output out of 10000 (max. 10000000)
 

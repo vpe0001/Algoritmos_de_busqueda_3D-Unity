@@ -3,23 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class A_estrella : ControladorCoche {
-	// Mapa de prueba: Escala 10x10 Que equivale a 100X100 metros
-	// Cada unidad de coordenadas es un metro
-	// El centro del plano/mapa es la coordenada 0,0,0
-	// En este caso solo usaremos la x y la z debido a que no tenemos alturas
-	// En el inicio el coche este orientado hacia las z positivas, es decir, hacia adelante
-	// es moverse en el eje z en sentido positivo, y hacia atras en el sentido negativo
-	// El coche en el inicio esta colocado en la coordenada 0,0,0, aunque hay que tener en 
-	// cuenta que eso es el centro del vehiculo. El coche mide 2,43x4,47
-	// Si tenemos precision de 1 metro, el morro del vehiculo esta en la coordenada 0,0,3
-	// Esto es porque si 0 es el centro del vehuculo, la mitad 2,23 esta por delante de la
-	// 0, redondeando queda 3
-	// Para el ejemplo primero vale esta aproximacion
-	// Se ha colocado un obstaculo en la posicion 0,0,20 Es decir delante del vehiculo
-	// Mide 3 de ancho asi que se choca con el en 0,0,18.5 o 0,0,18 en la aproximacion
-	// Mide 10 de largo asi que va desde la -5,0,20 hasta la 5,0,20
-	// Al final se ha dibujado el mapa para mas claridad
-	private int [,] mapa_ = new int[11,11];
+	
+	private Cerrados cerrados = new Cerrados ();
+	private List <Nodo> sucesores = new List <Nodo> ();
+	private Abiertos abiertos = new Abiertos ();
+	private Vector3[] v_trayectoria;
+	private Vector3 inicio;
+	private Vector3 meta;
+	private ObtenerMapa mapa;
+	private Parrilla parrilla;
+	private Nodo nodo_final;
+	private Nodo n_actual;
+	private Nodo n_inicio;
+	private bool meta_encontrada;
 
 	public override void MoverCoche (WheelCollider[] m_WheelColliders, GameObject[] m_WheelMeshes) {
 		float thrustTorque = 5000000f; 
@@ -46,70 +42,76 @@ public class A_estrella : ControladorCoche {
 		coche.transform.position = posicion;
 	}
 
-	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa) {
-		Cerrados cerrados = new Cerrados ();
-		List <Nodo> sucesores = new List <Nodo> ();
-		bool meta_encontrada = false;
-		Abiertos abiertos = new Abiertos ();
-		//Buscar cola de prioridad
+	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla) {
+		inicio = v_inicio;
+		meta = v_meta;
+		mapa = v_mapa;
+		parrilla = v_parrilla;
 
-		rellenarMapaPrueba ();
+		meta_encontrada = false;
 
-		Nodo nodo_final = null;
-		Nodo n_actual = null;
-		Nodo n_inicio = new Nodo ();
+		nodo_final = null;
+		n_actual = null;
+		n_inicio = new Nodo ();
 		n_inicio.vector = inicio;
 		n_inicio.padre = null;
 		n_inicio.coste = 0;
 
 		abiertos.add (n_inicio);
+	}
 
-		while (abiertos.count() > 0 && !meta_encontrada) {
+	public override bool pasoAestrella () {
+		//Buscar cola de prioridad
+
+		if (abiertos.count() > 0 && !meta_encontrada) {
 			n_actual = abiertos.getFirst ();
 			cerrados.add (n_actual);
+			parrilla.crearCasilla (n_actual.vector, 1);
 
 			if (esMeta (n_actual, meta)) {
 				meta_encontrada = true;
 				nodo_final = n_actual;
-				//Debug.Log ("Es meta" + n_actual.vector + "Padre:" + n_actual.padre.vector);
+
 			} else {
 				sucesores = CalcularSucesores (n_actual, meta, mapa);
-				//Debug.Log ("Sucesores: " + sucesores.Count);
 
 				foreach (Nodo siguiente in sucesores) {
 					if (!abiertos.comprobar (siguiente) && !cerrados.comprobar (siguiente)) {
 						abiertos.add (siguiente);
-						//Debug.Log ("No es ni en abiertos ni en cerrados");
+						parrilla.crearCasilla (siguiente.vector, 0);
+
 					} else {
 						Nodo anterior;
 						Nodo mover_padre;
 
 						if (abiertos.comprobar (siguiente)) {
-							//Debug.Log ("Esta en abiertos");
+							
 							anterior = abiertos.find (siguiente);	
 
 							if (anterior.coste > siguiente.coste) {
-								//Debug.Log ("Anterior1 coste = " + anterior.coste);
+								
 								anterior.padre = n_actual;
 								anterior.coste = siguiente.coste;
 								anterior = abiertos.find (siguiente);
-								//Debug.Log ("siguiente coste = " + siguiente.coste);
-								//Debug.Log ("Anterior2 coste = " + anterior.coste);
+
 							}
 						} else {
 							if (cerrados.comprobar (siguiente)) {
-								//Debug.Log ("Esta en cerrados");
+								
 								anterior = cerrados.find (siguiente);	
 
 								if (anterior.coste > siguiente.coste) {
 									anterior.padre = n_actual;
 									anterior.coste = siguiente.coste;
 
+									anterior = cerrados.find (siguiente);
+									Debug.Log ("siguiente3 coste = " + siguiente.coste);
+									Debug.Log ("Anterior3 coste = " + anterior.coste);
 
 									mover_padre = cerrados.find (siguiente.padre);
 									cerrados.delete (mover_padre);
 									abiertos.add (mover_padre);
+									parrilla.crearCasilla (mover_padre.vector, 0);
 								}
 							}
 						}
@@ -123,7 +125,22 @@ public class A_estrella : ControladorCoche {
 		}
 
 
-		Vector3 [] v_trayectoria = vectoresCamino (nodo_final);
+		v_trayectoria = vectoresCamino (nodo_final);
+
+		return meta_encontrada;
+	}
+
+	public override Vector3[] getTrayectoria (){
+		return v_trayectoria;
+	}
+
+	// A*
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla) {
+		
+		iniciarPasoAestrella(inicio, meta, mapa, parrilla);
+
+		while (!pasoAestrella ()) {
+		}
 
 		return v_trayectoria;
 	}
@@ -151,49 +168,14 @@ public class A_estrella : ControladorCoche {
 		}
 
 
-		//Cambiar por un bucle
-		/*
-		sucesor[0].vector.x = n_actual.vector.x - 1;
-		sucesor[0].vector.y = n_actual.vector.y;
-		sucesor[0].vector.z = n_actual.vector.z - 1;
-
-		sucesor[1].vector.x = n_actual.vector.x - 1;
-		sucesor[1].vector.y = n_actual.vector.y;
-		sucesor[1].vector.z = n_actual.vector.z;
-
-		sucesor[2].vector.x = n_actual.vector.x - 1;
-		sucesor[2].vector.y = n_actual.vector.y;
-		sucesor[2].vector.z = n_actual.vector.z + 1;
-
-		sucesor[3].vector.x = n_actual.vector.x;
-		sucesor[3].vector.y = n_actual.vector.y;
-		sucesor[3].vector.z = n_actual.vector.z - 1;
-
-		sucesor[4].vector.x = n_actual.vector.x;
-		sucesor[4].vector.y = n_actual.vector.y;
-		sucesor[4].vector.z = n_actual.vector.z + 1;
-
-		sucesor[5].vector.x = n_actual.vector.x + 1;
-		sucesor[5].vector.y = n_actual.vector.y;
-		sucesor[5].vector.z = n_actual.vector.z - 1;
-
-		sucesor[6].vector.x = n_actual.vector.x + 1;
-		sucesor[6].vector.y = n_actual.vector.y;
-		sucesor[6].vector.z = n_actual.vector.z;
-
-		sucesor[7].vector.x = n_actual.vector.x + 1;
-		sucesor[7].vector.y = n_actual.vector.y;
-		sucesor[7].vector.z = n_actual.vector.z + 1;
-		*/
-
 		sucesores = SucesoresValidos (sucesor, mapa);
 
 		foreach (Nodo sucesor_valido in sucesores) {
-			float coste = 0.0f;
 			sucesor_valido.padre = n_actual;
 
-			coste = funcionG (sucesor_valido) + funcionH (sucesor_valido, meta);
-			sucesor_valido.coste = coste + sucesor_valido.padre.coste;
+			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
+			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
+			sucesor_valido.coste = sucesor_valido.costeG + sucesor_valido.costeH;
 		}
 
 		return sucesores;
@@ -222,7 +204,7 @@ public class A_estrella : ControladorCoche {
 			es_meta = true;
 		}
 		*/
-
+		// No tenemos en cuenta la altura
 		if (nodo.vector.x == meta.x && nodo.vector.z == meta.z){
 			es_meta = true;
 		}
@@ -268,7 +250,6 @@ public class A_estrella : ControladorCoche {
 		Vector3 [] camino = new Vector3[size];
 		meta = nodo_final;
 		while (meta != null){
-			//Debug.Log ("Meta: " + meta.vector);
 			camino [i] = meta.vector;
 			i++;
 			meta = meta.padre;
@@ -277,36 +258,21 @@ public class A_estrella : ControladorCoche {
 		return camino;
 	}
 
-	// Rellena el mapa de prueba
-	private void rellenarMapaPrueba () {
-		// 0 = vacio
-		// 1 = salida
-		// 2 = meta
-		// 3 = Obstaculo
-		for (int i=0; i<11; i++){
-			for (int j=0; j<11; j++){
-				mapa_ [i, j] = 0;
-			}	
-		}
-
-		mapa_ [1 , 5] = 2;
-		mapa_ [5 , 5] = 1;
-		mapa_ [3 , 4] = 3;
-		mapa_ [3 , 5] = 3;
-		mapa_ [3 , 6] = 3;
-	}
-
 	private class Nodo {
 		public Vector3 vector;
 		public Nodo padre;
 		public float coste;
+		public float costeH;
+		public float costeG;
 
 		public Nodo (){}
 
-		public Nodo (Vector3 _vector, Nodo _padre, int _coste){
+		public Nodo (Vector3 _vector, Nodo _padre, float _coste, float _costeG, float _costeH){
 			vector = _vector;
 			padre = _padre;
 			coste = _coste;
+			costeH = _costeH;
+			costeG = _costeG;
 		}
 	}
 
@@ -529,80 +495,3 @@ public class A_estrella : ControladorCoche {
 	}
 
 }
-
-/*
-    -5 -4 -3 -2 -1  0  1  2  3  4  5 X                                                                  
-  5                                                                     
-  4                 X
-  3                                                                    
-  2              O  O  O                                                    
-  1                                                                       
-  0                 C                                     
- -1                                                                      
- -2                                                                     
- -3                                                                    
- -4                                                                      
- -5
-  Z
-*/
-
-/*
-Nodo nodo_prueba_padre = new Nodo ();
-Nodo nodo_prueba = new Nodo ();
-Nodo nodo_prueba2 = new Nodo ();
-Nodo nodo_prueba3 = new Nodo ();
-
-nodo_prueba_padre.coste = 0;
-nodo_prueba_padre.padre = null;
-nodo_prueba_padre.vector = new Vector3 (0.0f, 1.0f, 2.0f);
-
-nodo_prueba.coste = 10;
-nodo_prueba.padre = nodo_prueba_padre;
-nodo_prueba.vector = new Vector3 (1.0f, 2.0f, 3.0f);
-
-nodo_prueba2.coste = 12;
-nodo_prueba2.padre = nodo_prueba;
-nodo_prueba2.vector = new Vector3 (2.0f, 3.0f, 4.0f);
-
-nodo_prueba3.coste = 3;
-nodo_prueba3.padre = null;
-nodo_prueba3.vector = new Vector3 (2.0f, 3.0f, 4.0f);
-
-abiertos.add (nodo_prueba);
-abiertos.add (nodo_prueba_padre);
-abiertos.add (nodo_prueba2);
-
-foreach (Nodo _nodo in abiertos) {
-	Debug.Log (_nodo.vector);
-}
-
-if (abiertos.comprobar (nodo_prueba2)) {
-	Debug.Log ("Comprobar1 true");
-} else {
-	Debug.Log ("Comprobar1 false");
-}
-
-if (abiertos.comprobar (nodo_prueba3)) {
-	Debug.Log ("Comprobar2 true");
-} else {
-	Debug.Log ("Comprobar2 false");
-}
-
-Debug.Log ("Count: " + abiertos.count());
-
-if (abiertos.delete (nodo_prueba3)) {
-	Debug.Log ("Delete true");
-} else {
-	Debug.Log ("Delete false");
-}
-
-Debug.Log ("Count: " + abiertos.count());
-
-Nodo primero;
-primero = abiertos.getFirst ();
-Debug.Log (primero.vector);
-Debug.Log ("Count: " + abiertos.count());
-primero = abiertos.getFirst ();
-Debug.Log (primero.vector);
-Debug.Log ("Count: " + abiertos.count());
-*/

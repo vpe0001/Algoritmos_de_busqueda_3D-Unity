@@ -9,6 +9,12 @@ public class MoverCoche : MonoBehaviour {
 	private GameObject coche;
 	private float contador_frames;
 	int contador_vector;
+	private Parrilla parrilla;
+	private float offset = 4.0f;
+	private bool encontrada_meta;
+
+	[SerializeField] private GameObject casilla_abiertos;
+	[SerializeField] private GameObject casilla_cerrados;
 
 	// Para poder aplicar la fuerza y el giro a las ruedas
 	[SerializeField] private WheelCollider[] m_WheelColliders = new WheelCollider[4];
@@ -26,9 +32,12 @@ public class MoverCoche : MonoBehaviour {
 		Vector3 meta;
 		float radio = 0.25f;
 
+		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados);
+
 		contador_frames = 0.0f;
 
 		mapa = new ObtenerMapa ();
+		mapa.setRadio (radio);
 
 		// get the car controller reference
 		if (hybrid_a_estrella) {
@@ -41,31 +50,36 @@ public class MoverCoche : MonoBehaviour {
 		salida_coche = coche.transform.position;
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 
-		trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
+		//trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
+		encontrada_meta = false;
+		script_algoritmo.iniciarPasoAestrella(salida_coche, meta, mapa, parrilla);
 
-		//Debug.Log (trayectoria.Length);
-		while (trayectoria.Length == 0 && radio < 1.0f) {
-			mapa.setRadio (radio);
-			trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
-			radio += 0.1f;
-		}
 
-		Debug.Log ("Radio: " + radio);
-		DibujarTrayectoria (trayectoria, trayectoria.Length);
-		contador_vector = trayectoria.Length - 1;
+
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
 		//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
-		float offset = 5.0f;
+		if (script_algoritmo.pasoAestrella () && encontrada_meta == false) {
+			trayectoria = script_algoritmo.getTrayectoria ();
+			contador_vector = trayectoria.Length - 1;
+			//parrilla.borrarCasillas ();
+			DibujarTrayectoria (trayectoria, trayectoria.Length);
+			encontrada_meta = true;
 
-		if (contador_frames%offset == 0 && contador_vector>=0) {
-			script_algoritmo.MoverCoche (coche, trayectoria[contador_vector]);
-			contador_vector -= 1;
+		} 
+
+		if (encontrada_meta == true) {
+			if (contador_frames % offset == 0 && contador_vector >= 0) {
+				script_algoritmo.MoverCoche (coche, trayectoria [contador_vector]);
+				contador_vector -= 1;
+				contador_frames = 0.0f;
+			}
+				
+			contador_frames += 1.0f;
 		}
-
-		contador_frames += 1.0f;
 	}
 
 	void Update () {
@@ -80,77 +94,3 @@ public class MoverCoche : MonoBehaviour {
 		m_LineRenderer.SetPositions (vertices);
 	}
 }
-
-
-/*
- * Ejemplo de casos de prueba para los puntos recorribles del mapa
-	Debug.Log ("Centro de la rotanda: 0.0f, 0.0f, -10.0f");
-		if (mapa.esRecorrible (new Vector3 (0.0f, 0.0f, -10.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("lado de la rotanda: 0.0f, 0.0f, -20.0f");
-		if (mapa.esRecorrible (new Vector3 (0.0f, 0.0f, -20.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("lado de la rotanda: 0.0f, 0.0f, 0.0f");
-		if (mapa.esRecorrible (new Vector3 (0.0f, 0.0f, 0.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("lado de la rotanda: 10.0f, 0.0f, -10.0f");
-		if (mapa.esRecorrible (new Vector3 (10.0f, 0.0f, -10.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("lado de la rotanda: -10.0f, 0.0f, -10.0f");
-		if (mapa.esRecorrible (new Vector3 (-10.0f, 0.0f, -10.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("Caja 1: 0.0f, 0.0f, 20.0f");
-		if (mapa.esRecorrible (new Vector3 (0.0f, 0.0f, 20.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("Caja 2: 10.0f, 0.0f, 10.0f");
-		if (mapa.esRecorrible (new Vector3 (10.0f, 0.0f, 10.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("Caja 3: -10.0f, 0.0f, 10.0f");
-		if (mapa.esRecorrible (new Vector3 (-10.0f, 0.0f, 10.0f))) {
-			Debug.LogError ("Error: devuelve recorrible");
-		} else {
-			Debug.Log ("Correcto: no devuelve recorrible");
-		}
-
-		Debug.Log ("Punto recorrible: 30.0f, 0.0f, -30.0f");
-		if (mapa.esRecorrible (new Vector3 (30.0f, 0.0f, -30.0f))) {
-			Debug.Log ("Correcto: devuelve recorrible");
-		} else {
-			Debug.LogError ("Error: no devuelve recorrible");
-		}
-
-		Debug.Log ("Meta: 0.0f, 0.0f, 40.0f");
-		if (mapa.esRecorrible (new Vector3 (0.0f, 0.0f, 40.0f))) {
-			Debug.Log ("Correcto: devuelve recorrible");
-		} else {
-			Debug.LogError ("Error: no devuelve recorrible");
-		}
-*/
