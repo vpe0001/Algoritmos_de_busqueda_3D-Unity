@@ -36,5 +36,14 @@ public class ObtenerMapa  {
 		radio = nuevo_radio;
 	}
 
+	public bool lineaVision (Vector3 inicio, Vector3 fin) {
+		bool linea = false;
+		NavMeshHit hit;
+
+		linea = !(NavMesh.Raycast (inicio, fin, out hit, NavMesh.AllAreas));
+
+		return linea;
+	}
+
 
 }

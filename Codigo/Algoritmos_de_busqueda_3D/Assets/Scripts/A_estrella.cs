@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Priority_Queue;
 
 public class A_estrella : ControladorCoche {
 	
 	private Cerrados cerrados = new Cerrados ();
 	private List <Nodo> sucesores = new List <Nodo> ();
-	private Abiertos abiertos = new Abiertos ();
+	private Abiertos abiertos = new Abiertos (10000);
 	private Vector3[] v_trayectoria;
 	private Vector3 inicio;
 	private Vector3 meta;
@@ -16,6 +17,7 @@ public class A_estrella : ControladorCoche {
 	private Nodo n_actual;
 	private Nodo n_inicio;
 	private bool meta_encontrada;
+	private float peso;
 
 	public override void MoverCoche (WheelCollider[] m_WheelColliders, GameObject[] m_WheelMeshes) {
 		float thrustTorque = 5000000f; 
@@ -24,8 +26,8 @@ public class A_estrella : ControladorCoche {
 		m_WheelColliders [2].motorTorque = thrustTorque;
 		m_WheelColliders [3].motorTorque = thrustTorque;
 
-		m_WheelColliders [0].steerAngle = 0f;
-		m_WheelColliders [1].steerAngle = 0f;
+		m_WheelColliders [0].steerAngle = 35f;
+		m_WheelColliders [1].steerAngle = 35f;
 		m_WheelColliders [2].steerAngle = 0f;
 		m_WheelColliders [3].steerAngle = 0f;
 
@@ -39,10 +41,15 @@ public class A_estrella : ControladorCoche {
 	}
 
 	public override void MoverCoche (GameObject coche, Vector3 posicion){
+		coche.GetComponent<Rigidbody> ().isKinematic = true;
+		coche.GetComponent<Rigidbody> ().detectCollisions = false; 
+		coche.transform.LookAt (posicion, Vector3.up);
 		coche.transform.position = posicion;
 	}
 
-	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla) {
+	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
+		peso = p_peso;
+
 		inicio = v_inicio;
 		meta = v_meta;
 		mapa = v_mapa;
@@ -63,8 +70,11 @@ public class A_estrella : ControladorCoche {
 	public override bool pasoAestrella () {
 		//Buscar cola de prioridad
 
+		//Debug.Log ("---------------------------------------------------------");
+
 		if (abiertos.count() > 0 && !meta_encontrada) {
 			n_actual = abiertos.getFirst ();
+			//Debug.Log ("Nodo Actual: " + n_actual.vector);
 			cerrados.add (n_actual);
 			parrilla.crearCasilla (n_actual.vector, 1);
 
@@ -76,50 +86,47 @@ public class A_estrella : ControladorCoche {
 				sucesores = CalcularSucesores (n_actual, meta, mapa);
 
 				foreach (Nodo siguiente in sucesores) {
-					if (!abiertos.comprobar (siguiente) && !cerrados.comprobar (siguiente)) {
-						abiertos.add (siguiente);
-						parrilla.crearCasilla (siguiente.vector, 0);
+					Nodo anterior;
+					Nodo mover_padre;
 
+					if (abiertos.find (siguiente, out anterior)) {
+						//Debug.Log ("Esta en abiertos: " + siguiente.vector + " " + siguiente.coste + " | " + anterior.vector + " " + anterior.coste);
+
+						if (anterior.coste > siguiente.coste) {
+
+							anterior.padre = n_actual;
+							anterior.coste = siguiente.coste;
+							abiertos.updatePrioridad (anterior, anterior.coste);
+
+							//abiertos.find (siguiente, out anterior);
+							//Debug.Log ("siguiente2 coste = " + siguiente.coste);
+							//Debug.Log ("Anterior2 coste = " + anterior.coste);
+						}
 					} else {
-						Nodo anterior;
-						Nodo mover_padre;
-
-						if (abiertos.comprobar (siguiente)) {
-							
-							anterior = abiertos.find (siguiente);	
+						if (cerrados.find (siguiente, out anterior)) {
+							//Debug.Log ("Esta en cerrados: " + siguiente.vector + " " + siguiente.coste + " | " + anterior.vector + " " + anterior.coste);
 
 							if (anterior.coste > siguiente.coste) {
-								
 								anterior.padre = n_actual;
 								anterior.coste = siguiente.coste;
-								anterior = abiertos.find (siguiente);
 
+								cerrados.find (siguiente, out anterior);
+								//Debug.Log ("siguiente3 coste = " + siguiente.coste);
+								//Debug.Log ("Anterior3 coste = " + anterior.coste);
+
+								cerrados.find (siguiente.padre, out mover_padre);
+								cerrados.delete (mover_padre);
+								abiertos.add (mover_padre);
+								parrilla.crearCasilla (mover_padre.vector, 0);
 							}
-						} else {
-							if (cerrados.comprobar (siguiente)) {
-								
-								anterior = cerrados.find (siguiente);	
-
-								if (anterior.coste > siguiente.coste) {
-									anterior.padre = n_actual;
-									anterior.coste = siguiente.coste;
-
-									anterior = cerrados.find (siguiente);
-									Debug.Log ("siguiente3 coste = " + siguiente.coste);
-									Debug.Log ("Anterior3 coste = " + anterior.coste);
-
-									mover_padre = cerrados.find (siguiente.padre);
-									cerrados.delete (mover_padre);
-									abiertos.add (mover_padre);
-									parrilla.crearCasilla (mover_padre.vector, 0);
-								}
-							}
+						} else { //No esta ni en abiertos ni en cerrados
+							//Debug.Log ("No es ni en abiertos ni en cerrados: " + siguiente.vector);
+							abiertos.add (siguiente);
+							parrilla.crearCasilla (siguiente.vector, 0);
 						}
 					}
 
-
 				}
-
 
 			}
 		}
@@ -135,9 +142,10 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla) {
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla, float p_peso) {
+		peso = p_peso;
 		
-		iniciarPasoAestrella(inicio, meta, mapa, parrilla);
+		iniciarPasoAestrella(inicio, meta, mapa, parrilla, peso);
 
 		while (!pasoAestrella ()) {
 		}
@@ -175,7 +183,7 @@ public class A_estrella : ControladorCoche {
 
 			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
 			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
-			sucesor_valido.coste = sucesor_valido.costeG + sucesor_valido.costeH;
+			sucesor_valido.coste = (peso * sucesor_valido.costeG) + sucesor_valido.costeH;
 		}
 
 		return sucesores;
@@ -199,16 +207,10 @@ public class A_estrella : ControladorCoche {
 	private bool esMeta(Nodo nodo, Vector3 meta) {
 		bool es_meta = false;
 
-		/*
 		if (nodo.vector == meta){
 			es_meta = true;
 		}
-		*/
-		// No tenemos en cuenta la altura
-		if (nodo.vector.x == meta.x && nodo.vector.z == meta.z){
-			es_meta = true;
-		}
-
+			
 		return es_meta;
 	}
 
@@ -258,7 +260,7 @@ public class A_estrella : ControladorCoche {
 		return camino;
 	}
 
-	private class Nodo {
+	private class Nodo : FastPriorityQueueNode {
 		public Vector3 vector;
 		public Nodo padre;
 		public float coste;
@@ -277,48 +279,54 @@ public class A_estrella : ControladorCoche {
 	}
 
 	private class Abiertos {
-		private List <Nodo> abiertos;
-		private IComparer <Nodo> comparador;
+		//private List <Nodo> abiertos;
+		//private IComparer <Nodo> comparador;
+		private FastPriorityQueue <Nodo> abiertos;
+		//private SortedList <Nodo, Nodo> abiertos;
+		//Queue <Nodo> prueba = new Queue<Nodo> ();
 
-		public Abiertos (){
-			abiertos = new List <Nodo> ();
-			comparador = new ComparadorNodos ();
+		public Abiertos (int max_num_nodos){
+			//abiertos = new List <Nodo> ();
+			//comparador = new ComparadorNodos ();
+			abiertos = new FastPriorityQueue<Nodo>(max_num_nodos);
+
+			//abiertos = new SortedList <Nodo, Nodo> (new ComparadorNodosParaSorted());
 		}
 
-		public bool add (Nodo nodo) {
-			bool existe = false;
-
-			existe = comprobar (nodo);
-
-			if (!existe) {
-				abiertos.Add (nodo);
-				abiertos.Sort (comparador);
-			}
-
-			return existe;
+		public void add (Nodo nodo) {
+			abiertos.Enqueue(nodo, nodo.coste);
 		}
 
 		public bool comprobar (Nodo nodo) {
-			bool existe = false;
+			Nodo encontrado;
 
-			foreach (Nodo busqueda in abiertos ) {
-				if (busqueda.vector == nodo.vector) {
-					existe = true;
-					break;
-				}
-			}
-
-			return existe;
+			return find (nodo, out encontrado);
+			//return abiertos.Contains(nodo);
 		}
 
 		public bool delete (Nodo nodo) {
 			bool existe = false;
 
-			foreach (Nodo busqueda in abiertos ) {
-				if (busqueda.vector == nodo.vector) {
-					abiertos.Remove (busqueda);
-					abiertos.Sort (comparador);
+			existe = comprobar (nodo);
+
+			if (existe) {
+				abiertos.Remove (nodo);
+			}
+
+			return existe;
+		}
+
+		public bool find (Nodo nodo, out Nodo encontrado) {
+			bool existe = false;
+			encontrado = null;
+
+			//existe = comprobar (nodo);
+
+			foreach (Nodo n in abiertos){
+				if (n.vector == nodo.vector) {
+					encontrado = n;
 					existe = true;
+					//Debug.Log ("Abiertos.Find");
 					break;
 				}
 			}
@@ -326,57 +334,42 @@ public class A_estrella : ControladorCoche {
 			return existe;
 		}
 
-		public Nodo find (Nodo nodo) {
-			Nodo encontrado = null;
-
-			foreach (Nodo busqueda in abiertos ) {
-				if (busqueda.vector == nodo.vector) {
-					encontrado = busqueda;
-
-					break;
-				}
-			}
-
-			return encontrado;
-		}
-
 		public Nodo getFirst (){
+			/*
 			Nodo primero = null;
 
-			if (count() > 0) {
-				primero = abiertos [0];
+			if (abiertos.Count > 0) {
+				primero = abiertos.Keys [0];
 				abiertos.RemoveAt (0);
 			}
-
-			return primero;
+			*/
+				
+			return abiertos.Dequeue ();
 		}
+			
 
-		public Nodo getIndex (int index){
-			Nodo primero = null;
-
-			if (index < count() ){
-				primero = abiertos [index];
-			}
-
-			return primero;
-		}
-
-		public List<Nodo>.Enumerator GetEnumerator(){
-			return abiertos.GetEnumerator();
+		public IEnumerator GetEnumerator(){
+			return abiertos.GetEnumerator ();
 		}
 
 		public int count (){
 			return abiertos.Count;
 		}
+
+		public void updatePrioridad (Nodo nodo, float prioridad){
+			abiertos.UpdatePriority (nodo, prioridad);
+		}
 			
 	}
 
 	private class Cerrados {
-		private List <Nodo> cerrados;
-
+		//private List <Nodo> cerrados;
+		private SortedDictionary <Vector3, Nodo> cerrados;
 
 		public Cerrados (){
-			cerrados = new List <Nodo> ();
+			//cerrados = new List <Nodo> ();
+			cerrados = new SortedDictionary <Vector3, Nodo> (new ComparadorVectores());
+			//cerrados = new SortedDictionary <Vector3, Nodo> ();
 		}
 
 		public bool add (Nodo nodo) {
@@ -385,95 +378,31 @@ public class A_estrella : ControladorCoche {
 			existe = comprobar (nodo);
 
 			if (!existe) {
-				cerrados.Add (nodo);
+				cerrados.Add (nodo.vector, nodo);
 			}
 
 			return existe;
 		}
 
 		public bool comprobar (Nodo nodo) {
-			bool existe = false;
-
-			foreach (Nodo busqueda in cerrados ) {
-				if (busqueda.vector == nodo.vector) {
-					existe = true;
-					break;
-				}
-			}
-
-			return existe;
+			return cerrados.ContainsKey(nodo.vector);
 		}
 
 		public bool delete (Nodo nodo) {
-			bool existe = false;
-
-			foreach (Nodo busqueda in cerrados ) {
-				if (busqueda.vector == nodo.vector) {
-					cerrados.Remove (busqueda);
-
-					existe = true;
-					break;
-				}
-			}
-
-			return existe;
+			return cerrados.Remove(nodo.vector);
 		}
 
-		public Nodo find (Nodo nodo) {
-			Nodo encontrado = null;
-
-			foreach (Nodo busqueda in cerrados ) {
-				if (busqueda.vector == nodo.vector) {
-					encontrado = busqueda;
-
-					break;
-				}
-			}
-
-			return encontrado;
-		}
-			
-		public Nodo getIndex (int index){
-			Nodo primero = null;
-
-			if (index < count() ){
-				primero = cerrados [index];
-			}
-
-			return primero;
+		public bool find (Nodo nodo, out Nodo encontrado) {
+			return cerrados.TryGetValue(nodo.vector, out encontrado);
 		}
 
-		public List<Nodo>.Enumerator GetEnumerator(){
+		public SortedDictionary <Vector3, Nodo>.Enumerator GetEnumerator(){
 			return cerrados.GetEnumerator();
 		}
 
 		public int count (){
 			return cerrados.Count;
 		}
-
-		public Vector3[] toArray(){
-			int size = 0;
-			int i = 0;
-			Nodo meta = cerrados [count () - 1];
-
-			while (meta != null){
-				size++;
-				meta = meta.padre;
-			}
-
-			Vector3 [] camino = new Vector3[size];
-			meta = cerrados [size - 1];
-			while (meta != null){
-				//Debug.Log ("MEta: " + meta.vector);
-				camino [i] = meta.vector;
-				i++;
-				meta = meta.padre;
-			}
-				
-			return camino;
-		}
-
-
 	}
 
 	private class ComparadorNodos : IComparer<Nodo> {
@@ -492,6 +421,69 @@ public class A_estrella : ControladorCoche {
 
 			return mayor;
 		}
+	}
+
+	private class ComparadorNodosParaSorted : IComparer<Nodo> {
+		// 0 si son iguales 
+		// -1 si x es menor
+		// 1 si x es mayor
+
+		public int Compare(Nodo x, Nodo y) {
+			int mayor = 0;
+
+			if (x.vector == y.vector){
+				//Debug.Log ("Comparador: " + x.vector + " | " + y.vector);
+				mayor = 0;
+			} else {
+				if (x.coste < y.coste){
+					mayor = -1;
+				}else if (x.coste > y.coste) {
+					mayor = 1;
+				}
+			}
+
+			return mayor;
+		}
+	}
+
+	private class ComparadorVectores : IComparer<Vector3> {
+		// 0 si son iguales 
+		// -1 si x es menor
+		// 1 si x es mayor
+
+		public int Compare(Vector3 vector_1, Vector3 vector_2) {
+			int mayor = 0;
+
+			if (vector_1.x == vector_2.x && vector_1.y == vector_2.y && vector_1.z == vector_2.z){
+				mayor = 0;
+			}else {
+				if (vector_1.magnitude < vector_2.magnitude) {
+					mayor = -1;
+				} else {
+					mayor = 1;
+				}
+			}
+
+			return mayor;
+		}
+	}
+
+	private class ComparadorIgualdadVectores : IEqualityComparer<Vector3> {
+		
+		public bool Equals (Vector3 vector_1, Vector3 vector_2) {
+			bool iguales = false;
+
+			if (vector_1.x == vector_2.x && vector_1.y == vector_2.y && vector_1.z == vector_2.z) {
+				iguales = true;
+			}
+
+			return iguales;
+		}
+
+		public int GetHashCode (Vector3 vector) {
+			return vector.GetHashCode ();
+		}
+		
 	}
 
 }
