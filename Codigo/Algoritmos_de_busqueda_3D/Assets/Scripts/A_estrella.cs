@@ -7,15 +7,15 @@ public class A_estrella : ControladorCoche {
 	
 	private Cerrados cerrados = new Cerrados ();
 	private List <Nodo> sucesores = new List <Nodo> ();
-	private Abiertos abiertos = new Abiertos (10000);
+	private Abiertos abiertos = new Abiertos (100000);
 	private Vector3[] v_trayectoria;
-	private Vector3 inicio;
-	private Vector3 meta;
+	private Vector3 vector_inicio;
+	private Vector3 vector_meta;
 	private ObtenerMapa mapa;
 	private Parrilla parrilla;
 	private Nodo nodo_final;
-	private Nodo n_actual;
-	private Nodo n_inicio;
+	private Nodo nodo_actual;
+	private Nodo nodo_inicio;
 	private bool meta_encontrada;
 	private float peso;
 
@@ -40,100 +40,110 @@ public class A_estrella : ControladorCoche {
 		}
 	}
 
-	public override void MoverCoche (GameObject coche, Vector3 posicion){
+	public override bool MoverCoche (GameObject coche, Vector3 posicion, float velocidad){
+		bool llegado = false;
+		Vector3 movimiento;
+
 		coche.GetComponent<Rigidbody> ().isKinematic = true;
 		coche.GetComponent<Rigidbody> ().detectCollisions = false; 
-		coche.transform.LookAt (posicion, Vector3.up);
-		coche.transform.position = posicion;
+
+		if (coche.transform.position == posicion) {
+			llegado = true;
+		} else {
+			movimiento = Vector3.MoveTowards (coche.transform.position, posicion, velocidad * Time.deltaTime);
+			coche.transform.LookAt (posicion, Vector3.up);
+			coche.GetComponent<Rigidbody> ().MovePosition (movimiento);
+
+		}
+
+
+		//coche.transform.position = posicion;
+
+		return llegado;
 	}
 
 	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
 		peso = p_peso;
 
-		inicio = v_inicio;
-		meta = v_meta;
+		abiertos.getEmpty ();
+		cerrados.getEmpty ();
+
+		vector_inicio = v_inicio;
+		vector_meta = v_meta;
 		mapa = v_mapa;
 		parrilla = v_parrilla;
 
 		meta_encontrada = false;
 
 		nodo_final = null;
-		n_actual = null;
-		n_inicio = new Nodo ();
-		n_inicio.vector = inicio;
-		n_inicio.padre = null;
-		n_inicio.coste = 0;
+		nodo_actual = null;
+		nodo_inicio = new Nodo ();
+		nodo_inicio.vector = vector_inicio;
+		nodo_inicio.padre = null;
+		nodo_inicio.coste = 0;
 
-		abiertos.add (n_inicio);
+		abiertos.add (nodo_inicio);
+
 	}
 
-	public override bool pasoAestrella () {
-		//Buscar cola de prioridad
+	public override bool pasoAestrella (out bool error) {
+		error = false;
 
-		//Debug.Log ("---------------------------------------------------------");
+		if (abiertos.count () > 0 && !meta_encontrada) {
+			nodo_actual = abiertos.getFirst ();
 
-		if (abiertos.count() > 0 && !meta_encontrada) {
-			n_actual = abiertos.getFirst ();
-			//Debug.Log ("Nodo Actual: " + n_actual.vector);
-			cerrados.add (n_actual);
-			parrilla.crearCasilla (n_actual.vector, 1);
-
-			if (esMeta (n_actual, meta)) {
+			if (esMeta (nodo_actual, vector_meta)) { 
 				meta_encontrada = true;
-				nodo_final = n_actual;
+				nodo_final = nodo_actual;
+
+				v_trayectoria = vectoresCamino (nodo_final);
 
 			} else {
-				sucesores = CalcularSucesores (n_actual, meta, mapa);
+				cerrados.add (nodo_actual);
+				parrilla.crearCasilla (nodo_actual.vector, 1);
 
-				foreach (Nodo siguiente in sucesores) {
+				sucesores = CalcularSucesores (nodo_actual, vector_meta, mapa);
+
+				foreach (Nodo sucesor in sucesores) {
 					Nodo anterior;
 					Nodo mover_padre;
 
-					if (abiertos.find (siguiente, out anterior)) {
-						//Debug.Log ("Esta en abiertos: " + siguiente.vector + " " + siguiente.coste + " | " + anterior.vector + " " + anterior.coste);
+					if (abiertos.find (sucesor, out anterior)) {
 
-						if (anterior.coste > siguiente.coste) {
+						if (anterior.coste > sucesor.coste) {
 
-							anterior.padre = n_actual;
-							anterior.coste = siguiente.coste;
+							anterior.padre = nodo_actual;
+							anterior.coste = sucesor.coste;
 							abiertos.updatePrioridad (anterior, anterior.coste);
 
-							//abiertos.find (siguiente, out anterior);
-							//Debug.Log ("siguiente2 coste = " + siguiente.coste);
-							//Debug.Log ("Anterior2 coste = " + anterior.coste);
 						}
 					} else {
-						if (cerrados.find (siguiente, out anterior)) {
-							//Debug.Log ("Esta en cerrados: " + siguiente.vector + " " + siguiente.coste + " | " + anterior.vector + " " + anterior.coste);
+						if (cerrados.find (sucesor, out anterior)) {
 
-							if (anterior.coste > siguiente.coste) {
-								anterior.padre = n_actual;
-								anterior.coste = siguiente.coste;
+							if (anterior.coste > sucesor.coste) {
+								anterior.padre = nodo_actual;
+								anterior.coste = sucesor.coste;
 
-								cerrados.find (siguiente, out anterior);
-								//Debug.Log ("siguiente3 coste = " + siguiente.coste);
-								//Debug.Log ("Anterior3 coste = " + anterior.coste);
-
-								cerrados.find (siguiente.padre, out mover_padre);
+								cerrados.find (sucesor.padre, out mover_padre);
 								cerrados.delete (mover_padre);
 								abiertos.add (mover_padre);
 								parrilla.crearCasilla (mover_padre.vector, 0);
 							}
 						} else { //No esta ni en abiertos ni en cerrados
-							//Debug.Log ("No es ni en abiertos ni en cerrados: " + siguiente.vector);
-							abiertos.add (siguiente);
-							parrilla.crearCasilla (siguiente.vector, 0);
+							abiertos.add (sucesor);
+							parrilla.crearCasilla (sucesor.vector, 0);
 						}
 					}
 
 				}
 
 			}
+		} else { //abiertos esta vacio
+			if (abiertos.count () == 0) {
+				error = true;
+			}
 		}
-
-
-		v_trayectoria = vectoresCamino (nodo_final);
-
+			
 		return meta_encontrada;
 	}
 
@@ -143,13 +153,14 @@ public class A_estrella : ControladorCoche {
 
 	// A*
 	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla, float p_peso) {
+		bool error;
 		peso = p_peso;
 		
 		iniciarPasoAestrella(inicio, meta, mapa, parrilla, peso);
 
-		while (!pasoAestrella ()) {
+		while (!pasoAestrella (out error)) {
 		}
-
+			
 		return v_trayectoria;
 	}
 
@@ -173,19 +184,18 @@ public class A_estrella : ControladorCoche {
 		for (int i=0; i < num_sucesores; i++){
 			sucesor [i] = new Nodo ();
 			sucesor [i].vector = n_actual.vector + movimientos[i];
+			sucesor [i].padre = n_actual;
 		}
 
 
 		sucesores = SucesoresValidos (sucesor, mapa);
 
 		foreach (Nodo sucesor_valido in sucesores) {
-			sucesor_valido.padre = n_actual;
-
 			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
 			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
 			sucesor_valido.coste = (peso * sucesor_valido.costeG) + sucesor_valido.costeH;
 		}
-
+			
 		return sucesores;
 	}
 
@@ -195,11 +205,14 @@ public class A_estrella : ControladorCoche {
 
 		foreach (Nodo sucesor_valido in sucesor) {
 			
-			if ( mapa.esRecorrible(sucesor_valido.vector) ){
+			//if ( mapa.esRecorrible(sucesor_valido.vector) ){
+			//Comprobamos las dos direcciones porque hemos encontrado que no siempre, aunque deberia, da el mismo resultado
+			//Asi evitamos bugs debido a que sea visible/alcanzable desde una direccion pero no desde la otra
+			if ( mapa.lineaVision (sucesor_valido.padre.vector, sucesor_valido.vector) && mapa.lineaVision (sucesor_valido.vector, sucesor_valido.padre.vector)){
 				sucesores.Add (sucesor_valido);
 			}
 		}
-
+			
 		return sucesores;
 	}
 
@@ -225,7 +238,7 @@ public class A_estrella : ControladorCoche {
 		}
 
 		coste = distancia.magnitude;
-			
+
 		return coste;
 	}
 
@@ -244,6 +257,7 @@ public class A_estrella : ControladorCoche {
 		int i = 0;
 		Nodo meta = nodo_final;
 
+
 		while (meta != null){
 			size++;
 			meta = meta.padre;
@@ -256,7 +270,7 @@ public class A_estrella : ControladorCoche {
 			i++;
 			meta = meta.padre;
 		}
-
+			
 		return camino;
 	}
 
@@ -326,7 +340,7 @@ public class A_estrella : ControladorCoche {
 				if (n.vector == nodo.vector) {
 					encontrado = n;
 					existe = true;
-					//Debug.Log ("Abiertos.Find");
+
 					break;
 				}
 			}
@@ -358,6 +372,10 @@ public class A_estrella : ControladorCoche {
 
 		public void updatePrioridad (Nodo nodo, float prioridad){
 			abiertos.UpdatePriority (nodo, prioridad);
+		}
+
+		public void getEmpty (){
+			abiertos.Clear ();
 		}
 			
 	}
@@ -403,6 +421,10 @@ public class A_estrella : ControladorCoche {
 		public int count (){
 			return cerrados.Count;
 		}
+
+		public void getEmpty (){
+			cerrados.Clear ();
+		}
 	}
 
 	private class ComparadorNodos : IComparer<Nodo> {
@@ -432,7 +454,6 @@ public class A_estrella : ControladorCoche {
 			int mayor = 0;
 
 			if (x.vector == y.vector){
-				//Debug.Log ("Comparador: " + x.vector + " | " + y.vector);
 				mayor = 0;
 			} else {
 				if (x.coste < y.coste){

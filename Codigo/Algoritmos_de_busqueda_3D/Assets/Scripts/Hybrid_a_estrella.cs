@@ -16,14 +16,16 @@ public class Hybrid_a_estrella : ControladorCoche {
 		m_WheelColliders [3].steerAngle = 0f;
 	}
 
-	public override void MoverCoche (GameObject coche, Vector3 posicion){
-		
+	public override bool MoverCoche (GameObject coche, Vector3 posicion, float velocidad){
+		return true;
 	}
 
 	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
 	}
 
-	public override bool pasoAestrella () {
+	public override bool pasoAestrella (out bool error) {
+		error = false;
+
 		return false;
 	}
 

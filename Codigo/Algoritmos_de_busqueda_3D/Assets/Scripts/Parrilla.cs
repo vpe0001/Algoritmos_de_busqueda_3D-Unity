@@ -40,5 +40,7 @@ public class Parrilla {
 		foreach (GameObject casilla in casillas){
 			GameObject.Destroy(casilla);
 		}
+
+		casillas.Clear ();
 	}
 }

@@ -8,15 +8,15 @@ public class MoverCoche : MonoBehaviour {
 	private ObtenerMapa mapa;
 	private PathSmoothing path_smoothing;
 	private GameObject coche;
-	private float contador_frames;
 	int contador_vector;
 	private Parrilla parrilla;
-	private float offset = 4.0f;
 	private bool encontrada_meta;
 	private float inicio;
 	private float final;
 	public float peso;// = 0.5f; //con 1 encuentra el camino mas corto, pero es mas lento. Valores menores intenta acercars a la meta mas rapido aunque no sea en mejor camino
+	private bool error;
 
+	[SerializeField] private float velocidad = 1.0f;
 	[SerializeField] private GameObject casilla_abiertos;
 	[SerializeField] private GameObject casilla_cerrados;
 
@@ -29,19 +29,18 @@ public class MoverCoche : MonoBehaviour {
 	// Para usar un algorutmo u otro
 	private ControladorCoche script_algoritmo;
 	private Vector3[] trayectoria;
+	private float radio = 0.35f;
+	private Vector3 salida_coche;
+	private Vector3 meta;
 
 	// Use this for initialization
 	void Start () {
-		Vector3 salida_coche;
-		Vector3 meta;
-		float radio = 0.25f;
-		Debug.Log ("Inicio A*");
+		error = false;
+		encontrada_meta = false;
+
 		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados);
 
-		contador_frames = 0.0f;
-
 		mapa = new ObtenerMapa ();
-		mapa.setRadio (radio);
 
 		// get the car controller reference
 		if (hybrid_a_estrella) {
@@ -65,45 +64,57 @@ public class MoverCoche : MonoBehaviour {
 
 	}
 	
-	// Update is called once per frame
+	// 
 	void FixedUpdate () {
+		bool fin;
 
-		//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
-		if (script_algoritmo.pasoAestrella () && encontrada_meta == false) {
-			final = Time.realtimeSinceStartup;
-			Debug.Log ("Fin del A*: " + (final - inicio));
+		if (error) {
+			
+			Debug.Log ("Error: no se ha encontrado un camino");
 
-			trayectoria = script_algoritmo.getTrayectoria ();
+			parrilla.borrarCasillas ();
 
-			contador_vector = trayectoria.Length - 1;
+		} else if ( !encontrada_meta ) {
+			//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
+			fin = script_algoritmo.pasoAestrella (out error);
 
-			//parrilla.borrarCasillas ();
-			DibujarTrayectoria (trayectoria, trayectoria.Length);
+			if (fin) {
+				final = Time.realtimeSinceStartup;
+				encontrada_meta = true;
+				Debug.Log ("A* terminado en " + (final - inicio));
 
-			path_smoothing = new PathSmoothing (mapa, trayectoria);
+				trayectoria = script_algoritmo.getTrayectoria ();
 
-			trayectoria = path_smoothing.getTrayectoriaSuavizada ();
+				//contador_vector = trayectoria.Length - 1;
 
-			contador_vector = trayectoria.Length - 1;
-			DibujarTrayectoria (trayectoria, trayectoria.Length);
+				parrilla.borrarCasillas ();
+				//DibujarTrayectoria (trayectoria, trayectoria.Length);
 
-			encontrada_meta = true;
-		} 
+				path_smoothing = new PathSmoothing (mapa, trayectoria);
 
-		if (encontrada_meta == true) {
-			if (contador_frames % offset == 0 && contador_vector >= 0) {
-				script_algoritmo.MoverCoche (coche, trayectoria [contador_vector]);
-				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
-				contador_vector -= 1;
-				contador_frames = 0.0f;
-			}
-				
-			contador_frames += 1.0f;
+				trayectoria = path_smoothing.getTrayectoriaSuavizada ();
+
+				contador_vector = trayectoria.Length - 1;
+				DibujarTrayectoria (trayectoria, trayectoria.Length);
+			} 
 		}
 	}
 
-	void Update () {
-		
+	//
+	void Update (){
+		if (encontrada_meta == true) {
+			
+			//if (contador_frames % offset == 0 && contador_vector >= 0) {
+			if (contador_vector >= 0) {
+				bool llegado = false;
+
+				llegado = script_algoritmo.MoverCoche (coche, trayectoria [contador_vector], velocidad);
+				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
+				if (llegado){
+					contador_vector -= 1;			
+				}
+			}
+		}
 	}
 
 	// Dibujamos la trayectoria

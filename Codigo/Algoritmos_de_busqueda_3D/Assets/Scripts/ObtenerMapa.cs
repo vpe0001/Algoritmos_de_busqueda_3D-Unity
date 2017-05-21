@@ -15,7 +15,7 @@ public class ObtenerMapa  {
 
 		mapa = NavMesh.CalculateTriangulation ();
 		vectores = mapa.vertices;
-		radio = 0.1f;
+		radio = 0.01f;
 	}
 
 	public Vector3[] getBordes (){
@@ -27,7 +27,11 @@ public class ObtenerMapa  {
 		NavMeshHit punto_cercano;
 		//float radio = 0.25f; // debe ser lo mas pequeño posible 0.17f
 
+		//Debug.Log ("esRecorrible? " + posicion);
+
 		recorrible = NavMesh.SamplePosition (posicion, out punto_cercano, radio, NavMesh.AllAreas);
+
+		//Debug.Log ("esRecorrible: " + recorrible);
 
 		return recorrible;
 	}
