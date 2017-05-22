@@ -6,14 +6,21 @@
 \contentsline {chapter}{Introducci\IeC {\'o}n}{1}{chapter*.4}
 \contentsline {chapter}{Objetivos del proyecto}{2}{chapter*.5}
 \contentsline {chapter}{Conceptos te\IeC {\'o}ricos}{3}{chapter*.6}
-\contentsline {section}{\numberline {3.1}Secciones}{3}{section.3.1}
-\contentsline {subsection}{Subsecciones}{3}{section*.7}
-\contentsline {subsubsection}{Subsubsecciones}{3}{section*.8}
-\contentsline {section}{\numberline {3.2}Referencias}{3}{section.3.2}
-\contentsline {section}{\numberline {3.3}Im\IeC {\'a}genes}{3}{section.3.3}
-\contentsline {section}{\numberline {3.4}Listas de items}{4}{section.3.4}
-\contentsline {section}{\numberline {3.5}Tablas}{5}{section.3.5}
-\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{6}{chapter*.9}
-\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{7}{chapter*.10}
-\contentsline {chapter}{Trabajos relacionados}{8}{chapter*.11}
-\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{9}{chapter*.12}
+\contentsline {section}{\numberline {3.1}Algoritmo A*}{3}{section.3.1}
+\contentsline {subsubsection}{Heur\IeC {\'\i }stica}{4}{section*.7}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo}{4}{section*.8}
+\contentsline {subsubsection}{Subsubsecciones}{4}{section*.9}
+\contentsline {section}{\numberline {3.2}Referencias}{4}{section.3.2}
+\contentsline {section}{\numberline {3.3}Im\IeC {\'a}genes}{4}{section.3.3}
+\contentsline {section}{\numberline {3.4}Listas de items}{5}{section.3.4}
+\contentsline {section}{\numberline {3.5}Tablas}{6}{section.3.5}
+\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{7}{chapter*.10}
+\contentsline {section}{\numberline {4.1}Programas usados}{7}{section.4.1}
+\contentsline {subsubsection}{Unity}{7}{section*.11}
+\contentsline {subsubsection}{Texmaker}{8}{section*.12}
+\contentsline {subsubsection}{SmartGit}{8}{section*.13}
+\contentsline {subsubsection}{GitHub y ZenHub}{8}{section*.14}
+\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{9}{chapter*.15}
+\contentsline {section}{\numberline {5.1}Nav Mesh}{9}{section.5.1}
+\contentsline {chapter}{Trabajos relacionados}{11}{chapter*.16}
+\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{12}{chapter*.17}

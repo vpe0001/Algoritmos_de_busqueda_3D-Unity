@@ -4,11 +4,24 @@ En aquellos proyectos que necesiten para su comprensión y desarrollo de unos co
 
 Algunos conceptos teóricos de \LaTeX \footnote{Créditos a los proyectos de Álvaro López Cantero: Configurador de Presupuestos y Roberto Izquierdo Amo: PLQuiz}.
 
-\section{Secciones}
+\section{Algoritmo A*}
 
-Las secciones se incluyen con el comando section.
+A* es un algoritmo de búsqueda informada del tipo primero el mejor, que usa una función de evaluación para elegir hacia que nodo expandirse desde un nodo inicial hacia un nodo final.
 
-\subsection{Subsecciones}
+Para representar el espacio de búsqueda del algoritmo, se usa una cuadrícula donde cada nodo puede representar un espacio donde es posible desplazarse o un obstaculo que es inalcanzable.
+
+La función F() de evaluación calcula el coste de cada nodo, con lo que se eligen los nodos con menor coste para llegar al destino a través del camino óptimo. Esta función está formada por dos funciones a su vez. Una función G() que calcula el coste del camino seguido desde el nodo inicial a ese nodo concreto, y una función H() que hace un estimación del coste del camino desde ese nodo al nodo final o meta.
+
+Al algoritmo comienza desde el nodo inicial explorando los nodos adyacentes o sucesores, cual es de menor coste. Un nodo ya explorado, es decir del que ya se ha buscado sus sucesores, se manda a la lista de nodos cerrados. Con los sucesores se forma una lista de nodos abiertos o por explorar, de la cual se elige el de menor coste para ser el siguiente en ser explorado, hasta que se alcance el nodo meta o no queden más nodos por ser explorados. Si al explorar un nodo esta ya se encontraba en alguna de las listas de nodos abiertos o cerrados, se actualizarán los valores de los nodos al de menor coste encontrado.
+
+\subsubsection{Heurística}
+Al algoritmo A* es completo, lo que significa que encontrará un camino hasta la meta siempre que este exista. Además, para que sea admisible, que significa que siempre encontrará un camino óptimo, su función H() tambíen debe ser admisible.
+
+Una función H() es admisible siempre y cuando no sobreestime el coste del camino desde un nodo hasta la meta. Por ejemplo se puede considerar que el camino desde un nodo hasta la meta será la línea recta.
+
+La admisibilidad del A* trae consigo un gran coste computacional debido al gran número de nodos explorados. Para mejorar la eficiencia podemos dar pesos a las funciones G() y H(), de tal forma que si damos mas valor a G() la búsqueda se expandirá en anchura buscando el camino, mientras que si damos más valor a H() se expandirá más rápido acercandose a la meta.
+
+\subsection{Pseudocódigo}
 
 Además de secciones tenemos subsecciones.
 
