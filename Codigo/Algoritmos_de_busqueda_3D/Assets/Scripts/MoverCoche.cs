@@ -3,20 +3,27 @@ using System.Collections;
 
 
 public class MoverCoche : MonoBehaviour {
-	public bool a_estrella;
-	public bool hybrid_a_estrella;
+	//Compos de la clase
 	private ObtenerMapa mapa;
 	private PathSmoothing path_smoothing;
 	private GameObject coche;
-	int contador_vector;
+	private int contador_vector;
 	private Parrilla parrilla;
 	private bool encontrada_meta;
 	private float inicio;
 	private float final;
-	public float peso;// = 0.5f; //con 1 encuentra el camino mas corto, pero es mas lento. Valores menores intenta acercars a la meta mas rapido aunque no sea en mejor camino
 	private bool error;
+	private ControladorCoche script_algoritmo;
+	private Vector3[] trayectoria;
+	private Vector3 salida_coche;
+	private Vector3 meta;
 
-	[SerializeField] private float velocidad = 1.0f;
+	//Campor para el editor
+	[SerializeField] private bool a_estrella;
+	[SerializeField] private bool hybrid_a_estrella;
+	[SerializeField] private bool path_smoothing_activado;
+	[SerializeField] private float velocidad = 10.0f;
+	[SerializeField] private float peso_heuristica = 0.5f;
 	[SerializeField] private GameObject casilla_abiertos;
 	[SerializeField] private GameObject casilla_cerrados;
 
@@ -27,13 +34,9 @@ public class MoverCoche : MonoBehaviour {
 	// Para dibujar la trayectoria
 	[SerializeField] private LineRenderer m_LineRenderer;
 	// Para usar un algorutmo u otro
-	private ControladorCoche script_algoritmo;
-	private Vector3[] trayectoria;
-	private float radio = 0.35f;
-	private Vector3 salida_coche;
-	private Vector3 meta;
 
-	// Use this for initialization
+
+	// Inicializacion
 	void Start () {
 		error = false;
 		encontrada_meta = false;
@@ -42,7 +45,7 @@ public class MoverCoche : MonoBehaviour {
 
 		mapa = new ObtenerMapa ();
 
-		// get the car controller reference
+		// Elegir algoritmo
 		if (hybrid_a_estrella) {
 			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
 		} else {
@@ -52,19 +55,16 @@ public class MoverCoche : MonoBehaviour {
 		coche = GameObject.FindGameObjectWithTag ("Coche");
 		salida_coche = coche.transform.position;
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
-		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por moticos esteticos
+		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
 
 		//trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
-		script_algoritmo.iniciarPasoAestrella(salida_coche, meta, mapa, parrilla, peso);
-
-
-
+		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, peso_heuristica);
 	}
 	
-	// 
+	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
 	void FixedUpdate () {
 		bool fin;
 
@@ -76,35 +76,34 @@ public class MoverCoche : MonoBehaviour {
 
 		} else if ( !encontrada_meta ) {
 			//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
-			fin = script_algoritmo.pasoAestrella (out error);
+			fin = script_algoritmo.pasoCalcularRuta (out error);
 
 			if (fin) {
 				final = Time.realtimeSinceStartup;
 				encontrada_meta = true;
 				Debug.Log ("A* terminado en " + (final - inicio));
 
+				parrilla.borrarCasillas ();	
 				trayectoria = script_algoritmo.getTrayectoria ();
 
-				//contador_vector = trayectoria.Length - 1;
+				if (path_smoothing_activado) {
+					path_smoothing = new PathSmoothing (mapa, trayectoria);
+					trayectoria = path_smoothing.getTrayectoriaSuavizada ();
+					contador_vector = trayectoria.Length - 1;
+					DibujarTrayectoria (trayectoria, trayectoria.Length);
+				} else {
+					contador_vector = trayectoria.Length - 1;
 
-				parrilla.borrarCasillas ();
-				//DibujarTrayectoria (trayectoria, trayectoria.Length);
-
-				path_smoothing = new PathSmoothing (mapa, trayectoria);
-
-				trayectoria = path_smoothing.getTrayectoriaSuavizada ();
-
-				contador_vector = trayectoria.Length - 1;
-				DibujarTrayectoria (trayectoria, trayectoria.Length);
+					DibujarTrayectoria (trayectoria, trayectoria.Length);
+					
+				}
 			} 
 		}
 	}
 
-	//
+	// Se ejecuta una vez cada frame
 	void Update (){
 		if (encontrada_meta == true) {
-			
-			//if (contador_frames % offset == 0 && contador_vector >= 0) {
 			if (contador_vector >= 0) {
 				bool llegado = false;
 

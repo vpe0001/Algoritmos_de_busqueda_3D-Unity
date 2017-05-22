@@ -20,10 +20,10 @@ public class Hybrid_a_estrella : ControladorCoche {
 		return true;
 	}
 
-	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
 	}
 
-	public override bool pasoAestrella (out bool error) {
+	public override bool pasoCalcularRuta (out bool error) {
 		error = false;
 
 		return false;

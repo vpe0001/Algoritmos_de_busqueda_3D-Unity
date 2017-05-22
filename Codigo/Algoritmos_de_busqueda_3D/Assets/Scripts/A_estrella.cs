@@ -62,7 +62,7 @@ public class A_estrella : ControladorCoche {
 		return llegado;
 	}
 
-	public override void iniciarPasoAestrella(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
 		peso = p_peso;
 
 		abiertos.getEmpty ();
@@ -86,7 +86,7 @@ public class A_estrella : ControladorCoche {
 
 	}
 
-	public override bool pasoAestrella (out bool error) {
+	public override bool pasoCalcularRuta (out bool error) {
 		error = false;
 
 		if (abiertos.count () > 0 && !meta_encontrada) {
@@ -156,9 +156,9 @@ public class A_estrella : ControladorCoche {
 		bool error;
 		peso = p_peso;
 		
-		iniciarPasoAestrella(inicio, meta, mapa, parrilla, peso);
+		iniciarCalcularRuta(inicio, meta, mapa, parrilla, peso);
 
-		while (!pasoAestrella (out error)) {
+		while (!pasoCalcularRuta (out error)) {
 		}
 			
 		return v_trayectoria;
