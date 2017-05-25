@@ -22,6 +22,8 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private bool a_estrella;
 	[SerializeField] private bool hybrid_a_estrella;
 	[SerializeField] private bool path_smoothing_activado;
+	[SerializeField] private bool ps_bezier;
+	[SerializeField] private bool ps_descenso_gradiente;
 	[SerializeField] private float velocidad = 10.0f;
 	[SerializeField] private float peso_heuristica = 0.5f;
 	[SerializeField] private GameObject casilla_abiertos;
@@ -88,7 +90,16 @@ public class MoverCoche : MonoBehaviour {
 
 				if (path_smoothing_activado) {
 					path_smoothing = new PathSmoothing (mapa, trayectoria);
-					trayectoria = path_smoothing.getTrayectoriaSuavizada ();
+
+					if (ps_bezier) {
+						trayectoria = path_smoothing.getTrayectoriaSuavizadaCurvasBezier ();	
+					} else if (ps_descenso_gradiente) {
+						trayectoria = path_smoothing.getTrayectoriaDescensoGradiente ();	
+					} else {
+						trayectoria = path_smoothing.eliminarZigZag(trayectoria);
+						trayectoria = path_smoothing.eliminarZigZag(trayectoria);	
+					}
+						
 					contador_vector = trayectoria.Length - 1;
 					DibujarTrayectoria (trayectoria, trayectoria.Length);
 				} else {

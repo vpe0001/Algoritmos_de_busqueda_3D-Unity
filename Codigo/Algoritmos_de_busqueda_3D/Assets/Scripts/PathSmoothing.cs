@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public class PathSmoothing {
 	private ObtenerMapa  mapa;
 	private Vector3[] trayectoria;
-	private Vector3[] suavizada;
-	private Vector3[] sinzigzag;
 	private float peso_trayectoria;
 	private float peso_suavizado;
 	private float tolerancia;
@@ -16,26 +14,35 @@ public class PathSmoothing {
 		mapa = p_mapa;
 		trayectoria = p_trayectoria;
 
-		peso_trayectoria = 0.9f;
+		peso_trayectoria = 0.5f;
 		peso_suavizado = 0.1f;
 		tolerancia = 0.000001f;
 
 		num_puntos_bezier = 10.0f;
 	}
 
-	public Vector3 [] getTrayectoriaSuavizada () {
-		//Hacemos dos pasadas para mejorar la eliminacion del zigzag
-		eliminarZigZag (trayectoria);
-		eliminarZigZag (sinzigzag);
+	public Vector3 [] getTrayectoriaSuavizadaCurvasBezier () {
+		Vector3[] suavizada;
+		Vector3[] sinzigzag;
 
-		//descensoGradiente ();
-		curvaBezier();
-		//suavizada = sinzigzag;
+		//Hacemos dos pasadas para mejorar la eliminacion del zigzag
+		sinzigzag = eliminarZigZag (trayectoria);
+		sinzigzag = eliminarZigZag (sinzigzag);
+
+		suavizada = curvaBezier(sinzigzag);
 
 		return suavizada;
 	}
 
-	private void eliminarZigZag (Vector3[] p_trayectoria) {
+	public Vector3 [] getTrayectoriaDescensoGradiente () {
+		Vector3[] suavizada;
+
+		suavizada = descensoGradiente (trayectoria);
+
+		return suavizada;
+	}
+
+	public Vector3 [] eliminarZigZag (Vector3[] p_trayectoria) {
 		int size_trayectoria = p_trayectoria.Length;
 		LinkedList<Vector3> nueva = new LinkedList<Vector3> ();
 		Vector3 actual;
@@ -72,45 +79,39 @@ public class PathSmoothing {
 			i++;
 		}
 
-		sinzigzag = temp;
-
+		return temp;
 	}
 
 	//
-	private void descensoGradiente (){
-		//Vector3[] temporal = (Vector3[])sinzigzag.Clone();
-		Vector3[] temporal = (Vector3[]) trayectoria.Clone();
+	public Vector3 [] descensoGradiente (Vector3[] p_trayectoria){
+		Vector3[] nueva_trayectoria = (Vector3[]) p_trayectoria.Clone();
 		float error = tolerancia * 10.0f;
 
 		while (error > tolerancia) {
+			//Vector3[] temporal = (Vector3[]) nueva_trayectoria.Clone();
 			error = 0.0f;
 
-			for (int i = 1; i < (temporal.Length -1) ; i++) {
-				Vector3 aux = temporal [i];
+			for (int i = 1; i < (nueva_trayectoria.Length -1) ; i++) {
+				
+				Vector3 aux = nueva_trayectoria [i];
 
-				/*
-				temporal [i].x += peso_trayectoria * (sinzigzag[i].x - temporal[i].x);	
-				temporal [i].y += peso_trayectoria * (sinzigzag[i].y - temporal[i].y);	
-				temporal [i].z += peso_trayectoria * (sinzigzag[i].z - temporal[i].z);
-				*/
+				nueva_trayectoria [i].x += peso_trayectoria * (trayectoria[i].x - nueva_trayectoria[i].x);	
+				nueva_trayectoria [i].y += peso_trayectoria * (trayectoria[i].y - nueva_trayectoria[i].y);	
+				nueva_trayectoria [i].z += peso_trayectoria * (trayectoria[i].z - nueva_trayectoria[i].z);
 
-				temporal [i].x += peso_trayectoria * (trayectoria[i].x - temporal[i].x);	
-				temporal [i].y += peso_trayectoria * (trayectoria[i].y - temporal[i].y);	
-				temporal [i].z += peso_trayectoria * (trayectoria[i].z - temporal[i].z);
+				nueva_trayectoria [i].x += peso_suavizado * (nueva_trayectoria[i+1].x + nueva_trayectoria[i-1].x - (2 * nueva_trayectoria[i].x));	
+				nueva_trayectoria [i].y += peso_suavizado * (nueva_trayectoria[i+1].y + nueva_trayectoria[i-1].y - (2 * nueva_trayectoria[i].y));	
+				nueva_trayectoria [i].z += peso_suavizado * (nueva_trayectoria[i+1].z + nueva_trayectoria[i-1].z - (2 * nueva_trayectoria[i].z));
 
-
-				temporal [i].x += peso_suavizado * (temporal[i+1].x - temporal[i-1].x - (2 * temporal[i].x));	
-				temporal [i].y += peso_suavizado * (temporal[i+1].y - temporal[i-1].y - (2 * temporal[i].y));	
-				temporal [i].z += peso_suavizado * (temporal[i+1].z - temporal[i-1].z - (2 * temporal[i].z));
-
-				error += Mathf.Abs(aux.x - temporal [i].x) + Mathf.Abs(aux.y - temporal [i].y) + Mathf.Abs(aux.z - temporal [i].z);
+				error += Mathf.Abs(aux.x - nueva_trayectoria [i].x) + Mathf.Abs(aux.y - nueva_trayectoria [i].y) + Mathf.Abs(aux.z - nueva_trayectoria [i].z);
 			}
 		}
 
-		suavizada = temporal;
+		return nueva_trayectoria;
 	}
 
-	private void curvaBezier() {
+	public Vector3 [] curvaBezier(Vector3[] sinzigzag) {
+		Vector3[] suavizada;
 		LinkedList <Vector3> trayectoriaBezier = new LinkedList<Vector3> ();
 		int size = sinzigzag.Length;
 		int i = 0;
@@ -147,6 +148,8 @@ public class PathSmoothing {
 			suavizada [i] = vector_nuevo;
 			i++;
 		}
+
+		return suavizada;
 	}
 
 	private Vector3 vectorBezier (float bezierT, Vector3 punto1, Vector3 punto2, Vector3 punto3) {

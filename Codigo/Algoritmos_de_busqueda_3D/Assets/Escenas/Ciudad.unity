@@ -200,6 +200,8 @@ MonoBehaviour:
   a_estrella: 1
   hybrid_a_estrella: 0
   path_smoothing_activado: 1
+  ps_bezier: 1
+  ps_descenso_gradiente: 0
   velocidad: 10
   peso_heuristica: 0.5
   casilla_abiertos: {fileID: 1741385352}
