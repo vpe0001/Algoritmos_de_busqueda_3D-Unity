@@ -5,8 +5,7 @@ using System.Collections;
 
 //public class ObtenerMapa : MonoBehaviour  {
 public class ObtenerMapa  {
-	private Vector3[] vectores;
-	private Vector3[] bordes;
+	private Vector3[] vertices;
 	private float radio;
 
 	// Use this for initialization
@@ -14,12 +13,12 @@ public class ObtenerMapa  {
 		NavMeshTriangulation mapa;
 
 		mapa = NavMesh.CalculateTriangulation ();
-		vectores = mapa.vertices;
+		vertices = mapa.vertices;
 		radio = 0.01f;
 	}
 
-	public Vector3[] getBordes (){
-		return vectores;
+	public Vector3[] getVertices (){
+		return vertices;
 	}
 
 	public bool esRecorrible (Vector3 posicion) {
@@ -27,11 +26,7 @@ public class ObtenerMapa  {
 		NavMeshHit punto_cercano;
 		//float radio = 0.25f; // debe ser lo mas pequeño posible 0.17f
 
-		//Debug.Log ("esRecorrible? " + posicion);
-
 		recorrible = NavMesh.SamplePosition (posicion, out punto_cercano, radio, NavMesh.AllAreas);
-
-		//Debug.Log ("esRecorrible: " + recorrible);
 
 		return recorrible;
 	}

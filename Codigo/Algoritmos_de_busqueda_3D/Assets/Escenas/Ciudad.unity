@@ -163,6 +163,7 @@ GameObject:
   - 54: {fileID: 20116588}
   - 114: {fileID: 20116590}
   - 114: {fileID: 20116589}
+  - 114: {fileID: 20116591}
   m_Layer: 0
   m_Name: Coche
   m_TagString: Coche
@@ -199,11 +200,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   a_estrella: 1
   hybrid_a_estrella: 0
+  a_estrella_vertices: 0
   path_smoothing_activado: 1
-  ps_bezier: 1
+  ps_bezier: 0
   ps_descenso_gradiente: 0
   velocidad: 10
-  peso_heuristica: 0.5
+  peso_heuristica: 0.8
   casilla_abiertos: {fileID: 1741385352}
   casilla_cerrados: {fileID: 2086596742}
   m_WheelColliders:
@@ -252,6 +254,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2b65969fd58e4ea3b5c48adf5c09081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &20116591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 20116585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37c3ea897af9f49f4a72b7173dbad4af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &46108263

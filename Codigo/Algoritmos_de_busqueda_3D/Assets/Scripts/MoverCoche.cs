@@ -21,9 +21,12 @@ public class MoverCoche : MonoBehaviour {
 	//Campor para el editor
 	[SerializeField] private bool a_estrella;
 	[SerializeField] private bool hybrid_a_estrella;
+	[SerializeField] private bool a_estrella_vertices;
+
 	[SerializeField] private bool path_smoothing_activado;
 	[SerializeField] private bool ps_bezier;
 	[SerializeField] private bool ps_descenso_gradiente;
+
 	[SerializeField] private float velocidad = 10.0f;
 	[SerializeField] private float peso_heuristica = 0.5f;
 	[SerializeField] private GameObject casilla_abiertos;
@@ -49,9 +52,14 @@ public class MoverCoche : MonoBehaviour {
 
 		// Elegir algoritmo
 		if (hybrid_a_estrella) {
+			Debug.Log ("Usando Hybrid A Estrella");
 			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
-		} else {
+		} else if (a_estrella) {
+			Debug.Log ("Usando A Estrella");
 			script_algoritmo = GetComponent<A_estrella> ();
+		} else if (a_estrella_vertices) {
+			Debug.Log ("Usando Hybrid A Estrella con vertices");
+			script_algoritmo = GetComponent<A_estrella_vertices> ();
 		}
 			
 		coche = GameObject.FindGameObjectWithTag ("Coche");
@@ -83,7 +91,7 @@ public class MoverCoche : MonoBehaviour {
 			if (fin) {
 				final = Time.realtimeSinceStartup;
 				encontrada_meta = true;
-				Debug.Log ("A* terminado en " + (final - inicio));
+				Debug.Log ("Ruta calculada en: " + (final - inicio));
 
 				parrilla.borrarCasillas ();	
 				trayectoria = script_algoritmo.getTrayectoria ();
@@ -97,7 +105,6 @@ public class MoverCoche : MonoBehaviour {
 						trayectoria = path_smoothing.getTrayectoriaDescensoGradiente ();	
 					} else {
 						trayectoria = path_smoothing.eliminarZigZag(trayectoria);
-						trayectoria = path_smoothing.eliminarZigZag(trayectoria);	
 					}
 						
 					contador_vector = trayectoria.Length - 1;

@@ -27,7 +27,7 @@ public class PathSmoothing {
 
 		//Hacemos dos pasadas para mejorar la eliminacion del zigzag
 		sinzigzag = eliminarZigZag (trayectoria);
-		sinzigzag = eliminarZigZag (sinzigzag);
+		//sinzigzag = eliminarZigZag (sinzigzag);
 
 		suavizada = curvaBezier(sinzigzag);
 
@@ -54,18 +54,33 @@ public class PathSmoothing {
 		visible = p_trayectoria [1];
 		siguiente = p_trayectoria [2];
 
+		//actual = p_trayectoria [size_trayectoria-1];
+		//visible = p_trayectoria [size_trayectoria-2];
+		//siguiente = p_trayectoria [size_trayectoria-3];
+		//i = size_trayectoria - 3;
+
 		nueva.AddLast(actual);
 
 		while ( i < size_trayectoria ) {
+		//while ( i >= 0 ) {
 			siguiente = p_trayectoria [i];
 
 			if (mapa.lineaVision(actual, siguiente)) {
 				visible = siguiente;
 				i++;
+				//i--;
 			} else {
-				nueva.AddLast (visible);
+				if (visible == actual) {
+					actual = siguiente;
+					visible = siguiente;
+					nueva.AddLast (siguiente);
 
-				actual = visible;
+					i++;
+				} else {
+					nueva.AddLast (visible);
+
+					actual = visible;
+				}
 			}
 		}
 

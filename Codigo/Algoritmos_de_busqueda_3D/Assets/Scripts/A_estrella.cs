@@ -5,19 +5,20 @@ using Priority_Queue;
 
 public class A_estrella : ControladorCoche {
 	
-	private Cerrados cerrados = new Cerrados ();
-	private List <Nodo> sucesores = new List <Nodo> ();
-	private Abiertos abiertos = new Abiertos (100000);
-	private Vector3[] v_trayectoria;
-	private Vector3 vector_inicio;
-	private Vector3 vector_meta;
-	private ObtenerMapa mapa;
-	private Parrilla parrilla;
-	private Nodo nodo_final;
-	private Nodo nodo_actual;
-	private Nodo nodo_inicio;
-	private bool meta_encontrada;
-	private float peso;
+	protected Cerrados cerrados = new Cerrados ();
+	protected List <Nodo> sucesores = new List <Nodo> ();
+	protected Abiertos abiertos = new Abiertos (100000);
+	protected Vector3[] v_trayectoria;
+	protected Vector3 vector_inicio;
+	protected Vector3 vector_meta;
+	protected ObtenerMapa mapa;
+	protected Parrilla parrilla;
+	protected Nodo nodo_final;
+	protected Nodo nodo_actual;
+	protected Nodo nodo_inicio;
+	protected bool meta_encontrada;
+	protected float peso;
+	protected HashSet <Vector3> vertices;
 
 	public override void MoverCoche (WheelCollider[] m_WheelColliders, GameObject[] m_WheelMeshes) {
 		float thrustTorque = 5000000f; 
@@ -44,6 +45,7 @@ public class A_estrella : ControladorCoche {
 		bool llegado = false;
 		Vector3 movimiento;
 
+		//Desactivamos las fisicas del coche porque no vamos a usarlas para moverlo en este metodo
 		coche.GetComponent<Rigidbody> ().isKinematic = true;
 		coche.GetComponent<Rigidbody> ().detectCollisions = false; 
 
@@ -55,14 +57,15 @@ public class A_estrella : ControladorCoche {
 			coche.GetComponent<Rigidbody> ().MovePosition (movimiento);
 
 		}
-
-
+			
 		//coche.transform.position = posicion;
 
 		return llegado;
 	}
 
 	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
+		Vector3[] array_vertices;
+
 		peso = p_peso;
 
 		abiertos.getEmpty ();
@@ -72,6 +75,16 @@ public class A_estrella : ControladorCoche {
 		vector_meta = v_meta;
 		mapa = v_mapa;
 		parrilla = v_parrilla;
+
+		vertices = new HashSet<Vector3> ();
+		array_vertices = mapa.getVertices ();
+
+		foreach (Vector3 vertice in array_vertices){
+			vertices.Add (vertice);
+		}
+
+		vertices.Add (vector_meta);
+
 
 		meta_encontrada = false;
 
@@ -164,7 +177,7 @@ public class A_estrella : ControladorCoche {
 		return v_trayectoria;
 	}
 
-	private List <Nodo> CalcularSucesores (Nodo n_actual, Vector3 meta, ObtenerMapa mapa) {
+	protected virtual List <Nodo> CalcularSucesores (Nodo n_actual, Vector3 meta, ObtenerMapa mapa) {
 		List <Nodo> sucesores = new List <Nodo> ();
 		const int num_sucesores = 8; //las 8 direcciones posibles
 		Vector3[] movimientos = new Vector3[num_sucesores] {
@@ -200,15 +213,14 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
-	private List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
+	protected List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
 		List <Nodo> sucesores = new List<Nodo> ();
 
 		foreach (Nodo sucesor_valido in sucesor) {
-			
-			//if ( mapa.esRecorrible(sucesor_valido.vector) ){
 			//Comprobamos las dos direcciones porque hemos encontrado que no siempre, aunque deberia, da el mismo resultado
 			//Asi evitamos bugs debido a que sea visible/alcanzable desde una direccion pero no desde la otra
 			if ( mapa.lineaVision (sucesor_valido.padre.vector, sucesor_valido.vector) && mapa.lineaVision (sucesor_valido.vector, sucesor_valido.padre.vector)){
+			//if ( mapa.lineaVision (sucesor_valido.padre.vector, sucesor_valido.vector)){
 				sucesores.Add (sucesor_valido);
 			}
 		}
@@ -217,7 +229,7 @@ public class A_estrella : ControladorCoche {
 	}
 
 
-	private bool esMeta(Nodo nodo, Vector3 meta) {
+	protected bool esMeta(Nodo nodo, Vector3 meta) {
 		bool es_meta = false;
 
 		if (nodo.vector == meta){
@@ -227,14 +239,14 @@ public class A_estrella : ControladorCoche {
 		return es_meta;
 	}
 
-	private float funcionG(Nodo nodo){
+	protected float funcionG(Nodo nodo){
 		float coste = 0;
 		Vector3 distancia;
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector - nodo.padre.vector;
 		}else {
-			distancia = new Vector3(0.0f, 0.0f, 0.0f);
+			distancia = nodo.vector - nodo_inicio.vector;
 		}
 
 		coste = distancia.magnitude;
@@ -242,7 +254,7 @@ public class A_estrella : ControladorCoche {
 		return coste;
 	}
 
-	private float funcionH(Nodo nodo, Vector3 meta){
+	protected float funcionH(Nodo nodo, Vector3 meta){
 		float coste = 0;
 
 		Vector3 distancia;
@@ -252,7 +264,7 @@ public class A_estrella : ControladorCoche {
 		return coste;
 	}
 
-	private Vector3[] vectoresCamino (Nodo nodo_final){
+	protected Vector3[] vectoresCamino (Nodo nodo_final){
 		int size = 0;
 		int i = 0;
 		Nodo meta = nodo_final;
@@ -272,239 +284,6 @@ public class A_estrella : ControladorCoche {
 		}
 			
 		return camino;
-	}
-
-	private class Nodo : FastPriorityQueueNode {
-		public Vector3 vector;
-		public Nodo padre;
-		public float coste;
-		public float costeH;
-		public float costeG;
-
-		public Nodo (){}
-
-		public Nodo (Vector3 _vector, Nodo _padre, float _coste, float _costeG, float _costeH){
-			vector = _vector;
-			padre = _padre;
-			coste = _coste;
-			costeH = _costeH;
-			costeG = _costeG;
-		}
-	}
-
-	private class Abiertos {
-		//private List <Nodo> abiertos;
-		//private IComparer <Nodo> comparador;
-		private FastPriorityQueue <Nodo> abiertos;
-		//private SortedList <Nodo, Nodo> abiertos;
-		//Queue <Nodo> prueba = new Queue<Nodo> ();
-
-		public Abiertos (int max_num_nodos){
-			//abiertos = new List <Nodo> ();
-			//comparador = new ComparadorNodos ();
-			abiertos = new FastPriorityQueue<Nodo>(max_num_nodos);
-
-			//abiertos = new SortedList <Nodo, Nodo> (new ComparadorNodosParaSorted());
-		}
-
-		public void add (Nodo nodo) {
-			abiertos.Enqueue(nodo, nodo.coste);
-		}
-
-		public bool comprobar (Nodo nodo) {
-			Nodo encontrado;
-
-			return find (nodo, out encontrado);
-			//return abiertos.Contains(nodo);
-		}
-
-		public bool delete (Nodo nodo) {
-			bool existe = false;
-
-			existe = comprobar (nodo);
-
-			if (existe) {
-				abiertos.Remove (nodo);
-			}
-
-			return existe;
-		}
-
-		public bool find (Nodo nodo, out Nodo encontrado) {
-			bool existe = false;
-			encontrado = null;
-
-			//existe = comprobar (nodo);
-
-			foreach (Nodo n in abiertos){
-				if (n.vector == nodo.vector) {
-					encontrado = n;
-					existe = true;
-
-					break;
-				}
-			}
-
-			return existe;
-		}
-
-		public Nodo getFirst (){
-			/*
-			Nodo primero = null;
-
-			if (abiertos.Count > 0) {
-				primero = abiertos.Keys [0];
-				abiertos.RemoveAt (0);
-			}
-			*/
-				
-			return abiertos.Dequeue ();
-		}
-			
-
-		public IEnumerator GetEnumerator(){
-			return abiertos.GetEnumerator ();
-		}
-
-		public int count (){
-			return abiertos.Count;
-		}
-
-		public void updatePrioridad (Nodo nodo, float prioridad){
-			abiertos.UpdatePriority (nodo, prioridad);
-		}
-
-		public void getEmpty (){
-			abiertos.Clear ();
-		}
-			
-	}
-
-	private class Cerrados {
-		//private List <Nodo> cerrados;
-		private SortedDictionary <Vector3, Nodo> cerrados;
-
-		public Cerrados (){
-			//cerrados = new List <Nodo> ();
-			cerrados = new SortedDictionary <Vector3, Nodo> (new ComparadorVectores());
-			//cerrados = new SortedDictionary <Vector3, Nodo> ();
-		}
-
-		public bool add (Nodo nodo) {
-			bool existe = false;
-
-			existe = comprobar (nodo);
-
-			if (!existe) {
-				cerrados.Add (nodo.vector, nodo);
-			}
-
-			return existe;
-		}
-
-		public bool comprobar (Nodo nodo) {
-			return cerrados.ContainsKey(nodo.vector);
-		}
-
-		public bool delete (Nodo nodo) {
-			return cerrados.Remove(nodo.vector);
-		}
-
-		public bool find (Nodo nodo, out Nodo encontrado) {
-			return cerrados.TryGetValue(nodo.vector, out encontrado);
-		}
-
-		public SortedDictionary <Vector3, Nodo>.Enumerator GetEnumerator(){
-			return cerrados.GetEnumerator();
-		}
-
-		public int count (){
-			return cerrados.Count;
-		}
-
-		public void getEmpty (){
-			cerrados.Clear ();
-		}
-	}
-
-	private class ComparadorNodos : IComparer<Nodo> {
-		// 0 si son iguales 
-		// -1 si x es menor
-		// 1 si x es mayor
-
-		public int Compare(Nodo x, Nodo y) {
-			int mayor = 0;
-
-			if (x.coste < y.coste){
-				mayor = -1;
-			}else if (x.coste > y.coste) {
-				mayor = 1;
-			}
-
-			return mayor;
-		}
-	}
-
-	private class ComparadorNodosParaSorted : IComparer<Nodo> {
-		// 0 si son iguales 
-		// -1 si x es menor
-		// 1 si x es mayor
-
-		public int Compare(Nodo x, Nodo y) {
-			int mayor = 0;
-
-			if (x.vector == y.vector){
-				mayor = 0;
-			} else {
-				if (x.coste < y.coste){
-					mayor = -1;
-				}else if (x.coste > y.coste) {
-					mayor = 1;
-				}
-			}
-
-			return mayor;
-		}
-	}
-
-	private class ComparadorVectores : IComparer<Vector3> {
-		// 0 si son iguales 
-		// -1 si x es menor
-		// 1 si x es mayor
-
-		public int Compare(Vector3 vector_1, Vector3 vector_2) {
-			int mayor = 0;
-
-			if (vector_1.x == vector_2.x && vector_1.y == vector_2.y && vector_1.z == vector_2.z){
-				mayor = 0;
-			}else {
-				if (vector_1.magnitude < vector_2.magnitude) {
-					mayor = -1;
-				} else {
-					mayor = 1;
-				}
-			}
-
-			return mayor;
-		}
-	}
-
-	private class ComparadorIgualdadVectores : IEqualityComparer<Vector3> {
-		
-		public bool Equals (Vector3 vector_1, Vector3 vector_2) {
-			bool iguales = false;
-
-			if (vector_1.x == vector_2.x && vector_1.y == vector_2.y && vector_1.z == vector_2.z) {
-				iguales = true;
-			}
-
-			return iguales;
-		}
-
-		public int GetHashCode (Vector3 vector) {
-			return vector.GetHashCode ();
-		}
-		
 	}
 
 }

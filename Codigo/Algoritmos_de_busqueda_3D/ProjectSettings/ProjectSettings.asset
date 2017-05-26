@@ -10,7 +10,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: UBU
-  productName: "Algoritmos de b\xFAsqueda 3D"
+  productName: Algoritmos de busqueda 3D
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_ShowUnitySplashScreen: 1
@@ -93,7 +93,17 @@ PlayerSettings:
     Others: 1
   bundleIdentifier: com.unity.sampleassets
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   xboxOneDisableKinectGpuReservation: 0

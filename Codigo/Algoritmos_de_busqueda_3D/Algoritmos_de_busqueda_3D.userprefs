@@ -1,12 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PathSmoothing.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/A_estrella.cs">
     <Files>
-      <File FileName="Assets/Editor/Tests/PathSmoothingTests.cs" Line="49" Column="68" />
-      <File FileName="Assets/Scripts/PathSmoothing.cs" Line="40" Column="45" />
-      <File FileName="Assets/Scripts/MoverCoche.cs" Line="66" Column="1" />
-      <File FileName="Assets/Scripts/A_estrella.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/A_estrella.cs" Line="223" Column="6" />
+      <File FileName="Assets/Scripts/PathSmoothing.cs" Line="30" Column="5" />
       <File FileName="Assets/Scripts/ObtenerMapa.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/MoverCoche.cs" Line="94" Column="35" />
       <File FileName="Assets/Scripts/ControladorCoche.cs" Line="1" Column="1" />
       <File FileName="Assets/Standard Assets/Vehicles/Car/Scripts/CarController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Hybrid_a_estrella.cs" Line="1" Column="1" />
@@ -16,7 +15,9 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Assets/Scripts/ObtenerMapa.cs" line="25" column="1" />
+      <Breakpoint file="/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Assets/Scripts/A_estrella.cs" line="89" column="1" />
+      <Breakpoint file="/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Assets/Scripts/PathSmoothing.cs" line="65" column="1" />
+      <Breakpoint file="/home/ice/Uni/Proyecto/Repositorio/Codigo/Algoritmos_de_busqueda_3D/Assets/Scripts/PathSmoothing.cs" line="68" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
