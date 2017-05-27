@@ -74,6 +74,7 @@
      <Compile Include="Assets\Scripts\PriorityQueue\FastPriorityQueueNode.cs" />
      <Compile Include="Assets\Scripts\PriorityQueue\IFixedSizePriorityQueue.cs" />
      <Compile Include="Assets\Scripts\PriorityQueue\IPriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\Theta_estrella.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />

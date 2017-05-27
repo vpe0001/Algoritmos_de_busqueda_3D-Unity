@@ -74,15 +74,15 @@ NavMeshSettings:
   m_ObjectHideFlags: 0
   m_BuildSettings:
     serializedVersion: 2
-    agentRadius: 2.3
+    agentRadius: 2
     agentHeight: 1.5
-    agentSlope: 13.1
-    agentClimb: 0.1
+    agentSlope: 0
+    agentClimb: 0
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     accuratePlacement: 0
     minRegionArea: 2
-    cellSize: 0.76666665
+    cellSize: 0.6666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 23800000, guid: a12cda35d41634e39a14b5f865f1dcb3, type: 2}
 --- !u!1 &15412629
@@ -164,6 +164,7 @@ GameObject:
   - 114: {fileID: 20116590}
   - 114: {fileID: 20116589}
   - 114: {fileID: 20116591}
+  - 114: {fileID: 20116592}
   m_Layer: 0
   m_Name: Coche
   m_TagString: Coche
@@ -198,13 +199,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e433e0b23f8d0439e86199c987539242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a_estrella: 1
+  a_estrella: 0
+  a_estrella_vertices: 1
+  theta_estrella: 0
   hybrid_a_estrella: 0
-  a_estrella_vertices: 0
+  pid_control: 0
   path_smoothing_activado: 1
-  ps_bezier: 0
+  ps_bezier: 1
   ps_descenso_gradiente: 0
-  velocidad: 10
+  velocidad: 15
   peso_heuristica: 0.8
   casilla_abiertos: {fileID: 1741385352}
   casilla_cerrados: {fileID: 2086596742}
@@ -265,6 +268,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37c3ea897af9f49f4a72b7173dbad4af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &20116592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 20116585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 324ddedffc0b44b0d9faae1fdbc2e879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &46108263
@@ -918,7 +932,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 351572356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15, y: 1.5, z: 20}
+  m_LocalPosition: {x: -15, y: 1.5, z: 10}
   m_LocalScale: {x: 10, y: 3, z: 3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -2576,7 +2590,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1588314361}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 10}
+  m_LocalPosition: {x: 0, y: 1.5, z: 20}
   m_LocalScale: {x: 17, y: 3, z: 3}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []

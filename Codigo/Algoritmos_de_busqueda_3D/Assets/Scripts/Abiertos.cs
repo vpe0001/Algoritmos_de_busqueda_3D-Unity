@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Priority_Queue;
 
 public class Abiertos {
 	//private List <Nodo> abiertos;
 	//private IComparer <Nodo> comparador;
 	private FastPriorityQueue <Nodo> abiertos;
+	private HashSet <Vector3> abiertos_comprobar;
 	//private SortedList <Nodo, Nodo> abiertos;
 	//Queue <Nodo> prueba = new Queue<Nodo> ();
 
@@ -13,12 +15,14 @@ public class Abiertos {
 		//abiertos = new List <Nodo> ();
 		//comparador = new ComparadorNodos ();
 		abiertos = new FastPriorityQueue<Nodo>(max_num_nodos);
+		abiertos_comprobar = new HashSet<Vector3> (new ComparadorIgualdadVectores());
 
 		//abiertos = new SortedList <Nodo, Nodo> (new ComparadorNodosParaSorted());
 	}
 
 	public void add (Nodo nodo) {
 		abiertos.Enqueue(nodo, nodo.coste);
+		abiertos_comprobar.Add (nodo.vector);
 	}
 
 	public bool comprobar (Nodo nodo) {
@@ -35,10 +39,35 @@ public class Abiertos {
 
 		if (existe) {
 			abiertos.Remove (nodo);
+			abiertos_comprobar.Remove (nodo.vector);
 		}
 
 		return existe;
 	}
+	/*
+	public bool find (Nodo nodo, out Nodo encontrado) {
+		bool existe = false;
+		bool aniadido = false;
+		encontrado = null;
+
+		aniadido = abiertos_comprobar.Contains (nodo.vector);
+
+		if (aniadido) { //no esta en abiertos;
+			
+			existe = true;
+
+			foreach (Nodo n in abiertos){
+				if (n.vector == nodo.vector) {
+					encontrado = n;
+
+					break;
+				}
+			}
+		}
+
+		return existe;
+	}
+	*/
 
 	public bool find (Nodo nodo, out Nodo encontrado) {
 		bool existe = false;
@@ -57,6 +86,7 @@ public class Abiertos {
 
 		return existe;
 	}
+
 
 	public Nodo getFirst (){
 		/*

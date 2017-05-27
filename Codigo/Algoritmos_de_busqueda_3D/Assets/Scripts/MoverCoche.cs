@@ -20,8 +20,11 @@ public class MoverCoche : MonoBehaviour {
 
 	//Campor para el editor
 	[SerializeField] private bool a_estrella;
-	[SerializeField] private bool hybrid_a_estrella;
 	[SerializeField] private bool a_estrella_vertices;
+	[SerializeField] private bool theta_estrella;
+	[SerializeField] private bool hybrid_a_estrella;
+
+	[SerializeField] private bool pid_control;
 
 	[SerializeField] private bool path_smoothing_activado;
 	[SerializeField] private bool ps_bezier;
@@ -43,6 +46,8 @@ public class MoverCoche : MonoBehaviour {
 
 	// Inicializacion
 	void Start () {
+		int tam_parrilla;
+
 		error = false;
 		encontrada_meta = false;
 
@@ -58,20 +63,26 @@ public class MoverCoche : MonoBehaviour {
 			Debug.Log ("Usando A Estrella");
 			script_algoritmo = GetComponent<A_estrella> ();
 		} else if (a_estrella_vertices) {
-			Debug.Log ("Usando Hybrid A Estrella con vertices");
+			Debug.Log ("Usando A Estrella con vertices");
 			script_algoritmo = GetComponent<A_estrella_vertices> ();
+		}else if (theta_estrella) {
+			Debug.Log ("Usando Theta Estrella");
+			script_algoritmo = GetComponent<Theta_estrella> ();
 		}
 			
 		coche = GameObject.FindGameObjectWithTag ("Coche");
 		salida_coche = coche.transform.position;
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
+		tam_parrilla = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.x * 10.0f)
+			* (GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.z * 10.0f));
+
 
 		//trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
-		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, peso_heuristica);
+		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, peso_heuristica, tam_parrilla);
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame

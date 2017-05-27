@@ -5,9 +5,9 @@ using Priority_Queue;
 
 public class A_estrella : ControladorCoche {
 	
-	protected Cerrados cerrados = new Cerrados ();
-	protected List <Nodo> sucesores = new List <Nodo> ();
-	protected Abiertos abiertos = new Abiertos (100000);
+	protected Cerrados cerrados;
+	protected List <Nodo> sucesores;
+	protected Abiertos abiertos;
 	protected Vector3[] v_trayectoria;
 	protected Vector3 vector_inicio;
 	protected Vector3 vector_meta;
@@ -63,8 +63,12 @@ public class A_estrella : ControladorCoche {
 		return llegado;
 	}
 
-	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla) {
 		Vector3[] array_vertices;
+
+		cerrados = new Cerrados ();
+		sucesores = new List <Nodo> ();
+		abiertos = new Abiertos (tam_parrilla);
 
 		peso = p_peso;
 
@@ -165,11 +169,11 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla, float p_peso) {
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla, float p_peso, int tam_parrilla) {
 		bool error;
 		peso = p_peso;
 		
-		iniciarCalcularRuta(inicio, meta, mapa, parrilla, peso);
+		iniciarCalcularRuta(inicio, meta, mapa, parrilla, peso, tam_parrilla);
 
 		while (!pasoCalcularRuta (out error)) {
 		}
@@ -190,16 +194,8 @@ public class A_estrella : ControladorCoche {
 			new Vector3 (1.0f, 0.0f, 0.0f),  // izquiera
 			new Vector3 (1.0f, 0.0f, 1.0f)   // adelante izquierda
 		};
-
-		//cada nodo 8 posibles sucesores
-		Nodo[] sucesor = new Nodo[num_sucesores];
-
-		for (int i=0; i < num_sucesores; i++){
-			sucesor [i] = new Nodo ();
-			sucesor [i].vector = n_actual.vector + movimientos[i];
-			sucesor [i].padre = n_actual;
-		}
-
+			
+		Nodo[] sucesor = rellenarSucesores(num_sucesores, n_actual, movimientos);
 
 		sucesores = SucesoresValidos (sucesor, mapa);
 
@@ -210,6 +206,18 @@ public class A_estrella : ControladorCoche {
 		}
 			
 		return sucesores;
+	}
+
+	protected virtual Nodo [] rellenarSucesores (int num_sucesores, Nodo n_actual, Vector3[] movimientos){
+		Nodo[] sucesor = new Nodo[num_sucesores];
+
+		for (int i=0; i < num_sucesores; i++){
+			sucesor [i] = new Nodo ();
+			sucesor [i].vector = n_actual.vector + movimientos[i];
+			sucesor [i].padre = n_actual;
+		}
+
+		return sucesor;
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
