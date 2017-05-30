@@ -11,6 +11,8 @@ TagManager:
   - Parrilla
   - CasillaCerrados
   - CasillaAbiertos
+  - EjeDelantero
+  - EjeTrasero
   layers:
   - Default
   - TransparentFX

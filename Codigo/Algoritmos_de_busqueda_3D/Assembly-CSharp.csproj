@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\MoverCoche.cs" />
      <Compile Include="Assets\Scripts\Nodo.cs" />
      <Compile Include="Assets\Scripts\ObtenerMapa.cs" />
+     <Compile Include="Assets\Scripts\PID_control.cs" />
      <Compile Include="Assets\Scripts\Parrilla.cs" />
      <Compile Include="Assets\Scripts\PathSmoothing.cs" />
      <Compile Include="Assets\Scripts\PriorityQueue\FastPriorityQueue.cs" />
@@ -80,6 +81,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
+     <None Include="Assets\Modelos\UK Terraced Houses FREE\Readme.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />

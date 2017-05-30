@@ -7,6 +7,7 @@ public class MoverCoche : MonoBehaviour {
 	private ObtenerMapa mapa;
 	private PathSmoothing path_smoothing;
 	private GameObject coche;
+	private Rigidbody rb_coche;
 	private int contador_vector;
 	private Parrilla parrilla;
 	private bool encontrada_meta;
@@ -17,21 +18,31 @@ public class MoverCoche : MonoBehaviour {
 	private Vector3[] trayectoria;
 	private Vector3 salida_coche;
 	private Vector3 meta;
+	private PID_control pid;
+
+	private float input_fuerza;
+	private float input_angulo;
 
 	//Campor para el editor
-	[SerializeField] private bool a_estrella;
-	[SerializeField] private bool a_estrella_vertices;
-	[SerializeField] private bool theta_estrella;
-	[SerializeField] private bool hybrid_a_estrella;
+	[SerializeField] private bool a_A_estrella = false;
+	[SerializeField] private bool a_A_estrella_vertices = true;
+	[SerializeField] private bool a_theta_estrella = false;
+	[SerializeField] private bool a_hybrid_a_estrella = false;
 
-	[SerializeField] private bool pid_control;
+	[SerializeField] private bool control_pid = true;
+	[SerializeField] private float control_pid_param_p = 0.5f;
+	[SerializeField] private float control_pid_param_i = 0.1f;
+	[SerializeField] private float control_pid_param_d = 0.1f;
+	[SerializeField] private bool control_manual = false;
+	[SerializeField] private float coche_max_torque = 1000.0f;
+	[SerializeField] private float coche_max_angulo = 45.0f;
 
-	[SerializeField] private bool path_smoothing_activado;
-	[SerializeField] private bool ps_bezier;
-	[SerializeField] private bool ps_descenso_gradiente;
+	[SerializeField] private bool ps_path_smoothing_activado = true;
+	[SerializeField] private bool ps_bezier = true;
+	[SerializeField] private bool ps_descenso_gradiente = false;
 
-	[SerializeField] private float velocidad = 10.0f;
-	[SerializeField] private float peso_heuristica = 0.5f;
+	[SerializeField] private float a_param_velocidad = 10.0f;
+	[SerializeField] private float a_param_peso_heuristica = 0.5f;
 	[SerializeField] private GameObject casilla_abiertos;
 	[SerializeField] private GameObject casilla_cerrados;
 
@@ -56,21 +67,22 @@ public class MoverCoche : MonoBehaviour {
 		mapa = new ObtenerMapa ();
 
 		// Elegir algoritmo
-		if (hybrid_a_estrella) {
+		if (a_hybrid_a_estrella) {
 			Debug.Log ("Usando Hybrid A Estrella");
 			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
-		} else if (a_estrella) {
+		} else if (a_A_estrella) {
 			Debug.Log ("Usando A Estrella");
 			script_algoritmo = GetComponent<A_estrella> ();
-		} else if (a_estrella_vertices) {
+		} else if (a_A_estrella_vertices) {
 			Debug.Log ("Usando A Estrella con vertices");
 			script_algoritmo = GetComponent<A_estrella_vertices> ();
-		}else if (theta_estrella) {
+		}else if (a_theta_estrella) {
 			Debug.Log ("Usando Theta Estrella");
 			script_algoritmo = GetComponent<Theta_estrella> ();
 		}
 			
 		coche = GameObject.FindGameObjectWithTag ("Coche");
+		rb_coche = coche.GetComponent<Rigidbody> ();
 		salida_coche = coche.transform.position;
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
@@ -82,20 +94,57 @@ public class MoverCoche : MonoBehaviour {
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
-		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, peso_heuristica, tam_parrilla);
+		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, a_param_peso_heuristica, tam_parrilla);
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
 	void FixedUpdate () {
+		if (control_manual) {
+
+			moverCocheFisicas (input_fuerza * coche_max_torque, input_angulo * coche_max_angulo);
+
+		}else if (encontrada_meta == true) {
+			if (control_pid) {
+				float[] resultado_pid;
+
+				resultado_pid = pid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
+
+				if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
+					freno ();
+				} else {
+					moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
+				}
+			
+			} else if (contador_vector >= 0) {
+				bool llegado = false;
+
+				llegado = moverCocheSinFisicas (trayectoria [contador_vector]);
+				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
+				if (llegado){
+					contador_vector -= 1;			
+				}
+			}
+		}
+	}
+
+
+	// Se ejecuta una vez cada frame
+	void Update (){
 		bool fin;
 
+		input_fuerza = Input.GetAxis ("Vertical");
+		input_angulo = Input.GetAxis ("Horizontal");
+
+		//input_fuerza *= Time.deltaTime;
+		//input_angulo *= Time.deltaTime;
+
 		if (error) {
-			
+
 			Debug.Log ("Error: no se ha encontrado un camino");
 
 			parrilla.borrarCasillas ();
 
-		} else if ( !encontrada_meta ) {
+		} else if (!encontrada_meta) {
 			//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
 			fin = script_algoritmo.pasoCalcularRuta (out error);
 
@@ -107,7 +156,7 @@ public class MoverCoche : MonoBehaviour {
 				parrilla.borrarCasillas ();	
 				trayectoria = script_algoritmo.getTrayectoria ();
 
-				if (path_smoothing_activado) {
+				if (ps_path_smoothing_activado) {
 					path_smoothing = new PathSmoothing (mapa, trayectoria);
 
 					if (ps_bezier) {
@@ -115,34 +164,22 @@ public class MoverCoche : MonoBehaviour {
 					} else if (ps_descenso_gradiente) {
 						trayectoria = path_smoothing.getTrayectoriaDescensoGradiente ();	
 					} else {
-						trayectoria = path_smoothing.eliminarZigZag(trayectoria);
+						trayectoria = path_smoothing.eliminarZigZag (trayectoria);
 					}
-						
+
 					contador_vector = trayectoria.Length - 1;
 					DibujarTrayectoria (trayectoria, trayectoria.Length);
 				} else {
 					contador_vector = trayectoria.Length - 1;
 
 					DibujarTrayectoria (trayectoria, trayectoria.Length);
-					
+
 				}
+
+				pid = new PID_control (coche, trayectoria);
 			} 
 		}
-	}
 
-	// Se ejecuta una vez cada frame
-	void Update (){
-		if (encontrada_meta == true) {
-			if (contador_vector >= 0) {
-				bool llegado = false;
-
-				llegado = script_algoritmo.MoverCoche (coche, trayectoria [contador_vector], velocidad);
-				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
-				if (llegado){
-					contador_vector -= 1;			
-				}
-			}
-		}
 	}
 
 	// Dibujamos la trayectoria
@@ -151,5 +188,85 @@ public class MoverCoche : MonoBehaviour {
 		//m_LineRenderer.
 		m_LineRenderer.SetVertexCount(num_vertices);
 		m_LineRenderer.SetPositions (vertices);
+	}
+
+	void ControlManual () {
+		
+	}
+
+	void moverCocheFisicas (float p_fuerza_motor, float p_angulo_giro) {
+		float angulo_giro = 0.0f;
+		float fuerza_motor = 0.0f;
+
+		if (p_angulo_giro > coche_max_angulo) {
+			angulo_giro = coche_max_angulo;
+		}else if (p_angulo_giro < (-1)*coche_max_angulo){
+			angulo_giro = (-1)*coche_max_angulo;
+		}else{
+			angulo_giro = p_angulo_giro;	
+		}
+
+		if (p_fuerza_motor > coche_max_torque) {
+			fuerza_motor = coche_max_torque;
+		}else if (p_fuerza_motor < (-1)*coche_max_torque){
+			fuerza_motor = (-1)*coche_max_torque;
+		}else{
+			fuerza_motor = p_fuerza_motor;	
+		}
+			
+		// Si le damos fuerza a las 4 ruedas: 4x4
+		// Si le damos fuerza a 0 y 1: tracion delantera
+		// Si le damos fuerza a 2 y 3; traccion trasera
+		m_WheelColliders [0].motorTorque = fuerza_motor;
+		m_WheelColliders [1].motorTorque = fuerza_motor;
+		m_WheelColliders [2].motorTorque = fuerza_motor;
+		m_WheelColliders [3].motorTorque = fuerza_motor;
+
+		//Solo giramos las ruedas delanteras
+		m_WheelColliders [0].steerAngle = angulo_giro;
+		m_WheelColliders [1].steerAngle = angulo_giro;
+		m_WheelColliders [2].steerAngle = 0f;
+		m_WheelColliders [3].steerAngle = 0f;
+
+		// Para actualizar el giro de los modelos de las ruedas
+		for (int i = 0; i < 4; i++) {
+			Quaternion quat;
+			Vector3 position;
+			m_WheelColliders [i].GetWorldPose (out position, out quat);
+			m_WheelMeshes [i].transform.position = position;
+			m_WheelMeshes [i].transform.rotation = quat;
+		}
+
+
+		//Debug.Log ("Velocidad: " + Mathf.Round (rb_coche.velocity.magnitude * 3.6f) + "km/h");
+	}
+
+	bool moverCocheSinFisicas (Vector3 posicion){
+		bool llegado = false;
+		Vector3 movimiento;
+
+		//Desactivamos las fisicas del coche porque no vamos a usarlas para moverlo en este metodo
+		coche.GetComponent<Rigidbody> ().isKinematic = true;
+		coche.GetComponent<Rigidbody> ().detectCollisions = false; 
+
+		if (coche.transform.position == posicion) {
+			llegado = true;
+		} else {
+			movimiento = Vector3.MoveTowards (coche.transform.position, posicion, a_param_velocidad * Time.deltaTime);
+			coche.transform.LookAt (posicion, Vector3.up);
+			coche.GetComponent<Rigidbody> ().MovePosition (movimiento);
+
+		}
+
+		//coche.transform.position = posicion;
+
+		return llegado;
+	}
+
+	void freno (){
+		m_WheelColliders [0].brakeTorque = 1000f;
+		m_WheelColliders [1].brakeTorque = 1000f;
+		m_WheelColliders [2].brakeTorque = 1000f;
+		m_WheelColliders [3].brakeTorque = 1000f;
 	}
 }

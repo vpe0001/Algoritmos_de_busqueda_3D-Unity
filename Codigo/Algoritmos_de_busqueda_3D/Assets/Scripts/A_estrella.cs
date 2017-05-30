@@ -20,49 +20,6 @@ public class A_estrella : ControladorCoche {
 	protected float peso;
 	protected HashSet <Vector3> vertices;
 
-	public override void MoverCoche (WheelCollider[] m_WheelColliders, GameObject[] m_WheelMeshes) {
-		float thrustTorque = 5000000f; 
-		m_WheelColliders [0].motorTorque = thrustTorque;
-		m_WheelColliders [1].motorTorque = thrustTorque;
-		m_WheelColliders [2].motorTorque = thrustTorque;
-		m_WheelColliders [3].motorTorque = thrustTorque;
-
-		m_WheelColliders [0].steerAngle = 35f;
-		m_WheelColliders [1].steerAngle = 35f;
-		m_WheelColliders [2].steerAngle = 0f;
-		m_WheelColliders [3].steerAngle = 0f;
-
-		for (int i = 0; i < 4; i++) {
-			Quaternion quat;
-			Vector3 position;
-			m_WheelColliders [i].GetWorldPose (out position, out quat);
-			m_WheelMeshes [i].transform.position = position;
-			m_WheelMeshes [i].transform.rotation = quat;
-		}
-	}
-
-	public override bool MoverCoche (GameObject coche, Vector3 posicion, float velocidad){
-		bool llegado = false;
-		Vector3 movimiento;
-
-		//Desactivamos las fisicas del coche porque no vamos a usarlas para moverlo en este metodo
-		coche.GetComponent<Rigidbody> ().isKinematic = true;
-		coche.GetComponent<Rigidbody> ().detectCollisions = false; 
-
-		if (coche.transform.position == posicion) {
-			llegado = true;
-		} else {
-			movimiento = Vector3.MoveTowards (coche.transform.position, posicion, velocidad * Time.deltaTime);
-			coche.transform.LookAt (posicion, Vector3.up);
-			coche.GetComponent<Rigidbody> ().MovePosition (movimiento);
-
-		}
-			
-		//coche.transform.position = posicion;
-
-		return llegado;
-	}
-
 	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla) {
 		Vector3[] array_vertices;
 
@@ -275,6 +232,7 @@ public class A_estrella : ControladorCoche {
 	protected Vector3[] vectoresCamino (Nodo nodo_final){
 		int size = 0;
 		int i = 0;
+		int j = 0;
 		Nodo meta = nodo_final;
 
 
@@ -284,14 +242,25 @@ public class A_estrella : ControladorCoche {
 		}
 
 		Vector3 [] camino = new Vector3[size];
+		Vector3 [] camino_orden = new Vector3[size];
 		meta = nodo_final;
 		while (meta != null){
 			camino [i] = meta.vector;
 			i++;
 			meta = meta.padre;
 		}
+
+		// Ahora la trayectoria va de la meta al inicaio, la vamos a dar la vuelta
+		//  para que nos facilite el trabajo a posteriori
+		i = size -1;
+		j = 0;
+		while (i>=0) {
+			camino_orden [i] = camino [j];
+			i--;
+			j++;
+		}
 			
-		return camino;
+		return camino_orden;
 	}
 
 }
