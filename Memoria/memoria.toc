@@ -8,19 +8,25 @@
 \contentsline {chapter}{Conceptos te\IeC {\'o}ricos}{3}{chapter*.6}
 \contentsline {section}{\numberline {3.1}Algoritmo A*}{3}{section.3.1}
 \contentsline {subsubsection}{Heur\IeC {\'\i }stica}{4}{section*.7}
-\contentsline {subsection}{Pseudoc\IeC {\'o}digo}{4}{section*.8}
-\contentsline {subsubsection}{Subsubsecciones}{4}{section*.9}
-\contentsline {section}{\numberline {3.2}Referencias}{4}{section.3.2}
-\contentsline {section}{\numberline {3.3}Im\IeC {\'a}genes}{4}{section.3.3}
-\contentsline {section}{\numberline {3.4}Listas de items}{5}{section.3.4}
-\contentsline {section}{\numberline {3.5}Tablas}{6}{section.3.5}
-\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{7}{chapter*.10}
-\contentsline {section}{\numberline {4.1}Programas usados}{7}{section.4.1}
-\contentsline {subsubsection}{Unity}{7}{section*.11}
-\contentsline {subsubsection}{Texmaker}{8}{section*.12}
-\contentsline {subsubsection}{SmartGit}{8}{section*.13}
-\contentsline {subsubsection}{GitHub y ZenHub}{8}{section*.14}
-\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{9}{chapter*.15}
-\contentsline {section}{\numberline {5.1}Nav Mesh}{9}{section.5.1}
-\contentsline {chapter}{Trabajos relacionados}{11}{chapter*.16}
-\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{12}{chapter*.17}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo A*}{4}{section*.8}
+\contentsline {section}{\numberline {3.2}Pathsmoothing}{4}{section.3.2}
+\contentsline {subsection}{Eliminar el zigzag}{5}{section*.9}
+\contentsline {subsection}{Descenso gradiente}{5}{section*.10}
+\contentsline {subsection}{Curvas B\IeC {\'e}zier}{6}{section*.11}
+\contentsline {section}{\numberline {3.3}Theta*}{7}{section.3.3}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo Theta*}{7}{section*.12}
+\contentsline {section}{\numberline {3.4}Referencias}{7}{section.3.4}
+\contentsline {section}{\numberline {3.5}Im\IeC {\'a}genes}{7}{section.3.5}
+\contentsline {section}{\numberline {3.6}Listas de items}{8}{section.3.6}
+\contentsline {section}{\numberline {3.7}Tablas}{9}{section.3.7}
+\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{10}{chapter*.13}
+\contentsline {section}{\numberline {4.1}Programas usados}{10}{section.4.1}
+\contentsline {subsubsection}{Unity}{10}{section*.14}
+\contentsline {subsubsection}{Texmaker}{11}{section*.15}
+\contentsline {subsubsection}{SmartGit}{11}{section*.16}
+\contentsline {subsubsection}{GitHub y ZenHub}{11}{section*.17}
+\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{12}{chapter*.18}
+\contentsline {section}{\numberline {5.1}Nav Mesh}{12}{section.5.1}
+\contentsline {chapter}{Trabajos relacionados}{14}{chapter*.19}
+\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{15}{chapter*.20}
+\contentsline {chapter}{Bibliograf\'{\i }a}{16}{section*.22}

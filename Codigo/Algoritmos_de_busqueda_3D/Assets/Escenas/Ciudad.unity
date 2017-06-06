@@ -203,13 +203,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   a_A_estrella: 0
-  a_A_estrella_vertices: 1
+  a_A_estrella_vertices: 0
   a_theta_estrella: 0
   a_hybrid_a_estrella: 0
   control_pid: 1
   control_pid_param_p: 1
-  control_pid_param_i: 0.5
-  control_pid_param_d: 0.5
+  control_pid_param_i: 10
+  control_pid_param_d: 0
   control_manual: 0
   coche_max_torque: 1000
   coche_max_angulo: 45
@@ -2228,7 +2228,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 90
+  field of view: 60.66193
   orthographic: 0
   orthographic size: 5
   m_Depth: -1

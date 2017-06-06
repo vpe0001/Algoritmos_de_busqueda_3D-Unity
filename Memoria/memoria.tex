@@ -5,6 +5,8 @@
 \selectlanguage{spanish}
 \usepackage[utf8]{inputenc}
 \usepackage{placeins}
+\usepackage{mathtools}
+\usepackage[]{algorithm2e}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -425,12 +427,18 @@ D. nombre co-tutor
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-En este primer apartado se hace una \textbf{breve} presentación del tema que se aborda en el proyecto.
+En los últimos años hemos visto la evolución de autómatas que empiezan a hacerse presente en la sociedad. Uno de estos autómatas en lo que más se han observado esfuerzo en el desarrollo, inversiones por las grandes compañías y relevancia social ha sido la aparición de los primeros prototipos de los vehículos autónomos. Coches que se conducen solos.
+
+Para la realización de estos autómatas se tienen que combinar muchos procedimientos que doten del conocimiento necesario al autómata sobre su entorno, y que permitan una vez adquirido su utilización para desplazarse a su destino. Dos de estos procedimientos principales son el cómo conocer la ruta a seguir, y una vez conocida la ruta cómo seguirla hasta alcanzar su final.
+
+En este trabajo simularemos estos procesos en un entorno tridimensional, para poder simular algunos de los problemas que se encuentran los vehículos autónomos en el mundo real y tener una visión de como solventar los problemas que plantea. Se calcularán rutas que se puedan seguir por parte del vehículo y se implementarán métodos para seguir esas rutas de forma autónoma, viendo en cada paso los problemas que se plantean.
+
+
 \end{abstract}
 
 \renewcommand*\abstractname{Descriptores}
 \begin{abstract}
-Palabras separadas por comas que identifiquen el contenido del proyecto Ej: servidor web, buscador de vuelos, android \ldots
+Búsqueda de rutas, vehículos autónomos, seguimiento de rutas  \ldots
 \end{abstract}
 
 \clearpage
@@ -438,12 +446,16 @@ Palabras separadas por comas que identifiquen el contenido del proyecto Ej: serv
 % Abstract en inglés
 \renewcommand*\abstractname{Abstract}
 \begin{abstract}
-A \textbf{brief} presentation of the topic addressed in the project.
+In recent years we have seen the evolution of automatons that are beginning to be present in society. One of these automatons in what has seen the most effort in development, investments by large companies and social relevance has been the appearance of the first prototypes of autonomous vehicles. Cars that are driven by itselves.
+
+For the realization of these automatons many procedures have to be combined to provide the automaton with the necessary knowledge about its environment and to allow it to be used once it has reached its destination. Two of these main procedures are how to know the route to follow, and once known the route how to follow it until reaching its end.
+
+In this work, we will simulate these processes in a three-dimensional environment, in order to simulate some of the problems that autonomous vehicles find in the real world and to have a vision of how to solve the problems that it poses. Routes will be calculated that can be followed by the vehicle and will be implemented methods to follow these routes autonomously, seeing at each step the problems that arise.
 \end{abstract}
 
 \renewcommand*\abstractname{Keywords}
 \begin{abstract}
-keywords separated by commas.
+Routes searching, autonomous vehicles, tracking routes.
 \end{abstract}
 
 \clearpage

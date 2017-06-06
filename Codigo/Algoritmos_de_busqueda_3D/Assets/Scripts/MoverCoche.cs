@@ -115,13 +115,13 @@ public class MoverCoche : MonoBehaviour {
 					moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
 				}
 			
-			} else if (contador_vector >= 0) {
+			} else if (contador_vector < trayectoria.Length) {
 				bool llegado = false;
 
 				llegado = moverCocheSinFisicas (trayectoria [contador_vector]);
 				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
 				if (llegado){
-					contador_vector -= 1;			
+					contador_vector += 1;			
 				}
 			}
 		}
@@ -167,10 +167,10 @@ public class MoverCoche : MonoBehaviour {
 						trayectoria = path_smoothing.eliminarZigZag (trayectoria);
 					}
 
-					contador_vector = trayectoria.Length - 1;
+					contador_vector = 0;
 					DibujarTrayectoria (trayectoria, trayectoria.Length);
 				} else {
-					contador_vector = trayectoria.Length - 1;
+					contador_vector = 0;
 
 					DibujarTrayectoria (trayectoria, trayectoria.Length);
 
@@ -238,7 +238,7 @@ public class MoverCoche : MonoBehaviour {
 		}
 
 
-		//Debug.Log ("Velocidad: " + Mathf.Round (rb_coche.velocity.magnitude * 3.6f) + "km/h");
+		Debug.Log ("Velocidad: " + Mathf.Round (rb_coche.velocity.magnitude * 3.6f) + "km/h");
 	}
 
 	bool moverCocheSinFisicas (Vector3 posicion){

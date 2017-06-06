@@ -1,0 +1,23 @@
+\begin{thebibliography}{1}
+
+\bibitem{thetaestrella}
+Alex Nash, Kenny Daniel, Sven Koenig, and Ariel Felner.
+\newblock Theta*: Any-angle path planning on grids.
+
+\bibitem{bezierdevmag}
+Herman Tulleken.
+\newblock Bézier curves for your games: A tutorial.
+
+\bibitem{bezierdevmag_imagen}
+Herman Tulleken.
+\newblock Bézier curves for your games: A tutorial. quadratic curve.
+
+\bibitem{wiki:bezier}
+Wikipedia.
+\newblock Bézier curve --- wikipedia{,} the free encyclopedia, 2017.
+
+\bibitem{wiki:bezierimagen}
+Wikipedia.
+\newblock Construction of a quadratic bézier curve, 2017.
+
+\end{thebibliography}

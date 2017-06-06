@@ -70,8 +70,8 @@ public class PID_control {
 
 			fuerza_motor = (7.0f * distancia) + (0.5f * Mathf.Abs(angulo_giro));
 
-			if (fuerza_motor > 30.0f) {
-				fuerza_motor = 30.0f + (0.5f * Mathf.Abs(angulo_giro));
+			if (fuerza_motor > 40.0f) {
+				fuerza_motor = 40.0f + (0.5f * Mathf.Abs(angulo_giro));
 			}
 		}else{
 			if (punto_actual == punto_meta) { //Si hemos llegado a la meta
