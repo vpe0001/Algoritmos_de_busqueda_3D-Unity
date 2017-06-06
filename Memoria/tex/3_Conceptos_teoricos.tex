@@ -46,7 +46,27 @@ Para ello, usamos la línea de visión. Si existe una línea de visión entre un
 Así que lo que comprobamos es que existe una línea de visión entre una casilla del A* y la siguiente más lejana posible, y eliminamos a las casillas intermedias. De esta forma obtenemos una línea recta entre esas dos casillas y eliminamos el zigzag producido por las casillas intermedias.
 
 \subsection{Descenso gradiente}
-El descenso gradiente
+El descenso gradiente es un algoritmo iterativo que a partir de unos valores iniciales, itera una función modificando esos valores hacía un mínimo de esa función. El algoritmo termina cuando el cambio que se producen en los valores es menor que la tolerancia indicada.
+
+Para optimizar la ruta, queremos obtener los valores que minimizan las distancia entre los puntos sucesivos de la ruta, y a su vez que minimicen las distancia a la ruta original.
+
+Para minimizar la distancia entre los puntos con respecto a la ruta original usaremos las función:
+\begin{center}
+$y_i = y_i + \alpha (x_i - y_i)$
+\end{center}
+Donde $\alpha$ es el peso que le damos a cuanto de cerca queremos que la ruta suavizada esté de la ruta original, x es el punto de la ruta original y y es el nuevo punto suavizado.
+
+Para minimizar la distancia entre los puntos sucesivos de la ruta, usamos la función:
+\begin{center}
+$y_i = y_i + \beta (y_{i+1} + y_{i-1} - 2 * y_i)$
+\end{center}
+Donde $\beta$ es el peso que le damos al suavizado de la ruta, y tenemos en cuenta la distancia tanto con el punto anterior como con el puto siguiente.
+
+Para calcular el error que se produce, o el cambio hacia el mínimo, usamos la función:
+\begin{center}
+$error = error + (z_i - y_i)$
+\end{center}
+Donde z es el valor de y antes de calcular el nuevo mínimo.
 
 \subsection{Curvas Bézier}
 Las curvas Bézier \cite{bezierdevmag} \cite{wiki:bezier} son una forma de representar curvas a través de una función que recibe un parámetro. Hemos usado la función de las curvas de Bézier para suavizar la ruta y así obtener giros y curvas más cercanas a una representación real
@@ -89,15 +109,26 @@ $z = (1 – t)^2z_0 + 2(1 – t)tz_1 + t^2z_2$
 \end{figure}
 
 \section{Theta*}
-Theta A* es un algoritmo desarrollado por A. Nash, K. Daniel, S. Koenig y A. Felner \cite{thetaestrella} que modifica el A* original para obtener rutas más realistas.
+Theta A* es un algoritmo desarrollado por A. Nash, K. Daniel, S. Koenig y A. Felner \cite{thetaestrella} \cite{thetaestrellaweb} que modifica el A* original para obtener rutas más realistas.
+
+Como explicamos anteriormente, el A* por la forma en la que representa el espacio de búsqueda da resultados poco realistas, con lo que hay que realizar un postprocesado de la ruta obtenida. El theta* incorpora este proceso al propio A* para obtener de forma directa rutas que no requieran del proceso de suavizado o que lo minimice.
+
+Para ello, el cambio que hace el Theta* respecto al A* es que un sucesor a una casilla puede ser cualquier casilla, en vez de ser unicamente las que tiene alrededor. El algoritmo es el mismo que el A* original, pero cuando se calculan loa sucesores, además de calcular si es un sucesor válido y el coste de ese sucesor, comprueba si hay linea de visión con la casilla del nodo padre del nodo que lo generó. Si no hay línea de visión, sigue el algoritmo del A* y le asigna al sucesor como padre la casilla que lo originó. Pero si hay línea de visión, le asigna como padre no el nodo que lo generó, sino el padre de este, calculando el coste del sucesor teniendo en cuenta esta otra casilla. De esta forma elimina las casillas intermedias que origina el A* que no son necesarias de forma similar a como se realizaría en el post procesado para eliminar el zigzag.
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth,height=6cm,keepaspectratio=true]{Theta_path_12}
+    \caption{Comparacion de los caminos elegidos por el A* (path1) y el theta* (path2) de \cite{thetaestrellawebimagen}.}
+    \label{fig:basics AFM sketch}
+\end{figure}
 
 
 \subsection{Pseudocódigo Theta*}
 
+\section{A* con vértices}
 
-\section{Referencias}
+\subsection{Comparativa}
 
-Las referencias se incluyen en el texto usando cite \cite{wiki:latex}. Para citar webs, artículos o libros \cite{koza92}.
 
 
 \section{Imágenes}

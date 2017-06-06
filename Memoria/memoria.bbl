@@ -1,5 +1,15 @@
 \begin{thebibliography}{1}
 
+\bibitem{thetaestrellaweb}
+Alex Nash.
+\newblock Theta*: Any-angle path planning for smoother trajectories in
+  continuous environments.
+
+\bibitem{thetaestrellawebimagen}
+Alex Nash.
+\newblock Theta*: Any-angle path planning for smoother trajectories in
+  continuous environments. figure 6 comparison theta* and a*.
+
 \bibitem{thetaestrella}
 Alex Nash, Kenny Daniel, Sven Koenig, and Ariel Felner.
 \newblock Theta*: Any-angle path planning on grids.
