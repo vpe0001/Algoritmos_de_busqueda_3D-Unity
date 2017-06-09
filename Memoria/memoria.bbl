@@ -1,33 +1,62 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{thetaestrella}
+Kenny Daniel, Alex Nash, Sven Koenig, and Ariel Felner.
+\newblock Theta*: Any-angle path planning on grids, 2010.
+
+\bibitem{webfastcompanyselfdrivingcars}
+Christina Farr.
+\newblock The first study of self-driving car crash rates suggests they are
+  safer, 2017.
+\newblock [Online; accessed 8-June-2017].
+
+\bibitem{webtechcrunchselfdrivingcars}
+Ingrid Lunden.
+\newblock Intel buys mobileye in \$15.3b deal, moves its automotive unit to
+  israel, 2017.
+\newblock [Online; accessed 8-June-2017].
 
 \bibitem{thetaestrellaweb}
 Alex Nash.
 \newblock Theta*: Any-angle path planning for smoother trajectories in
   continuous environments.
+\newblock [Online; accessed 6-June-2017].
 
 \bibitem{thetaestrellawebimagen}
 Alex Nash.
 \newblock Theta*: Any-angle path planning for smoother trajectories in
   continuous environments. figure 6 comparison theta* and a*.
+\newblock [Online; accessed 6-June-2017].
 
-\bibitem{thetaestrella}
-Alex Nash, Kenny Daniel, Sven Koenig, and Ariel Felner.
-\newblock Theta*: Any-angle path planning on grids.
+\bibitem{webbusinessinsiderdrivingcars}
+Cadie Thompson.
+\newblock 8 ways self-driving cars will drastically improve our lives, 2016.
+\newblock [Online; accessed 8-June-2017].
+
+\bibitem{webtelegraphselfdrivingcars}
+Alan Tovey.
+\newblock Self-driving cars will add \$7 trillion a year to global economy,
+  says intel, 2017.
+\newblock [Online; accessed 8-June-2017].
 
 \bibitem{bezierdevmag}
 Herman Tulleken.
 \newblock Bézier curves for your games: A tutorial.
+\newblock [Online; accessed 6-June-2017].
 
 \bibitem{bezierdevmag_imagen}
 Herman Tulleken.
 \newblock Bézier curves for your games: A tutorial. quadratic curve.
+\newblock [Online; accessed 6-June-2017].
 
 \bibitem{wiki:bezier}
 Wikipedia.
 \newblock Bézier curve --- wikipedia{,} the free encyclopedia, 2017.
+\newblock [Online; accessed 6-June-2017].
 
 \bibitem{wiki:bezierimagen}
 Wikipedia.
 \newblock Construction of a quadratic bézier curve, 2017.
+\newblock [Online; accessed 6-June-2017].
 
 \end{thebibliography}
