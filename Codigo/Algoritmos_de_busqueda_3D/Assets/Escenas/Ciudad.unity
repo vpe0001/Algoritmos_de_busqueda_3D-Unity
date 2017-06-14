@@ -76,7 +76,7 @@ NavMeshSettings:
     serializedVersion: 2
     agentRadius: 2
     agentHeight: 1.5
-    agentSlope: 25
+    agentSlope: 14
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
@@ -178,10 +178,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 20116585}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -40}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000016292068}
+  m_LocalPosition: {x: 12, y: 0, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_Children:
   - {fileID: 708595040}
   - {fileID: 1846118395}
@@ -205,11 +205,11 @@ MonoBehaviour:
   a_A_estrella: 0
   a_A_estrella_vertices: 0
   a_theta_estrella: 0
-  a_hybrid_a_estrella: 0
+  a_hybrid_a_estrella: 1
   control_pid: 1
   control_pid_param_p: 1
-  control_pid_param_i: 10
-  control_pid_param_d: 0
+  control_pid_param_i: 0.5
+  control_pid_param_d: 0.1
   control_manual: 0
   coche_max_torque: 1000
   coche_max_angulo: 45
@@ -217,7 +217,7 @@ MonoBehaviour:
   ps_bezier: 0
   ps_descenso_gradiente: 0
   a_param_velocidad: 10
-  a_param_peso_heuristica: 0.8
+  a_param_peso_heuristica: 0.5
   casilla_abiertos: {fileID: 1741385352}
   casilla_cerrados: {fileID: 2086596742}
   m_WheelColliders:
@@ -1825,6 +1825,10 @@ Prefab:
       propertyPath: m_NavMeshLayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
   m_IsPrefabParent: 0
@@ -2251,7 +2255,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1043082789}
   m_LocalRotation: {x: 0.25881907, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 6, z: -5}
+  m_LocalPosition: {x: 0, y: 6, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
   m_Children: []
@@ -2263,7 +2267,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1043082789}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ba48db0592781435eb99dbf1281a0a0a, type: 3}
   m_Name: 
@@ -2311,7 +2315,7 @@ MeshRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1091498731}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -2400,6 +2404,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
       propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2696,6 +2704,10 @@ Prefab:
       propertyPath: m_NavMeshLayer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
   m_IsPrefabParent: 0
@@ -2736,7 +2748,7 @@ MeshRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1504490727}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -3129,6 +3141,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
       propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 13a50703d36e976459baf23952272a6f, type: 2}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

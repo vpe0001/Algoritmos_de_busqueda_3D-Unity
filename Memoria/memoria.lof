@@ -1,6 +1,6 @@
 \select@language {spanish}
 \select@language {spanish}
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica de Herman Tulleken, B\IeC {\'e}zier Curves for your Games: A Tutorial \cite {bezierdevmag_imagen}.}}{8}{figure.3.1}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica de B\IeC {\'e}zier curve --- Wikipedia \cite {wiki:bezierimagen}.}}{9}{figure.3.2}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Comparacion de los caminos elegidos por el A* (path1) y el theta* (path2) de \cite {thetaestrellawebimagen}.}}{10}{figure.3.3}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica de Herman Tulleken}}{8}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica, Wikipedia}}{9}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Comparacion de los caminos elegidos por el A* y el Theta*}}{10}{figure.3.3}
 \contentsline {figure}{\numberline {3.4}{\ignorespaces Aut\IeC {\'o}mata para una expresi\IeC {\'o}n vac\IeC {\'\i }a}}{11}{figure.3.4}

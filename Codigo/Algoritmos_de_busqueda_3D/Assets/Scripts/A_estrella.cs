@@ -9,6 +9,7 @@ public class A_estrella : ControladorCoche {
 	protected List <Nodo> sucesores;
 	protected Abiertos abiertos;
 	protected Vector3[] v_trayectoria;
+	protected Nodo[] n_trayectoria;
 	protected Vector3 vector_inicio;
 	protected Vector3 vector_meta;
 	protected ObtenerMapa mapa;
@@ -20,7 +21,7 @@ public class A_estrella : ControladorCoche {
 	protected float peso;
 	protected HashSet <Vector3> vertices;
 
-	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, float v_angulo_coche, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla, int ancho, int largo) {
 		Vector3[] array_vertices;
 
 		cerrados = new Cerrados ();
@@ -71,16 +72,17 @@ public class A_estrella : ControladorCoche {
 				nodo_final = nodo_actual;
 
 				v_trayectoria = vectoresCamino (nodo_final);
+				n_trayectoria = nodosCamino (nodo_final);
 
 			} else {
-				cerrados.add (nodo_actual);
-				parrilla.crearCasilla (nodo_actual.vector, 1);
+				cerrados.add ( nodo_actual );
+				parrilla.crearCasilla (nodo_actual.vector, Constantes._CERRADOS);
 
 				sucesores = CalcularSucesores (nodo_actual, vector_meta, mapa);
 
 				foreach (Nodo sucesor in sucesores) {
 					Nodo anterior;
-					Nodo mover_padre;
+					//Nodo mover_padre;
 
 					if (abiertos.find (sucesor, out anterior)) {
 
@@ -95,17 +97,17 @@ public class A_estrella : ControladorCoche {
 						if (cerrados.find (sucesor, out anterior)) {
 
 							if (anterior.coste > sucesor.coste) {
-								anterior.padre = nodo_actual;
-								anterior.coste = sucesor.coste;
+								//anterior.padre = nodo_actual;
+								//anterior.coste = sucesor.coste;
 
-								cerrados.find (sucesor.padre, out mover_padre);
-								cerrados.delete (mover_padre);
-								abiertos.add (mover_padre);
-								parrilla.crearCasilla (mover_padre.vector, 0);
+								//cerrados.find (sucesor.padre, out mover_padre);
+								cerrados.delete (anterior);
+								abiertos.add (sucesor);
+								parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
 							}
 						} else { //No esta ni en abiertos ni en cerrados
 							abiertos.add (sucesor);
-							parrilla.crearCasilla (sucesor.vector, 0);
+							parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
 						}
 					}
 
@@ -117,6 +119,8 @@ public class A_estrella : ControladorCoche {
 				error = true;
 			}
 		}
+
+		//parrilla.dibujarTodas (abiertos, cerrados);
 			
 		return meta_encontrada;
 	}
@@ -125,12 +129,16 @@ public class A_estrella : ControladorCoche {
 		return v_trayectoria;
 	}
 
+	public override Nodo[] getTrayectoriaNodos (){
+		return n_trayectoria;
+	}
+
 	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, ObtenerMapa mapa, Parrilla parrilla, float p_peso, int tam_parrilla) {
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float v_angulo_coche, ObtenerMapa mapa, Parrilla parrilla, float p_peso, int tam_parrilla, int ancho, int largo) {
 		bool error;
 		peso = p_peso;
 		
-		iniciarCalcularRuta(inicio, meta, mapa, parrilla, peso, tam_parrilla);
+		iniciarCalcularRuta(inicio, meta, v_angulo_coche, mapa, parrilla, peso, tam_parrilla, ancho, largo);
 
 		while (!pasoCalcularRuta (out error)) {
 		}
@@ -194,7 +202,7 @@ public class A_estrella : ControladorCoche {
 	}
 
 
-	protected bool esMeta(Nodo nodo, Vector3 meta) {
+	protected virtual bool esMeta(Nodo nodo, Vector3 meta) {
 		bool es_meta = false;
 
 		if (nodo.vector == meta){
@@ -204,7 +212,7 @@ public class A_estrella : ControladorCoche {
 		return es_meta;
 	}
 
-	protected float funcionG(Nodo nodo){
+	protected virtual float funcionG (Nodo nodo){
 		float coste = 0;
 		Vector3 distancia;
 
@@ -219,7 +227,7 @@ public class A_estrella : ControladorCoche {
 		return coste;
 	}
 
-	protected float funcionH(Nodo nodo, Vector3 meta){
+	protected virtual float funcionH (Nodo nodo, Vector3 meta){
 		float coste = 0;
 
 		Vector3 distancia;
@@ -260,6 +268,39 @@ public class A_estrella : ControladorCoche {
 			j++;
 		}
 			
+		return camino_orden;
+	}
+
+	protected Nodo[] nodosCamino (Nodo nodo_final){
+		int size = 0;
+		int i = 0;
+		int j = 0;
+		Nodo meta = nodo_final;
+
+		while (meta != null){
+			size++;
+			meta = meta.padre;
+		}
+
+		Nodo [] camino = new Nodo[size];
+		Nodo [] camino_orden = new Nodo[size];
+		meta = nodo_final;
+		while (meta != null){
+			camino [i] = meta;
+			i++;
+			meta = meta.padre;
+		}
+
+		// Ahora la trayectoria va de la meta al inicio, la vamos a dar la vuelta
+		//  para que nos facilite el trabajo a posteriori
+		i = size -1;
+		j = 0;
+		while (i>=0) {
+			camino_orden [i] = camino [j];
+			i--;
+			j++;
+		}
+
 		return camino_orden;
 	}
 

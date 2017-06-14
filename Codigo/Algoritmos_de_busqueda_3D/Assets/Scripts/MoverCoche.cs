@@ -16,9 +16,12 @@ public class MoverCoche : MonoBehaviour {
 	private bool error;
 	private ControladorCoche script_algoritmo;
 	private Vector3[] trayectoria;
+	private Nodo[] trayectoria_nodos;
 	private Vector3 salida_coche;
 	private Vector3 meta;
 	private PID_control pid;
+	private PID_control_hybrid pid_hybrid;
+	private float angulo_coche;
 
 	private float input_fuerza;
 	private float input_angulo;
@@ -58,6 +61,8 @@ public class MoverCoche : MonoBehaviour {
 	// Inicializacion
 	void Start () {
 		int tam_parrilla;
+		int ancho;
+		int largo;
 
 		error = false;
 		encontrada_meta = false;
@@ -86,15 +91,28 @@ public class MoverCoche : MonoBehaviour {
 		salida_coche = coche.transform.position;
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
-		tam_parrilla = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.x * 10.0f)
-			* (GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.z * 10.0f));
+		largo = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.z * 10.0f));
+		ancho = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.x * 10.0f));
+		tam_parrilla = ancho * largo;
+
+		angulo_coche = coche.transform.rotation.eulerAngles.y;
+
+		parrilla.Ancho = ancho;
+		parrilla.Largo = largo;
+
+		Debug.Log ("Ancho: " + ancho + " | largo: " + largo);
+		//Debug.Log ("Creando parrilla");
+		//float inicio_parrilla = Time.realtimeSinceStartup;
+		//parrilla.crearTodasCasilla ();
+		//float final_parrilla = Time.realtimeSinceStartup;
+		//Debug.Log ("Parrilla creada en: " + (final_parrilla - inicio_parrilla));
 
 
 		//trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
-		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, mapa, parrilla, a_param_peso_heuristica, tam_parrilla);
+		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo);
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
@@ -105,14 +123,27 @@ public class MoverCoche : MonoBehaviour {
 
 		}else if (encontrada_meta == true) {
 			if (control_pid) {
-				float[] resultado_pid;
+				if (a_hybrid_a_estrella) {
+					float[] resultado_pid;
 
-				resultado_pid = pid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
+					resultado_pid = pid_hybrid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
 
-				if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
-					freno ();
-				} else {
-					moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
+					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
+						freno ();
+					} else {
+						moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
+					}
+				}else{
+
+					float[] resultado_pid;
+
+					resultado_pid = pid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
+
+					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
+						freno ();
+					} else {
+						moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
+					}
 				}
 			
 			} else if (contador_vector < trayectoria.Length) {
@@ -142,7 +173,7 @@ public class MoverCoche : MonoBehaviour {
 
 			Debug.Log ("Error: no se ha encontrado un camino");
 
-			parrilla.borrarCasillas ();
+			parrilla.borrarTodasCasillas ();
 
 		} else if (!encontrada_meta) {
 			//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
@@ -153,11 +184,18 @@ public class MoverCoche : MonoBehaviour {
 				encontrada_meta = true;
 				Debug.Log ("Ruta calculada en: " + (final - inicio));
 
-				parrilla.borrarCasillas ();	
+				parrilla.borrarTodasCasillas ();	
 				trayectoria = script_algoritmo.getTrayectoria ();
+				trayectoria_nodos = script_algoritmo.getTrayectoriaNodos ();
 
 				if (ps_path_smoothing_activado) {
-					path_smoothing = new PathSmoothing (mapa, trayectoria);
+					Vector3[] trayectoria_ps = trayectoria;
+
+					if (a_hybrid_a_estrella) {
+						trayectoria_ps = trayectoriaHybrid (trayectoria_nodos, trayectoria_nodos.Length);
+					}
+
+					path_smoothing = new PathSmoothing (mapa, trayectoria_ps);
 
 					if (ps_bezier) {
 						trayectoria = path_smoothing.getTrayectoriaSuavizadaCurvasBezier ();	
@@ -172,11 +210,18 @@ public class MoverCoche : MonoBehaviour {
 				} else {
 					contador_vector = 0;
 
-					DibujarTrayectoria (trayectoria, trayectoria.Length);
+					if (a_hybrid_a_estrella) {
+						DibujarTrayectoria (trayectoria_nodos, trayectoria_nodos.Length);
+					} else {
+						DibujarTrayectoria (trayectoria, trayectoria.Length);
+					}
 
 				}
 
 				pid = new PID_control (coche, trayectoria);
+				pid_hybrid = new PID_control_hybrid (coche, trayectoria_nodos);
+				pid.setParrilla (parrilla);
+				pid_hybrid.setParrilla (parrilla);
 			} 
 		}
 
@@ -188,6 +233,33 @@ public class MoverCoche : MonoBehaviour {
 		//m_LineRenderer.
 		m_LineRenderer.SetVertexCount(num_vertices);
 		m_LineRenderer.SetPositions (vertices);
+	}
+
+	// Dibujamos la trayectoria
+	void DibujarTrayectoria (Nodo[] nodos, int num_vertices) {
+		Vector3[] vertices = new Vector3[num_vertices];
+		int indice = 0;
+
+		foreach (Nodo n in nodos) {
+			vertices [indice] = n.vector_hybrid;
+			indice++;
+		}
+
+		//m_LineRenderer.
+		m_LineRenderer.SetVertexCount(num_vertices);
+		m_LineRenderer.SetPositions (vertices);
+	}
+
+	Vector3[] trayectoriaHybrid (Nodo[] nodos, int num_vertices) {
+		Vector3[] vertices = new Vector3[num_vertices];
+		int indice = 0;
+
+		foreach (Nodo n in trayectoria_nodos) {
+			vertices [indice] = n.vector_hybrid;
+			indice++;
+		}
+
+		return vertices;
 	}
 
 	void ControlManual () {
@@ -238,7 +310,7 @@ public class MoverCoche : MonoBehaviour {
 		}
 
 
-		Debug.Log ("Velocidad: " + Mathf.Round (rb_coche.velocity.magnitude * 3.6f) + "km/h");
+		//Debug.Log ("Velocidad: " + Mathf.Round (rb_coche.velocity.magnitude * 3.6f) + "km/h");
 	}
 
 	bool moverCocheSinFisicas (Vector3 posicion){
