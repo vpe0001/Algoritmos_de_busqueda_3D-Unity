@@ -9,7 +9,8 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected int[, , ] array_mapa_obstaculos;
 
 
-
+	private float radio_giro_rad;
+	private float radio_giro;
 	private float tiempo_inicio;
 	private float tiempo_final;
 
@@ -103,6 +104,11 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		Debug.Log ("Mapa de Voronoi creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
 
+		radio_giro_rad = ((Constantes.distancia / Constantes.coche_largo) * Mathf.Tan (Mathf.Deg2Rad * Constantes.coche_max_angulo));
+		radio_giro = Mathf.Rad2Deg * radio_giro_rad;
+		Debug.Log ("Radio giro rad: " + radio_giro_rad);
+		Debug.Log ("Radio giro: " + radio_giro);
+
 		//Prueba de generar un nuevo nodo del Hybrid
 		//La casilla sera la misma que con el A*, la diferencia es que dentro del nodo de esa casilla guardamos la ruta
 		// continua. El vector discreto sirve para identificar la casilla
@@ -149,6 +155,7 @@ public class Hybrid_a_estrella  : A_estrella {
 		//					 adelante giro izquierda, adelante giro derecha
 		//					 retroceder giro izquierda, retroceder giro derecha
 		Nodo[] sucesores_array = new Nodo[6];
+		List <Nodo> final = new List<Nodo> ();
 
 		float angulo_coche = n_actual.angulo_hybrid;
 		float angulo_coche_rad = (Mathf.Deg2Rad * angulo_coche);
@@ -173,12 +180,12 @@ public class Hybrid_a_estrella  : A_estrella {
 				sucesor.padre = n_actual;
 
 				if (i == 0) { //hacia adelante
-					angulo_calculos = (Constantes.radio_giro_rad * direccion_giro) + angulo_coche_rad;
+					angulo_calculos = (radio_giro_rad * direccion_giro) + angulo_coche_rad;
 
 					sucesor.sentido = Constantes.hacia_adelante;
 					
 				} else { //hacia atras
-					angulo_calculos = (Constantes.radio_giro_rad * direccion_giro) + angulo_coche_rad + Constantes.angulo_atras_rad;
+					angulo_calculos = (radio_giro_rad * direccion_giro) + angulo_coche_rad + Constantes.angulo_atras_rad;
 
 					sucesor.sentido = Constantes.hacia_atras;
 				}
@@ -189,7 +196,7 @@ public class Hybrid_a_estrella  : A_estrella {
 				//Y sera la misma, si cambiase la altura seria y + altura de la posicion nueva, del suelo en el nuevo z,x
 
 				sucesor.vector_hybrid = new Vector3 (x, y, z);
-				sucesor.angulo_hybrid = (Constantes.radio_giro * direccion_giro) + n_actual.angulo_hybrid;
+				sucesor.angulo_hybrid = (radio_giro * direccion_giro) + n_actual.angulo_hybrid;
 
 				if (sucesor.angulo_hybrid < 0.0f) {
 					sucesor.angulo_hybrid += 360.0f;
@@ -201,23 +208,6 @@ public class Hybrid_a_estrella  : A_estrella {
 				direccion_giro++;
 			}
 		}
-			
-		//Calcular casilla
-
-		foreach (Nodo sucesor in sucesores_array){
-			/*
-			float x_casilla = Mathf.Round (sucesor.vector_hybrid.x);
-			float y_casilla = Mathf.Round (sucesor.vector_hybrid.y);
-			float z_casilla = Mathf.Round (sucesor.vector_hybrid.z);
-
-			Vector3 nuevo_casilla = new Vector3 (x_casilla, y_casilla, z_casilla);
-			*/
-			//sucesor.vector = nuevo_casilla;
-			sucesor.vector = sucesor.vector_hybrid;
-		}
-
-
-
 
 		//Sucesores validos
 		sucesores = SucesoresValidos(sucesores_array, mapa);
@@ -227,6 +217,52 @@ public class Hybrid_a_estrella  : A_estrella {
 			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
 			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
 			sucesor_valido.coste = (peso * sucesor_valido.costeG) + sucesor_valido.costeH;
+		}
+			
+		//Calcular casilla
+		for (int i =0; i < sucesores.Count; i++){
+			Nodo actual = sucesores [i];
+			float x_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.x);
+			float y_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.y);
+			float z_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.z);
+
+			for (int j= i+1; j < sucesores.Count; j++) {
+
+				//float x_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.x);
+				//float y_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.y);
+				//float z_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.z);
+				float x_casilla_j = round (sucesores[j].vector_hybrid.x);
+				float y_casilla_j = round (sucesores[j].vector_hybrid.y);
+				float z_casilla_j = round (sucesores[j].vector_hybrid.z);
+
+				if ( actual.coste > sucesores[j].coste &&
+														Mathf.Approximately (x_casilla_i, x_casilla_j) &&
+														Mathf.Approximately (y_casilla_i, y_casilla_j) && 
+														Mathf.Approximately (z_casilla_i, z_casilla_j) ) {
+					actual = sucesores [j];
+				}
+			}
+
+			Vector3 nuevo_casilla = new Vector3 (x_casilla_i, y_casilla_i, z_casilla_i);
+			actual.vector = nuevo_casilla;
+			final.Add (actual);
+		}
+	
+
+		return final;
+	}
+
+	// comprueba que los posibles sucesores esten dentro del rango posible
+	protected override List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
+		List <Nodo> sucesores = new List<Nodo> ();
+
+		foreach (Nodo sucesor_valido in sucesor) {
+			//Comprobamos las dos direcciones porque hemos encontrado que no siempre, aunque deberia, da el mismo resultado
+			//Asi evitamos bugs debido a que sea visible/alcanzable desde una direccion pero no desde la otra
+			if ( mapa.lineaVision (sucesor_valido.padre.vector_hybrid, sucesor_valido.vector_hybrid) ){
+				//if ( mapa.lineaVision (sucesor_valido.padre.vector, sucesor_valido.vector)){
+				sucesores.Add (sucesor_valido);
+			}
 		}
 
 		return sucesores;
@@ -244,7 +280,8 @@ public class Hybrid_a_estrella  : A_estrella {
 			if (Mathf.Approximately (nodo.padre.angulo_hybrid, nodo.angulo_hybrid)) {
 				coste *= 1.0f;
 			} else {
-				coste *= 1.4f;
+				//coste *= 5.4f;
+				coste *= 2.0f;
 			}
 		}else {
 			distancia = nodo.vector_hybrid - nodo_inicio.vector;
@@ -254,7 +291,8 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		//IS hacia atras es mas costoso que hacia adelante
 		if (nodo.sentido == Constantes.hacia_atras) {
-			coste *= 1.8f;
+			//coste *= 14.8f;
+			coste *= 6.0f;
 		} else {
 			coste *= 1.0f;
 		}
@@ -266,7 +304,7 @@ public class Hybrid_a_estrella  : A_estrella {
 		float coste = 0;
 
 		Vector3 distancia;
-		distancia = nodo.vector - meta;
+		distancia = nodo.vector_hybrid - meta;
 		coste = distancia.magnitude;
 
 		return coste;
@@ -275,9 +313,9 @@ public class Hybrid_a_estrella  : A_estrella {
 
 	protected override bool esMeta (Nodo nodo, Vector3 meta) {
 		bool es_meta = false;
-		float distancia = Vector3.Distance (nodo.vector, meta);
+		float distancia = Vector3.Distance (nodo.vector_hybrid, meta);
 
-		if (distancia < 1.0f){
+		if (distancia < 1.5f){
 			es_meta = true;
 		}
 
@@ -288,6 +326,24 @@ public class Hybrid_a_estrella  : A_estrella {
 
 	private void crearMapaVoronoi (){
 		
+	}
+
+	//Reescribimos esta funcion de la libreria porque no redondea correctamente
+	// x.5 puede ser 1 o 0 basado en si x es par o impar
+	//Nuestro funcion siempre sera 0.5 = 1.0
+	private float round (float numero) {
+		float redondeo = 0.0f;
+		float floor_float =	Mathf.Floor (numero);
+		float resta = numero - floor_float;
+
+		if (resta < 0.5f) {
+			redondeo = floor_float;
+		} else {
+			redondeo = Mathf.Ceil (numero);
+		}
+
+
+		return numero;
 	}
 }
 

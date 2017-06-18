@@ -7,6 +7,8 @@ public class MoverCoche : MonoBehaviour {
 	private ObtenerMapa mapa;
 	private PathSmoothing path_smoothing;
 	private GameObject coche;
+	private GameObject frontal;
+	private GameObject trasera;
 	private Rigidbody rb_coche;
 	private int contador_vector;
 	private Parrilla parrilla;
@@ -18,6 +20,8 @@ public class MoverCoche : MonoBehaviour {
 	private Vector3[] trayectoria;
 	private Nodo[] trayectoria_nodos;
 	private Vector3 salida_coche;
+	private Vector3 salida_frontal;
+	private Vector3 salida_trasera;
 	private Vector3 meta;
 	private PID_control pid;
 	private PID_control_hybrid pid_hybrid;
@@ -49,6 +53,7 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private GameObject casilla_abiertos;
 	[SerializeField] private GameObject casilla_cerrados;
 
+
 	// Para poder aplicar la fuerza y el giro a las ruedas
 	[SerializeField] private WheelCollider[] m_WheelColliders = new WheelCollider[4];
 	// Para que los modelos de las ruedas giren
@@ -71,10 +76,30 @@ public class MoverCoche : MonoBehaviour {
 
 		mapa = new ObtenerMapa ();
 
+		coche = GameObject.FindGameObjectWithTag ("Coche");
+		rb_coche = coche.GetComponent<Rigidbody> ();
+
+		frontal = GameObject.FindGameObjectWithTag ("Frontal");
+		trasera = GameObject.FindGameObjectWithTag ("Trasera");
+
+		salida_trasera = trasera.transform.position;
+		salida_frontal = frontal.transform.position;
+		salida_coche = coche.transform.position;
+
 		// Elegir algoritmo
 		if (a_hybrid_a_estrella) {
 			Debug.Log ("Usando Hybrid A Estrella");
 			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
+
+			salida_coche = salida_frontal;
+
+			//if ( mapa.lineaVision (salida_coche, salida_frontal) ) { //no hace falta salir hacia atras
+			//	salida_coche = salida_frontal;
+				
+			//} else if ( mapa.lineaVision (salida_coche, salida_trasera) ) { //salir hacia atras
+			//	salida_coche = salida_trasera;
+			//}
+
 		} else if (a_A_estrella) {
 			Debug.Log ("Usando A Estrella");
 			script_algoritmo = GetComponent<A_estrella> ();
@@ -86,9 +111,8 @@ public class MoverCoche : MonoBehaviour {
 			script_algoritmo = GetComponent<Theta_estrella> ();
 		}
 			
-		coche = GameObject.FindGameObjectWithTag ("Coche");
-		rb_coche = coche.GetComponent<Rigidbody> ();
-		salida_coche = coche.transform.position;
+
+
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
 		largo = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.z * 10.0f));
@@ -126,7 +150,7 @@ public class MoverCoche : MonoBehaviour {
 				if (a_hybrid_a_estrella) {
 					float[] resultado_pid;
 
-					resultado_pid = pid_hybrid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
+					resultado_pid = pid_hybrid.pasoPID (control_pid_param_p, control_pid_param_i, control_pid_param_d);
 
 					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
 						freno ();
@@ -137,7 +161,7 @@ public class MoverCoche : MonoBehaviour {
 
 					float[] resultado_pid;
 
-					resultado_pid = pid.pasoPID (control_pid_param_p, 0.0f, control_pid_param_d);
+					resultado_pid = pid.pasoPID (control_pid_param_p, control_pid_param_i, control_pid_param_d);
 
 					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
 						freno ();
@@ -270,29 +294,42 @@ public class MoverCoche : MonoBehaviour {
 		float angulo_giro = 0.0f;
 		float fuerza_motor = 0.0f;
 
-		if (p_angulo_giro > coche_max_angulo) {
-			angulo_giro = coche_max_angulo;
-		}else if (p_angulo_giro < (-1)*coche_max_angulo){
-			angulo_giro = (-1)*coche_max_angulo;
-		}else{
-			angulo_giro = p_angulo_giro;	
-		}
-
-		if (p_fuerza_motor > coche_max_torque) {
-			fuerza_motor = coche_max_torque;
-		}else if (p_fuerza_motor < (-1)*coche_max_torque){
-			fuerza_motor = (-1)*coche_max_torque;
-		}else{
-			fuerza_motor = p_fuerza_motor;	
-		}
+		if (Mathf.Approximately (p_fuerza_motor, 0.0f)) { //frenar
+			m_WheelColliders [0].brakeTorque = coche_max_torque;
+			m_WheelColliders [1].brakeTorque = coche_max_torque;
+			m_WheelColliders [2].brakeTorque = coche_max_torque;
+			m_WheelColliders [3].brakeTorque = coche_max_torque;
 			
-		// Si le damos fuerza a las 4 ruedas: 4x4
-		// Si le damos fuerza a 0 y 1: tracion delantera
-		// Si le damos fuerza a 2 y 3; traccion trasera
-		m_WheelColliders [0].motorTorque = fuerza_motor;
-		m_WheelColliders [1].motorTorque = fuerza_motor;
-		m_WheelColliders [2].motorTorque = fuerza_motor;
-		m_WheelColliders [3].motorTorque = fuerza_motor;
+		} else {
+			m_WheelColliders [0].brakeTorque = 0.0f;
+			m_WheelColliders [1].brakeTorque = 0.0f;
+			m_WheelColliders [2].brakeTorque = 0.0f;
+			m_WheelColliders [3].brakeTorque = 0.0f;
+
+			if (p_angulo_giro > coche_max_angulo) {
+				angulo_giro = coche_max_angulo;
+			} else if (p_angulo_giro < (-1) * coche_max_angulo) {
+				angulo_giro = (-1) * coche_max_angulo;
+			} else {
+				angulo_giro = p_angulo_giro;	
+			}
+
+			if (p_fuerza_motor > coche_max_torque) {
+				fuerza_motor = coche_max_torque;
+			} else if (p_fuerza_motor < (-1) * coche_max_torque) {
+				fuerza_motor = (-1) * coche_max_torque;
+			} else {
+				fuerza_motor = p_fuerza_motor;	
+			}
+			
+			// Si le damos fuerza a las 4 ruedas: 4x4
+			// Si le damos fuerza a 0 y 1: tracion delantera
+			// Si le damos fuerza a 2 y 3; traccion trasera
+			m_WheelColliders [0].motorTorque = fuerza_motor;
+			m_WheelColliders [1].motorTorque = fuerza_motor;
+			m_WheelColliders [2].motorTorque = fuerza_motor;
+			m_WheelColliders [3].motorTorque = fuerza_motor;
+		}
 
 		//Solo giramos las ruedas delanteras
 		m_WheelColliders [0].steerAngle = angulo_giro;

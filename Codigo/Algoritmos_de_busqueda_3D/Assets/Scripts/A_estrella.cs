@@ -67,6 +67,13 @@ public class A_estrella : ControladorCoche {
 		if (abiertos.count () > 0 && !meta_encontrada) {
 			nodo_actual = abiertos.getFirst ();
 
+			/*
+			Debug.Log ("Nodo actual: " +  nodo_actual.vector);
+			Debug.Log ("G: " +  nodo_actual.costeG);
+			Debug.Log ("H: " +  nodo_actual.costeH);
+			Debug.Log ("Coste: " +  nodo_actual.coste);
+			*/
+
 			if (esMeta (nodo_actual, vector_meta)) { 
 				meta_encontrada = true;
 				nodo_final = nodo_actual;
@@ -76,7 +83,7 @@ public class A_estrella : ControladorCoche {
 
 			} else {
 				cerrados.add ( nodo_actual );
-				parrilla.crearCasilla (nodo_actual.vector, Constantes._CERRADOS);
+				//parrilla.crearCasilla (nodo_actual.vector, Constantes._CERRADOS);
 
 				sucesores = CalcularSucesores (nodo_actual, vector_meta, mapa);
 
@@ -90,6 +97,13 @@ public class A_estrella : ControladorCoche {
 
 							anterior.padre = nodo_actual;
 							anterior.coste = sucesor.coste;
+							anterior.costeG = sucesor.costeG;
+							anterior.costeH = sucesor.costeH;
+
+							//Para el hybrid
+							anterior.sentido = sucesor.sentido;
+							anterior.vector_hybrid = sucesor.vector_hybrid;
+							anterior.angulo_hybrid = sucesor.angulo_hybrid;
 							abiertos.updatePrioridad (anterior, anterior.coste);
 
 						}
@@ -103,11 +117,11 @@ public class A_estrella : ControladorCoche {
 								//cerrados.find (sucesor.padre, out mover_padre);
 								cerrados.delete (anterior);
 								abiertos.add (sucesor);
-								parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+								//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
 							}
 						} else { //No esta ni en abiertos ni en cerrados
 							abiertos.add (sucesor);
-							parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+							//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
 						}
 					}
 
@@ -120,7 +134,7 @@ public class A_estrella : ControladorCoche {
 			}
 		}
 
-		//parrilla.dibujarTodas (abiertos, cerrados);
+		parrilla.dibujarTodas (abiertos, cerrados);
 			
 		return meta_encontrada;
 	}
@@ -186,7 +200,7 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
-	protected List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
+	protected virtual List <Nodo> SucesoresValidos (Nodo[] sucesor, ObtenerMapa mapa){
 		List <Nodo> sucesores = new List<Nodo> ();
 
 		foreach (Nodo sucesor_valido in sucesor) {

@@ -13,6 +13,8 @@ TagManager:
   - CasillaAbiertos
   - EjeDelantero
   - EjeTrasero
+  - Frontal
+  - Trasera
   layers:
   - Default
   - TransparentFX
