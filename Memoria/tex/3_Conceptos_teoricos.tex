@@ -15,7 +15,7 @@ Al algoritmo comienza desde el nodo inicial explorando los nodos adyacentes o su
 \subsubsection{Heurística}
 Al algoritmo A* es completo, lo que significa que encontrará un camino hasta la meta siempre que este exista. Además, para que sea admisible, que significa que siempre encontrará un camino óptimo, su función H() también debe ser admisible.
 
-Una función H() es admisible siempre y cuando no sobreestime el coste del camino desde un nodo hasta la meta. Por ejemplo se puede considerar que el camino desde un nodo hasta la meta será la línea recta.
+Una función H() es admisible siempre y cuando no sobrestime el coste del camino desde un nodo hasta la meta. Por ejemplo se puede considerar que el camino desde un nodo hasta la meta será la línea recta.
 
 La admisibilidad del A* trae consigo un gran coste computacional debido al gran número de nodos explorados. Para mejorar la eficiencia podemos dar pesos a las funciones G() y H(), de tal forma que si damos mas valor a G() la búsqueda se expandirá en anchura buscando el camino, mientras que si damos más valor a H() se expandirá más rápido acercándose a la meta.
 
@@ -24,7 +24,7 @@ La admisibilidad del A* trae consigo un gran coste computacional debido al gran 
 Además de secciones tenemos subsecciones.
 
 \section{\textit{Path Smoothing} o Suavizado}
-Poner imagenes comparativas
+\textcolor{blue}{Poner imagenes comparativas}
 
 Un problema del A* tradicional es que las rutas que encuentra, aunque sean las más cortas no tienen una apariencia realista. Esto es debido a que el A* discretiza el espacio de búsqueda, en nuestro caso el espacio en tres dimensiones, para poder buscar la ruta. Dependiendo de la representación que elijamos, se acercará más a o menos a la realidad, pero en cualquier caso se producirá una diferencia que suele estar alejada de la representación ideal de esa misma ruta.
 
@@ -33,7 +33,7 @@ Por ejemplo, en el caso de una búsqueda en un parrilla, si seguimos el camino a
 Por este motivo una vez realiza una vez obtenida la ruta, un proceso de suavizado de tal forma que se acerque la ruta obtenida a través del A*, a la representación ideal de esa ruta.
 
 \subsection{Eliminar el zigzag}
-Poner imagenes
+\textcolor{blue}{Poner imagenes}
 
 El primer método que hemos usado y que suele dar buenos resultados, es eliminar el zigzag. Este método es básicamente lo mismo que realiza el theta* que explicaremos más adelante en \ref{referenciaTheta}.
 
@@ -48,7 +48,7 @@ Para ello, usamos la línea de visión. Si existe una línea de visión entre un
 Así que lo que comprobamos es que existe una línea de visión entre una casilla del A* y la siguiente más lejana posible, y eliminamos a las casillas intermedias. De esta forma obtenemos una línea recta entre esas dos casillas y eliminamos el zigzag producido por las casillas intermedias.
 
 \subsection{Descenso gradiente}
-poner imagenes con resultados de distintos alphas y betas
+\textcolor{blue}{poner imágenes con resultados de distintos alphas y betas}
 
 El descenso gradiente es un algoritmo iterativo de optimización que a partir de $N$ valores iniciales ($x_1, x_2, x_3, ..., x_n$), itera una función modificando esos valores gradualmente hacía un mínimo de una función $f(x_1, x_2, x_3, ..., x_n)$. El algoritmo termina cuando el cambio que se producen en los valores es menor que la tolerancia indicada.
 
@@ -86,9 +86,7 @@ Si la función toma dos puntos de referencia, lo que obtendremos sera una recta 
     \label{fig:basics AFM sketch}
 \end{figure}
 
-Hemos usado la función Bézier con tres puntos después de eliminar el zigzag, así que cada tres puntos del A* sin zigzag se usan como puntos de control que servirán para crear la curva. Si los puntos más o menos están alineados, el resultado será una recta suavizada, y si forman una curva, se eliminan los segmentos rectos y se reemplazan con puntos que forman una curva.
-
-\newpage 
+Hemos usado la función Bézier con tres puntos después de eliminar el zigzag, así que cada tres puntos del A* sin zigzag se usan como puntos de control que servirán para crear la curva. Si los puntos más o menos están alineados, el resultado será una recta suavizada, y si forman una curva, se eliminan los segmentos rectos y se reemplazan con puntos que forman una curva. 
 
 La función Bézier cuadrática para tres puntos de control y parámetro t es:
 
@@ -112,6 +110,8 @@ $z = (1 – t)^2z_0 + 2(1 – t)tz_1 + t^2z_2$
     \label{fig:basics AFM sketch}
 \end{figure}
 
+\newpage
+
 \section{Theta*} \label{referenciaTheta}
 Theta A* es un algoritmo desarrollado por A. Nash, K. Daniel, S. Koenig y A. Felner \cite{thetaestrella, thetaestrellaweb} en 2010 que modifica el A* original para obtener rutas más realistas.
 
@@ -124,16 +124,97 @@ Podemos observar el funcionamiento del algoritmo en la figura 3.3. La línea dis
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=\textwidth,height=6cm,keepaspectratio=true]{Theta_path_12}
-    \caption[Comparacion de los caminos elegidos por el A* y el Theta*]{Comparacion de los caminos elegidos por el A* (path1) y el theta* (path2) de \cite{thetaestrellawebimagen}.}
+    \caption[Comparación de los caminos elegidos por el A* y el Theta*]{Comparación de los caminos elegidos por el A* (path1) y el theta* (path2) de \cite{thetaestrellawebimagen}.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
-
 \subsection{Pseudocódigo Theta*}
 
-\section{A* con vértices}
+\newpage
 
-\subsection{Comparativa}
+\section{A* con vértices}
+El algoritmo A* como hemos visto, divide el espacio de búsqueda en casillas de un espacio discreto. Esto presenta los problemas de rutas poco realistas, y además al ser discreto, no podemos representar una línea recta entre dos puntos distantes, si no que debemos recorrer todas las casillas intermedias.
+
+Podemos mejorar ambos problemas usando un \textit{Nav Mesh} \ref{referenciaNavMesh}.  Un \textit{Nav Mesh} usa polígonos para representar el espacio de búsqueda de tal forma que los lados de estos polígonos y sus vértices se encuentran en los bordes del espacio recorrible. De esta forma, podemos usar esos vértices como las casillas del espacio discreto, lo que produce tres mejoras importantes:
+
+\begin{enumerate}
+\item La representación del espacio recorrible se ajusta más a un espacio continuo al poder ir de un vértice a otro sin pasar por estados intermedios.
+\item Permite que las rutas obtenidas sean más realistas que las obtenidas con la representación discreta.
+\item Al ser un espacio continuo dentro de los polígonos del \textit{Nav Mesh}, evitamos pasar por todos los estados intermedios de una representación discreta, reduciendo enormemente las casillas a explorar y reduciendo el tiempo de ejecución del algoritmo.
+\end{enumerate}
+
+\textcolor{green}{NOTA: no se que mas comentar}
+
+\section{\textit{Hybrid A*}}
+Los algoritmos que hemos visto anteriormente, tanto los que usan una representación totalmente discreta hasta los que buscan aproximarse a rutas más realistas en un espacio continúo, tienen el problema de que no tienen en cuenta las características del vehículo que va a realizar la ruta.
+
+El \textit{Hybrid A*} se basa en el A* tradicional, pero teniendo en cuenta estos dos factores: que el vehículo se mueve por un espacio continuo, y que lo hace siguiendo sus limitaciones físicas.
+
+Para ello, utiliza una aproximación continua al A*. En nuestro caso, la aproximación usada ha sido el modelo de la bicicleta. Este modelo es válido porque los ejes de un vehículo son simétricos, por lo que el resultado de un lado del vehículo será equivalente al del otro lado, pudiéndolo simplificar como si fuera un solo eje formado por la rueda delantera y la rueda trasera.
+
+\textcolor{green}{Cual es la referencia correcta a Sebastian Thrun?}
+\textcolor{blue}{insertar imagen del modelo de la bicicleta}
+
+Los elementos de este modelo son:
+\begin{enumerate}
+\item La rotación del vehículo $\theta$.
+\item El ángulo de giro de las ruedas $\alpha$
+\item La distancia entre los ejes $l$
+\item La distancia recorrida por el vehículo $d$
+\end{enumerate}
+
+Con estos elementos podemos calcular en que posición se encontrará el vehículo en un espacio de tiempo, teniendo en cuenta su capacidad de maniobra.
+
+Las formulas para el calculo de la nueva posición del vehículo son:
+\begin{center}
+$x' = x +  v \Delta t sin \theta$
+
+$z' = z +  v \Delta t cos \theta$
+
+$\theta' = \theta + \Delta t \omega $
+\end{center}
+
+\textcolor{green}{No se cual sería la formula para la y}
+
+Para $v \Delta t$ hemos realizado una aproximación, tal que hemos considerado que la velocidad del vehículo $v$ va a ser constante, y que $\Delta t$ es el tiempo que tarda en recorrer una unidad de nuestra representación. Esto es válido en nuestro caso y nos permite simplificar las ecuaciones porque la velocidad de nuestro vehículo a través del \textit{PID Control} va a ser aproximadamente constante. En un entorno real $v$ sería la velocidad del vehículo entre el lapso de tiempo recorrido entre las mediciones representado por $\Delta T$ 
+
+Para calcular $\omega$, que es el radio de giro que realiza el vehículo en ese espacio de tiempo continuo, usamos la siguiente fórmula:
+\textcolor{green}{referencia de https://www.youtube.com/watch?v=5lWj1FMkq5I  https://www.udacity.com/course/intro-to-artificial-intelligence--cs271 Norvig y thrun}
+\begin{center}
+$\omega = \displaystyle \frac{d}{l} * tan \alpha  $
+\end{center}
+
+Con estos elementos ya podemos calcular cual es el siguiente estado del vehículo en un espacio continuo. Los sucesores del estado actual serán esos estados continuos, variando el angulo de giro, y podemos tener en cuenta el sentido permitiendo al vehículo ir marcha atrás añadiendo los sucesores correspondientes.
+
+Esto nos permite además de obtener rutas más realistas, rutas que se adecuan a la maniobrabilidad del vehículo,  rutas que permiten maniobrar y cambiar de sentido si fuera necesario.
+
+Una de las desventajas del \textit{Hybrid A*} es que no es un algoritmo completo al contrario que el A*. Cuando calculamos los sucesores de un estado se asigna el mejor a una casilla discreta correspondiente del espacio discreto. Además, de forma tradicional el \textit{Hybrid A*} si vuelve a una casilla ya explorada, descarta ese camino. De esta forma, aunque en la mayoría de los casos encontrará un camino, no siempre lo hará aunque exista.
+
+\section{\textit{PID Control}}
+
+\newpage
+
+\section{Comparativa de los algoritmos}
+En esta sección vamos a comparar los algoritmos dependiendo de si utilizan una representación del espacio de búsqueda continua o discreta. A continuación también compararemos el rendimiento de los distintos algoritmo tomando como referencia al A*.
+
+\textcolor{green}{coloca las tablas donde no es no se porque}
+
+\tablaSmall{Comparación de los algoritmos según su representación}{l c c }{comparativadiscretocontinuo}
+{ \multicolumn{1}{l}{Algoritmo} & Discreto & Continuo \\}{ 
+A* & X &\\
+Theta* & X &\\
+A* vértices & & X\\
+Hybrid A* & & X\\
+}
+
+\textcolor{blue}{poner valores reales}
+\tablaSmall{Comparación de los algoritmos según su rendimiento}{l c c }{comparativarendimiento}
+{ \multicolumn{1}{l}{Algoritmo} & Segundos & Porcentaje \\}{ 
+A* & 10.0 & 100\%\\
+Theta* & 9.0 & 90\%\\
+A* vértices & 1.0 & 1\%\\
+Hybrid A* & 15 & 150\%\\
+}
 
 
 

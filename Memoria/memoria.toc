@@ -1,8 +1,8 @@
 \select@language {spanish}
 \select@language {spanish}
 \contentsline {chapter}{\'{I}ndice general}{\es@scroman {iii}}{section*.1}
-\contentsline {chapter}{\'{I}ndice de figuras}{\es@scroman {iv}}{section*.2}
-\contentsline {chapter}{\'{I}ndice de tablas}{\es@scroman {v}}{section*.3}
+\contentsline {chapter}{\'{I}ndice de figuras}{\es@scroman {v}}{section*.2}
+\contentsline {chapter}{\'{I}ndice de tablas}{\es@scroman {vi}}{section*.3}
 \contentsline {chapter}{Introducci\IeC {\'o}n}{1}{chapter*.4}
 \contentsline {chapter}{Objetivos del proyecto}{3}{chapter*.5}
 \contentsline {chapter}{Conceptos te\IeC {\'o}ricos}{4}{chapter*.6}
@@ -15,19 +15,21 @@
 \contentsline {subsection}{Curvas B\IeC {\'e}zier}{7}{section*.11}
 \contentsline {section}{\numberline {3.3}Theta*}{9}{section.3.3}
 \contentsline {subsection}{Pseudoc\IeC {\'o}digo Theta*}{10}{section*.12}
-\contentsline {section}{\numberline {3.4}A* con v\IeC {\'e}rtices}{10}{section.3.4}
-\contentsline {subsection}{Comparativa}{10}{section*.13}
-\contentsline {section}{\numberline {3.5}Im\IeC {\'a}genes}{10}{section.3.5}
-\contentsline {section}{\numberline {3.6}Listas de items}{11}{section.3.6}
-\contentsline {section}{\numberline {3.7}Tablas}{12}{section.3.7}
-\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{14}{chapter*.14}
-\contentsline {section}{\numberline {4.1}Programas usados}{14}{section.4.1}
-\contentsline {subsubsection}{Unity}{14}{section*.15}
-\contentsline {subsubsection}{Texmaker}{15}{section*.16}
-\contentsline {subsubsection}{SmartGit}{15}{section*.17}
-\contentsline {subsubsection}{GitHub y ZenHub}{15}{section*.18}
-\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{16}{chapter*.19}
-\contentsline {section}{\numberline {5.1}\textit {Navigation Mesh}}{16}{section.5.1}
-\contentsline {chapter}{Trabajos relacionados}{18}{chapter*.20}
-\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{19}{chapter*.21}
-\contentsline {chapter}{Bibliograf\'{\i }a}{20}{section*.23}
+\contentsline {section}{\numberline {3.4}A* con v\IeC {\'e}rtices}{11}{section.3.4}
+\contentsline {section}{\numberline {3.5}\textit {Hybrid A*}}{11}{section.3.5}
+\contentsline {section}{\numberline {3.6}\textit {PID Control}}{13}{section.3.6}
+\contentsline {section}{\numberline {3.7}Comparativa de los algoritmos}{14}{section.3.7}
+\contentsline {section}{\numberline {3.8}Im\IeC {\'a}genes}{14}{section.3.8}
+\contentsline {section}{\numberline {3.9}Listas de items}{15}{section.3.9}
+\contentsline {section}{\numberline {3.10}Tablas}{16}{section.3.10}
+\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{18}{chapter*.13}
+\contentsline {section}{\numberline {4.1}Programas usados}{18}{section.4.1}
+\contentsline {subsubsection}{Unity}{18}{section*.14}
+\contentsline {subsubsection}{Texmaker}{19}{section*.15}
+\contentsline {subsubsection}{SmartGit}{19}{section*.16}
+\contentsline {subsubsection}{GitHub y ZenHub}{19}{section*.17}
+\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{20}{chapter*.18}
+\contentsline {section}{\numberline {5.1}\textit {Navigation Mesh}}{20}{section.5.1}
+\contentsline {chapter}{Trabajos relacionados}{22}{chapter*.19}
+\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{23}{chapter*.20}
+\contentsline {chapter}{Bibliograf\'{\i }a}{24}{section*.22}

@@ -8,13 +8,16 @@
 \BOOKMARK [1][-]{section.3.2}{Path Smoothing o Suavizado}{chapter*.6}% 8
 \BOOKMARK [1][-]{section.3.3}{Theta*}{chapter*.6}% 9
 \BOOKMARK [1][-]{section.3.4}{A* con v\351rtices}{chapter*.6}% 10
-\BOOKMARK [1][-]{section.3.5}{Im\341genes}{chapter*.6}% 11
-\BOOKMARK [1][-]{section.3.6}{Listas de items}{chapter*.6}% 12
-\BOOKMARK [1][-]{section.3.7}{Tablas}{chapter*.6}% 13
-\BOOKMARK [0][-]{chapter*.14}{T\351cnicas y herramientas}{}% 14
-\BOOKMARK [1][-]{section.4.1}{Programas usados}{chapter*.14}% 15
-\BOOKMARK [0][-]{chapter*.19}{Aspectos relevantes del desarrollo del proyecto}{}% 16
-\BOOKMARK [1][-]{section.5.1}{Navigation Mesh}{chapter*.19}% 17
-\BOOKMARK [0][-]{chapter*.20}{Trabajos relacionados}{}% 18
-\BOOKMARK [0][-]{chapter*.21}{Conclusiones y L\355neas de trabajo futuras}{}% 19
-\BOOKMARK [0][-]{section*.23}{Bibliograf\355a}{}% 20
+\BOOKMARK [1][-]{section.3.5}{Hybrid A*}{chapter*.6}% 11
+\BOOKMARK [1][-]{section.3.6}{PID Control}{chapter*.6}% 12
+\BOOKMARK [1][-]{section.3.7}{Comparativa de los algoritmos}{chapter*.6}% 13
+\BOOKMARK [1][-]{section.3.8}{Im\341genes}{chapter*.6}% 14
+\BOOKMARK [1][-]{section.3.9}{Listas de items}{chapter*.6}% 15
+\BOOKMARK [1][-]{section.3.10}{Tablas}{chapter*.6}% 16
+\BOOKMARK [0][-]{chapter*.13}{T\351cnicas y herramientas}{}% 17
+\BOOKMARK [1][-]{section.4.1}{Programas usados}{chapter*.13}% 18
+\BOOKMARK [0][-]{chapter*.18}{Aspectos relevantes del desarrollo del proyecto}{}% 19
+\BOOKMARK [1][-]{section.5.1}{Navigation Mesh}{chapter*.18}% 20
+\BOOKMARK [0][-]{chapter*.19}{Trabajos relacionados}{}% 21
+\BOOKMARK [0][-]{chapter*.20}{Conclusiones y L\355neas de trabajo futuras}{}% 22
+\BOOKMARK [0][-]{section*.22}{Bibliograf\355a}{}% 23
