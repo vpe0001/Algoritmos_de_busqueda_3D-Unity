@@ -53,6 +53,14 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private GameObject casilla_abiertos;
 	[SerializeField] private GameObject casilla_cerrados;
 
+	[SerializeField] private GameObject z_casilla_distancias_0;
+	[SerializeField] private GameObject z_casilla_distancias_1;
+	[SerializeField] private GameObject z_casilla_distancias_2;
+	[SerializeField] private GameObject z_casilla_distancias_3;
+	[SerializeField] private GameObject z_casilla_distancias_4;
+	[SerializeField] private GameObject z_casilla_distancias_5;
+	[SerializeField] private GameObject z_casilla_distancias_6;
+
 
 	// Para poder aplicar la fuerza y el giro a las ruedas
 	[SerializeField] private WheelCollider[] m_WheelColliders = new WheelCollider[4];
@@ -72,7 +80,7 @@ public class MoverCoche : MonoBehaviour {
 		error = false;
 		encontrada_meta = false;
 
-		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados);
+		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados, z_casilla_distancias_0, z_casilla_distancias_1, z_casilla_distancias_2, z_casilla_distancias_3, z_casilla_distancias_4, z_casilla_distancias_5, z_casilla_distancias_6);
 
 		mapa = new ObtenerMapa ();
 
@@ -137,6 +145,7 @@ public class MoverCoche : MonoBehaviour {
 
 		inicio = Time.realtimeSinceStartup;
 		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo);
+		//parrilla.borrarTodasCasillas ();
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
@@ -285,10 +294,7 @@ public class MoverCoche : MonoBehaviour {
 
 		return vertices;
 	}
-
-	void ControlManual () {
 		
-	}
 
 	void moverCocheFisicas (float p_fuerza_motor, float p_angulo_giro) {
 		float angulo_giro = 0.0f;

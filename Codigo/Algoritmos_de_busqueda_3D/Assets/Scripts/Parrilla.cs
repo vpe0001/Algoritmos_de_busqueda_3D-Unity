@@ -9,6 +9,13 @@ public class Parrilla {
 	private IComparer<Casilla> comparador_casillas;
 	private GameObject casilla_abiertos;
 	private GameObject casilla_cerrados;
+	private GameObject distancias_0;
+	private GameObject distancias_1;
+	private GameObject distancias_2;
+	private GameObject distancias_3;
+	private GameObject distancias_4;
+	private GameObject distancias_5;
+	private GameObject distancias_6;
 
 	public int Ancho { get; set;} 
 	public int Largo { get; set;} 
@@ -26,12 +33,32 @@ public class Parrilla {
 		Largo = 0;
 	}
 
+	public Parrilla (GameObject c_abiertos, GameObject c_cerrados, GameObject c_distancias_0, GameObject c_distancias_1, GameObject c_distancias_2, GameObject c_distancias_3, GameObject c_distancias_4, GameObject c_distancias_5, GameObject c_distancias_6 ) {
+		casilla_abiertos = c_abiertos;
+		casilla_cerrados = c_cerrados;
+		distancias_0 = c_distancias_0;
+		distancias_1 = c_distancias_1;
+		distancias_2 = c_distancias_2;
+		distancias_3 = c_distancias_3;
+		distancias_4 = c_distancias_4;
+		distancias_5 = c_distancias_5;
+		distancias_6 = c_distancias_6;
+
+		//casillas = new List<GameObject> ();
+
+		//casillas2 = new SortedDictionary<Vector3, GameObject[]> (new ComparadorVectores());
+		casillas = new List<Casilla> ();
+		comparador_casillas = new ComparadorCasillas ();
+
+		Ancho = 0;
+		Largo = 0;
+	}
+
 	// tipo = 1 -> cerrados
 	// tipo = 0 -> abiertos
 	public void crearCasilla (Vector3 posicion, int tipo) {
 		GameObject casilla;
 		//GameObject casilla_antigua;
-		Vector3 temp;
 
 		if (tipo == Constantes._ABIERTOS) {
 			casilla = GameObject.Instantiate<GameObject> (casilla_abiertos);
@@ -39,21 +66,7 @@ public class Parrilla {
 			casilla = GameObject.Instantiate<GameObject> (casilla_cerrados);
 		}
 
-		//La altura de la casilla independiente de la del vector posicion
-		temp = posicion;
-		temp.y = 0.01f;
-		casilla.transform.position = temp;
-
-		//Hacemos la casilla visible poniendo y a 1
-		temp = casilla.transform.localScale;
-		temp.y = 1;
-		casilla.transform.localScale = temp;
-
-		Casilla nueva_casilla = new Casilla (posicion, tipo, casilla);
-
-		borrarCasilla (nueva_casilla); //si ya existe la borramos
-			
-		casillas.Add (nueva_casilla);
+		addCasilla ( posicion, casilla, tipo );
 
 		//Debug.Log ("Tamanio parrilla: " + casillas.Count);
 	}
@@ -128,4 +141,57 @@ public class Parrilla {
 		}
 	}
 
+	public void crearCasillaDistancias (Vector3 posicion, int tipo) {
+		GameObject casilla;
+		//GameObject casilla_antigua;
+
+		switch (tipo) {
+			case 0:
+				casilla = GameObject.Instantiate<GameObject> (distancias_0);
+				break;
+			case 1:
+				casilla = GameObject.Instantiate<GameObject> (distancias_1);
+				break;
+			case 2:
+				casilla = GameObject.Instantiate<GameObject> (distancias_2);
+				break;
+			case 3:
+				casilla = GameObject.Instantiate<GameObject> (distancias_3);
+				break;
+			case 4:
+				casilla = GameObject.Instantiate<GameObject> (distancias_4);
+				break;
+			case 5:
+				casilla = GameObject.Instantiate<GameObject> (distancias_5);
+				break;
+			default:
+				casilla = GameObject.Instantiate<GameObject> (distancias_6);
+				break;
+		}
+			
+
+		addCasilla ( posicion, casilla, tipo );
+
+		//Debug.Log ("Tamanio parrilla: " + casillas.Count);
+	}
+
+	private void addCasilla ( Vector3 posicion, GameObject casilla, int tipo ) {
+		Vector3 temp;
+
+		//La altura de la casilla independiente de la del vector posicion
+		temp = posicion;
+		temp.y = 0.01f;
+		casilla.transform.position = temp;
+
+		//Hacemos la casilla visible poniendo y a 1
+		temp = casilla.transform.localScale;
+		temp.y = 1;
+		casilla.transform.localScale = temp;
+
+		Casilla nueva_casilla = new Casilla (posicion, tipo, casilla);
+
+		borrarCasilla (nueva_casilla); //si ya existe la borramos
+
+		casillas.Add (nueva_casilla);
+	}
 }

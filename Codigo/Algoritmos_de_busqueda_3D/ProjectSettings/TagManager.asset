@@ -15,6 +15,13 @@ TagManager:
   - EjeTrasero
   - Frontal
   - Trasera
+  - Distancias_1
+  - Distancias_2
+  - Distancias_3
+  - Distancias_4
+  - Distancias_5
+  - Distancias_0
+  - Distancias_6
   layers:
   - Default
   - TransparentFX

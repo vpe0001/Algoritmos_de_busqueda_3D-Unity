@@ -7,6 +7,7 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected int largo;
 	protected List<NodoObstaculo> mapa_obstaculos;
 	protected int[, , ] array_mapa_obstaculos;
+	int [,,] array_mapa_distancias;
 
 
 	private float radio_giro_rad;
@@ -99,10 +100,32 @@ public class Hybrid_a_estrella  : A_estrella {
 
 
 		tiempo_inicio = Time.realtimeSinceStartup;
-		crearMapaVoronoi ();
+		array_mapa_distancias = crearMapaDistancias ();
 		tiempo_final = Time.realtimeSinceStartup;
 
-		Debug.Log ("Mapa de Voronoi creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
+		Debug.Log ("Mapa de Distancias creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
+
+		/*
+		int inicio_ancho = (ancho / 2) * (-1);
+		int inicio_largo = (largo / 2) * (-1);
+
+
+		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
+			for (int j = inicio_largo; j <= (largo / 2); j++) {
+				Vector3 n = new Vector3 (i, 0.0f, j);
+				//Debug.Log ("Vector: " + n + " | distancia: " + array_mapa_distancias [i + (ancho / 2), j + (largo / 2), 0] / 10);
+				parrilla.crearCasillaDistancias (n , (array_mapa_distancias [i+(ancho/2), j+(largo/2), 0]) / 10);
+
+				
+				//if (array_mapa_obstaculos [i + (ancho / 2), j + (largo / 2), 0] == Constantes._ABIERTOS) {
+				//	parrilla.crearCasilla (n, Constantes._CERRADOS);
+				//} else {
+				//	parrilla.crearCasilla (n, Constantes._ABIERTOS);
+				//}
+
+			}
+		}
+		*/
 
 		radio_giro_rad = ((Constantes.distancia / Constantes.coche_largo) * Mathf.Tan (Mathf.Deg2Rad * Constantes.coche_max_angulo));
 		radio_giro = Mathf.Rad2Deg * radio_giro_rad;
@@ -271,6 +294,9 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected override float funcionG (Nodo nodo){
 		float coste = 0.0f;
 		Vector3 distancia;
+		int pos_x = Mathf.RoundToInt ( nodo.vector.x + (ancho / 2) );
+		int pos_z = Mathf.RoundToInt ( nodo.vector.z + (largo / 2) );
+		int mapa_distancias = array_mapa_distancias [pos_x, pos_z, 0];
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector_hybrid - nodo.padre.vector_hybrid;
@@ -279,9 +305,11 @@ public class Hybrid_a_estrella  : A_estrella {
 			// Si va en linea recta es menos costoso que girar
 			if (Mathf.Approximately (nodo.padre.angulo_hybrid, nodo.angulo_hybrid)) {
 				coste *= 1.0f;
+				//coste *= 1.2f;
 			} else {
 				//coste *= 5.4f;
-				coste *= 2.0f;
+				//coste *= 2.0f;
+				coste *= 1.7f;
 			}
 		}else {
 			distancia = nodo.vector_hybrid - nodo_inicio.vector;
@@ -293,9 +321,13 @@ public class Hybrid_a_estrella  : A_estrella {
 		if (nodo.sentido == Constantes.hacia_atras) {
 			//coste *= 14.8f;
 			coste *= 6.0f;
+			//coste *= 1.99f;
 		} else {
 			coste *= 1.0f;
 		}
+
+		//coste += (ancho/10) - ((mapa_distancias)/10);
+		coste -= (mapa_distancias)/10;
 
 		return coste;
 	}
@@ -321,13 +353,7 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		return es_meta;
 	}
-
-
-
-	private void crearMapaVoronoi (){
 		
-	}
-
 	//Reescribimos esta funcion de la libreria porque no redondea correctamente
 	// x.5 puede ser 1 o 0 basado en si x es par o impar
 	//Nuestro funcion siempre sera 0.5 = 1.0
@@ -344,6 +370,133 @@ public class Hybrid_a_estrella  : A_estrella {
 
 
 		return numero;
+	}
+
+
+	private int[,,] crearMapaDistancias (){
+		int [,,] mapa_distancias = new int[ancho+1, largo+1, 1];
+
+		Queue <ItemMapaDistancias> cola = new Queue <ItemMapaDistancias> ();
+
+		mapa.setRadio (0.5f);
+
+		//int inicio_ancho = (ancho / 2) * (-1);
+		//int inicio_largo = (largo / 2) * (-1);
+
+		//rellenamos el mapa antes de empezar
+		for (int i = 0; i <= ancho; i++) {
+			for (int j = 0; j <= largo; j++) {
+				mapa_distancias [i, j, 0] = int.MaxValue;
+
+				if (array_mapa_obstaculos [i, j, 0] == Constantes._OBSTACULO) {
+					ItemMapaDistancias celda = new ItemMapaDistancias ();
+
+					mapa_distancias [i, j, 0] = 0;
+
+					celda.x = i - (ancho/2);
+					celda.y = 0;
+					celda.z = j - (largo/2);
+					celda.distancia = 0;
+
+					cola.Enqueue (celda);
+				}
+			}
+		}
+
+		while (cola.Count > 0) {
+			//Debug.Log ("Cola count: " + cola.Count);
+			ItemMapaDistancias actual = cola.Dequeue ();
+			ItemMapaDistancias[] siguientes = siguienteCeldas (actual);
+
+			foreach (ItemMapaDistancias item_dis in siguientes) {
+				int pos_x = item_dis.x + (ancho / 2);
+				int pos_z = item_dis.z + (largo / 2);
+
+				//Esta dentro de nuestro array
+				if ( pos_x >= 0 && pos_z >=0 && pos_x <= ancho && pos_z <= largo ) {
+					//Debug.Log ("Pos_X: " + pos_x + " | Pos_Z: " + pos_z);
+					if ( array_mapa_obstaculos [pos_x, pos_z, 0] == Constantes._LIBRE ) { //Si es libre aun no esta en la cola
+						if ( mapa_distancias [pos_x, pos_z, 0] > item_dis.distancia ) { //Si es mayor es que hemos enconstrado un obstaculo mas cercano
+							mapa_distancias [pos_x, pos_z, 0] = item_dis.distancia;
+
+							cola.Enqueue (item_dis);
+						}
+					}	
+				}
+				
+			}
+		}
+			
+
+		return mapa_distancias;
+	}
+
+	private class ItemMapaDistancias {
+		public int x;
+		public int y;
+		public int z;
+		public int distancia;
+
+		public ItemMapaDistancias () {
+			x = 0;
+			y = 0;
+			z = 0;
+
+			distancia = 0;
+		}
+
+		public ItemMapaDistancias (int _x, int _y, int _z) {
+			x = _x;
+			y = _y;
+			z = _z;
+
+			distancia = 0;
+		}
+
+		public ItemMapaDistancias (int _x, int _y, int _z, int _distancia) {
+			x = _x;
+			y = _y;
+			z = _z;
+
+			distancia = _distancia;
+		}
+	}
+
+	private ItemMapaDistancias[] siguienteCeldas (ItemMapaDistancias actual){
+		ItemMapaDistancias [] siguientes = new ItemMapaDistancias[8] {
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias (),
+			new ItemMapaDistancias ()
+		};
+		ItemMapaDistancias[] movimientos = new ItemMapaDistancias[8] {
+			new ItemMapaDistancias (0, 0, 1, 10),   // adelante
+			new ItemMapaDistancias (-1, 0, 1, 14),   // adelante izquierda
+			new ItemMapaDistancias (-1, 0, 0, 10),   // izquierda
+			new ItemMapaDistancias (-1, 0, -1, 14),  // atras izquierda
+			new ItemMapaDistancias (0, 0, -1, 10),  // atras
+			new ItemMapaDistancias (1, 0, -1, 14), // atras derecha
+			new ItemMapaDistancias (1, 0, 0, 10),  // derecha
+			new ItemMapaDistancias (1, 0, 1, 14)   // adelante derecha
+		};
+
+		int indice = 0;
+
+		foreach (ItemMapaDistancias item_sig in movimientos) {
+			siguientes [indice].x = actual.x + item_sig.x;
+			siguientes [indice].y = actual.y + item_sig.y;
+			siguientes [indice].z = actual.z + item_sig.z;
+
+			siguientes [indice].distancia = actual.distancia + item_sig.distancia;
+
+			indice++;
+		}
+
+		return siguientes;
 	}
 }
 
