@@ -24,5 +24,6 @@ public static class Constantes {
 	public const int parado = 0;
 	public const float angulo_atras = 180.0f;
 	public const float angulo_atras_rad = (Mathf.Deg2Rad * Constantes.angulo_atras);
-
+	public const float ps_tolerancia = 0.000001f;
+	public const float ps_num_puntos_bezier = 10.0f;
 }

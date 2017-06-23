@@ -1,4 +1,20 @@
 \capitulo{7}{Conclusiones y Líneas de trabajo futuras}
 
-Todo proyecto debe incluir las conclusiones que se derivan de su desarrollo. Éstas pueden ser de diferente índole, dependiendo de la tipología del proyecto, pero normalmente van a estar presentes un conjunto de conclusiones relacionadas con los resultados del proyecto y un conjunto de conclusiones técnicas. 
-Además, resulta muy útil realizar un informe crítico indicando cómo se puede mejorar el proyecto, o cómo se puede continuar trabajando en la línea del proyecto realizado. 
+\section{Conclusiones}
+En la realización de este proyecto hemos sido capaces de aprender como funciona y el uso de un motor 3D, hemos implementado distintos tipo de algoritmos que permiten la planificación de rutas y hemos implementado métodos para el seguimiento de las mismas de forma autónoma. En general hemos sido capaces de alcanzar los objetivos que nos habíamos propuesto.
+
+También hemos visto de primera mano las dificultades que entrañan los vehículos autónomos y nos hemos encontrado con la gran cantidad variables a considerar que no se aprecian en una primera fase cuando se están estudiando los algoritmos a usar.
+
+Una de las mayores dificultades que hemos encontrado ha sido la planificación del proyecto, debido a que cuando empezamos no teníamos conocimiento de la mayoría de subtareas que eran necesarias para su realización, con lo que fue difícil calcular la cantidad de trabajo que llevaría cada una de ellas.
+
+\section{Líneas de trabajo futuras}
+Las posibles mejoras del proyecto son muchas debido a que es un campo donde aún se esta en desarrollo y que las disciplinas que abarca son múltiples.
+
+Algunas de las posibilidades que planteamos son mejoras que se pueden introducir al trabajo ya realizado son:
+\begin{itemize}
+\item Mejorar las rutas obtenidas a través de la inclusión de un mapa de Voronoi que mejore la distancia a la que pasa el vehículo de los obstáculos. También se pueden mejorar a través de la inclusión de una heurística que precalcule la distancia a la meta teniendo en cuenta los obstaculos que hay por el camino. De este manera se puede reducir el número de estados a explorar y mejorar el rendimiento.
+\item Mejorar el movimiento del vehículo usando rutas Reeds-Shepp. Estas rutas son costosas computacionalmente pero usadas junto con el \textit{Hybrid A*} permiten mayor precisión a la hora de alcanzar la meta.
+\item Crear un sistema de sensores que sea capaz de detectar el mapa en tiempo real y los obstáculos según de mueve el vehículo.
+\item Añadir otros vehículos que se muevan por el mapa, creando sensores para el vehículo que sean capaces de detectar otros vehículos, su movimiento y evitar una colisión.
+\item Diseñar un sistema de reconocimiento de señales y carreteras, de tal forma que el vehículo se mueva por el carril derecho y sea capaz de respetar las señales.
+\end{itemize}

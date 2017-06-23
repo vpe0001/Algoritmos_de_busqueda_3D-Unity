@@ -97,4 +97,59 @@ A.~Nash, ``Theta*: Any-angle path planning for smoother trajectories in
   \url{http://aigamedev.com/static/tutorials/aap-path12.png}
 \BIBentrySTDinterwordspacing
 
+\bibitem{dolgov08gppISER}
+D.~Dolgov, S.~Thrun, M.~Montemerlo, and J.~Diebel, ``Path planning for
+  autonomous driving in unknown environments,'' in \emph{Proceedings of the
+  Eleventh International Symposium on Experimental Robotics(ISER-08)}.\hskip
+  1em plus 0.5em minus 0.4em\relax Athens, Greece: Springer Tracts in Advanced
+  Robotics (STAR), July 2008.
+
+\bibitem{dolgov08gppSTAIR}
+------, ``Practical search techniques in path planning for autonomous
+  driving,'' in \emph{Proceedings of the First International Symposium on
+  Search Techniques in Artificial Intelligence and Robotics (STAIR-08)}.\hskip
+  1em plus 0.5em minus 0.4em\relax Chicago, USA: AAAI, June 2008.
+
+\bibitem{articuloimagenmodelobicicleta}
+\BIBentryALTinterwordspacing
+Y.-S. Byun, R.-G. Jeong, and S.-W. Kang, ``Vehicle position estimation based on
+  magnetic markers: Enhanced accuracy by compensation of time delays,''
+  \emph{Sensors}, vol.~15, no.~11, pp. 28\,807--28\,825, 2015. [Online].
+  Available: \url{http://www.mdpi.com/1424-8220/15/11/28807}
+\BIBentrySTDinterwordspacing
+
+\bibitem{wiki:pidimagen}
+\BIBentryALTinterwordspacing
+Wikipedia, ``Pid controller --- wikipedia{,} the free encyclopedia,'' 2017,
+  [Online; accessed 23-June-2017]. [Online]. Available:
+  \url{https://en.wikipedia.org/w/index.php?title=PID_controller&oldid=786368579}
+\BIBentrySTDinterwordspacing
+
+\bibitem{bluerajacola}
+\BIBentryALTinterwordspacing
+BlueRaja, ``High speed priority queue for c\#,'' 2016, [Online; accessed
+  23-June-2017]. [Online]. Available:
+  \url{https://github.com/BlueRaja/High-Speed-Priority-Queue-for-C-Sharp}
+\BIBentrySTDinterwordspacing
+
+\bibitem{bradley2012path}
+M.~Bradley, \emph{Path planning and path following for an autonomous car},
+  2012.
+
+\bibitem{vanni2016drones}
+A.~Vanni, \emph{Estudio sobre algoritmos de inteligencia artificial aplicables
+  a drones}, 2016.
+
+\bibitem{nordeus}
+\BIBentryALTinterwordspacing
+E.~Nordeus, ``Self-driving car,'' 2015, [Online; accessed 23-June-2017].
+  [Online]. Available: \url{http://www.habrador.com/p/self-driving-car/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{msairsim}
+\BIBentryALTinterwordspacing
+Microsoft, ``Airsim,'' 2017, [Online; accessed 23-June-2017]. [Online].
+  Available: \url{https://github.com/Microsoft/AirSim}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}

@@ -179,7 +179,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 20116585}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30, y: 0, z: -30}
+  m_LocalPosition: {x: 4, y: 0, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -204,20 +204,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e433e0b23f8d0439e86199c987539242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a_A_estrella: 0
+  a_A_estrella: 1
   a_A_estrella_vertices: 0
   a_theta_estrella: 0
-  a_hybrid_a_estrella: 1
-  control_pid: 1
+  a_hybrid_a_estrella: 0
+  control_pid: 0
   control_pid_param_p: 1
   control_pid_param_i: 0
   control_pid_param_d: 0
-  control_manual: 0
+  control_manual: 1
   coche_max_torque: 1000
   coche_max_angulo: 45
-  ps_path_smoothing_activado: 1
+  ps_path_smoothing_activado: 0
   ps_bezier: 0
-  ps_descenso_gradiente: 1
+  ps_descenso_gradiente: 0
+  ps_peso_trayectoria: 0.5
+  ps_peso_suavizado: 0.4
   a_param_velocidad: 10
   a_param_peso_heuristica: 0.5
   casilla_abiertos: {fileID: 1741385352}

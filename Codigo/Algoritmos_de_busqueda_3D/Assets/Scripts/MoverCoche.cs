@@ -47,6 +47,8 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private bool ps_path_smoothing_activado = true;
 	[SerializeField] private bool ps_bezier = true;
 	[SerializeField] private bool ps_descenso_gradiente = false;
+	[SerializeField] private float ps_peso_trayectoria = 0.5f;
+	[SerializeField] private float ps_peso_suavizado = 0.4f;
 
 	[SerializeField] private float a_param_velocidad = 10.0f;
 	[SerializeField] private float a_param_peso_heuristica = 0.5f;
@@ -145,7 +147,7 @@ public class MoverCoche : MonoBehaviour {
 
 		inicio = Time.realtimeSinceStartup;
 		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo);
-		//parrilla.borrarTodasCasillas ();
+		parrilla.borrarTodasCasillas ();
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
@@ -228,7 +230,7 @@ public class MoverCoche : MonoBehaviour {
 						trayectoria_ps = trayectoriaHybrid (trayectoria_nodos, trayectoria_nodos.Length);
 					}
 
-					path_smoothing = new PathSmoothing (mapa, trayectoria_ps);
+					path_smoothing = new PathSmoothing (mapa, trayectoria_ps, ps_peso_trayectoria, ps_peso_suavizado);
 
 					if (ps_bezier) {
 						trayectoria = path_smoothing.getTrayectoriaSuavizadaCurvasBezier ();	

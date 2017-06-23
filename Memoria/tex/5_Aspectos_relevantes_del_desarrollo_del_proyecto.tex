@@ -7,6 +7,72 @@ En relación por ejemplo al A*, sería el equivalente a la matriz que representa
 
 Está formada por los vértices de los polígonos, y si un punto esta dentro del área que forman entonces ese punto es recorrible. Esto es mas realista en un escenario en tres dimensiones debido a que permite un movimiento menos discretizado, al contrario que las parrillas de casillas que se adecuan más a una representación en dos dimensiones. Y si consideramos los vértices los nodos sucesores, resulta más óptimo computacionalmente, ya que el número de nodos (vértices) a explorar es menor, debido a que no tenemos que tener en cuenta todos los puntos intermedios hasta llegar al vértice, si no unicamente si el vértice es visible o alcanzable desde el nodo actual.
 
-Hemos usado una nav mesh para generar de forma automática el mapa para el A*. En Unity esto se puede hacer de dos formas. En versiones anteriores a la versión 5.6 solo es posible generarlo desde el editor antes del tiempo de ejecución. A partir de la versión 5.6, que permite acceder a las herramientas del editor en tiempo de ejecución, se puede construir a través de NavMeshBuilder, dando mucha más libertad a la hora de crear mapas de forma dinámica o interactiva. Lamentablemnte no se pudo usar la versión 5.6 y la versión más actual que funcionaba en el equipo de desarrollo fue la 5.3.6.
+Hemos usado una \textit{Nav Mesh} para generar de forma automática el mapa para el A*. En Unity esto se puede hacer de dos formas. En versiones anteriores a la versión 5.6 solo es posible generarlo desde el editor antes del tiempo de ejecución. A partir de la versión 5.6, que permite acceder a las herramientas del editor en tiempo de ejecución, se puede construir a través de NavMeshBuilder, dando mucha más libertad a la hora de crear mapas de forma dinámica o interactiva. Lamentablemente no se pudo usar la versión 5.6 y la versión más actual que funcionaba en el equipo de desarrollo fue la 5.3.6.
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth,height=10cm,keepaspectratio=true]{nav_mesh}
+    \caption[Imagén de un \textit{Nav Mesh} en Unity]{Imagén de un \textit{Nav Mesh} en Unity.}
+    \label{fig:basics AFM sketch}
+\end{figure}
 
 La clase NavMesh de Unity tiene métodos que podemos usar como RayTrace, que lanza un rayo desde un vector a otro y devuelve si son visibles dentro de la NavMesh, es decir, si existe una línea recta entre ellos que los una dentro del camino recorrible. Este método lo hemos usado para decidir si un nodo sucesor es válido o no. Al usarlo encontramos un bug que producía que a veces no se encontrará el camino o bucles infinitos a recorrer las listas. Esto es debido a que puede ocurrir que no devuelva lo mismo dependiendo del orden o sentido en el que se le indiquen los vectores entre los que lanzar el rayo. Por ejemplo RayTrace(vector1, vector2) puede ser visible pero RayTrace(vector2, vector1) no. Para solucionarlo decidimos que para que fuera un sucesor válido debe ser visible en los dos sentidos.
+
+\section{Cola de prioridad}
+Uno de los problemas que se encontraron al usar C\# y en concreto la versión que utiliza \textit{Unity} ha sido el no poder usar todos las estructuras de datos de C\# y que algunas estructuras de datos no estaban disponibles directamente en C\#.
+
+Una de estas estructuras de datos que no se encuentran en C\# es la cola de prioridad. La cola de prioridad es utilizada por el A* para almacenar los estados que se van a explorar. Se ordenan según su coste y se extrae de la cola aquel que tenga menos coste para ser el siguiente en ser explorado.
+
+Para tener acceso a una cola de prioridad hemos usado
+\href{https://github.com/BlueRaja/High-Speed-Priority-Queue-for-C-Sharp}{High Speed Priority Queue for C\# \cite{bluerajacola}}
+
+Los motivos para usarla han sido que tiene una licencia MIT que permite usarla libremente. Es sencilla y fácil de usar así como esta creada con el objetivo de ser usada para \textit{Path Finding} con lo que encaja en los objetivos del proyecto.
+
+\section{Física del vehículo}
+Unity dispone de un motor de físicas integrado basado en el PhysX de Nvidia \footnote{\href{https://blogs.unity3d.com/es/2014/07/08/high-performance-physics-in-unity-5/}{High-performance physics in Unity 5}}. Una de las características que se encuentran en el motor de físicas y que han resultado de gran utilidad para la realización del proyecto han sido los \textit{Wheel Colliders}
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth,height=10cm,keepaspectratio=true]{wheelcolliders}
+    \caption[Representación de los \textit{Wheel Colliders} en Unity]{Representación de los cuatro \textit{Wheel Colliders} en Unity.}
+    \label{fig:basics AFM sketch}
+\end{figure}
+
+Los \textit{Wheel Colliders} son una simulación realista de las ruedas de un vehículo y permiten simular todas la físicas necesarias para el vehículo. Tienen tanto simulación del giro de las ruedas como de la fuerza que aplica el motor a las mismas, y una simulación del freno, además de otras simulaciones como la amortiguación que no se han controlado de forma directa en este proyecto.
+
+El uso de los \textit{Wheel Colliders} nos ha permitido la simulación realista de un vehículo con tracción a las cuatro ruedas y un radio de giro de las mismas de 45 grados. Su uso es independiente del modelo del vehículo usado, pudiendo adaptarlo a cualquier modelo cambiando sus parámetros. Tampoco hay limitaciones al número de \textit{Wheel Colliders} que podemos usar, de tal forma que es posible simular una motocicleta, un camión o cualquier otro vehículo que use ruedas.
+
+\section{Modelos utilizados}
+Los modelos usados han sido los que estaban disponibles en la \textit{Assets Store} de Unity.
+
+Principalmente hemos usado los \textit{Standard Assets 1.1.2} de Unity de donde hemos utilizado el modelo del coche, y cuyos ejemplos nos han servido para aprender como usar Unity.
+
+El siguiente conjunto de \textit{assets} que más hemos utilizado ha sido \textit{Low Poly Street Pack 1.0} de \textit{Dynamic Art}, de donde hemos usado la mayor parte de los edificios y elementos del escenario.
+
+En menor medida también se han utilizado elementos de \textit{Abandoned Building 1.0} de Aleksey Kozhemyakim, \textit{Block Building Pack 1.0} de CGY (Yemelyan K.), \textit{Building Apartment 1.0} de LowlyPoly, \textit{San Francisco House 1.0} de Bretwalda Games, \textit{UK Terraced House Pack 1.0} de rik4000.
+
+Los \textit{assets} usados son gratuitos y siguen la licencia de la Unity Store en el que su uso es libre dentro de juegos y de medios interactivos.
+
+\section{Comparativa de los algoritmos}\label{comparativaAlgoritmos}
+
+En esta sección vamos a comparar los algoritmos dependiendo de si utilizan una representación del espacio de búsqueda continua o discreta. A continuación también compararemos el rendimiento de los distintos algoritmos tomando como referencia al A*.
+
+En la tabla 5.1 comparamos los algoritmos teniendo en cuenta como representan el espacio de búsqueda y que limitaciones tienen en cuenta. Podemos observar que el \textit{Hybrid A*} es el único que tiene en cuenta el modelo físico de los autómatas, y con ello el único que busca rutas válidas para la mayoría de los casos con vehículos no holonómicos. Además, debido a esto, es el ñunico que puede buscar rutas que indiquen al autómata moverse en varios sentidos según su dirección. El resto de algoritmos realizan la búsqueda para autómatas holonomicos no teniendo en cuenta estás restricciones.
+
+\tablaSmall{Comparación de los algoritmos según su representación}{l c c c c }{comparativadiscretocontinuo}
+{ \multicolumn{1}{l}{Algoritmo} & Discreto & Continuo & Modelo Físico & Varios Sentidos \\}{ 
+A* & X & & &\\
+Theta* & X & & & \\
+A* vértices & & X & &\\
+Hybrid A* & & X & X & X \\
+}
+
+En la tabla 5.2 comparamos el rendimiento de los algoritmos usados en las mismas condiciones y buscando una ruta con los mismo inicio y meta. Hemos tomado el A* como referencia ya que el resto se basan en el. Los resultados són los esperados. El Theta* es ligeramente más lento debido a los cálculos extra que debe hacer para comprbar si puede asignar un nodo anterior al nodo sucesor. La versión del A* con vértices es mucho más rápida debido a que el número de estados a explorar es mucho menor al usar los vértices del \textit{Nav Mesh}. El Hybrid A* es el más lento debido a que es el que más calculos tiene que realizar en la búsqueda de sucesores en el espacio continuo.
+
+\tablaSmall{Comparación de los algoritmos según su rendimiento}{l c c }{comparativarendimiento}
+{ \multicolumn{1}{l}{Algoritmo} & Segundos & Porcentaje \\}{ 
+A* & 12.34 & 100\%\\
+Theta* & 15.4 & 125\%\\
+A* vértices & 1.87 & 15\%\\
+Hybrid A* & 23.1 & 187\%\\
+}

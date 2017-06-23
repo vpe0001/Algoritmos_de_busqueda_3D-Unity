@@ -134,7 +134,7 @@ public class A_estrella : ControladorCoche {
 			}
 		}
 
-		parrilla.dibujarTodas (abiertos, cerrados);
+		//parrilla.dibujarTodas (abiertos, cerrados);
 			
 		return meta_encontrada;
 	}

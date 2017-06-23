@@ -8,28 +8,33 @@
 \contentsline {chapter}{Conceptos te\IeC {\'o}ricos}{4}{chapter*.6}
 \contentsline {section}{\numberline {3.1}Algoritmo A*}{4}{section.3.1}
 \contentsline {subsubsection}{Heur\IeC {\'\i }stica}{5}{section*.7}
-\contentsline {subsection}{Pseudoc\IeC {\'o}digo A*}{5}{section*.8}
-\contentsline {section}{\numberline {3.2}\textit {Path Smoothing} o Suavizado}{5}{section.3.2}
-\contentsline {subsection}{Eliminar el zigzag}{6}{section*.9}
-\contentsline {subsection}{Descenso gradiente}{6}{section*.10}
-\contentsline {subsection}{Curvas B\IeC {\'e}zier}{7}{section*.11}
-\contentsline {section}{\numberline {3.3}Theta*}{9}{section.3.3}
-\contentsline {subsection}{Pseudoc\IeC {\'o}digo Theta*}{10}{section*.12}
-\contentsline {section}{\numberline {3.4}A* con v\IeC {\'e}rtices}{11}{section.3.4}
-\contentsline {section}{\numberline {3.5}\textit {Hybrid A*}}{11}{section.3.5}
-\contentsline {section}{\numberline {3.6}\textit {PID Control}}{13}{section.3.6}
-\contentsline {section}{\numberline {3.7}Comparativa de los algoritmos}{14}{section.3.7}
-\contentsline {section}{\numberline {3.8}Im\IeC {\'a}genes}{14}{section.3.8}
-\contentsline {section}{\numberline {3.9}Listas de items}{15}{section.3.9}
-\contentsline {section}{\numberline {3.10}Tablas}{16}{section.3.10}
-\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{18}{chapter*.13}
-\contentsline {section}{\numberline {4.1}Programas usados}{18}{section.4.1}
-\contentsline {subsubsection}{Unity}{18}{section*.14}
-\contentsline {subsubsection}{Texmaker}{19}{section*.15}
-\contentsline {subsubsection}{SmartGit}{19}{section*.16}
-\contentsline {subsubsection}{GitHub y ZenHub}{19}{section*.17}
-\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{20}{chapter*.18}
-\contentsline {section}{\numberline {5.1}\textit {Navigation Mesh}}{20}{section.5.1}
-\contentsline {chapter}{Trabajos relacionados}{22}{chapter*.19}
-\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{23}{chapter*.20}
-\contentsline {chapter}{Bibliograf\'{\i }a}{24}{section*.22}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo A*}{6}{section*.8}
+\contentsline {section}{\numberline {3.2}\textit {Path Smoothing} o Suavizado}{7}{section.3.2}
+\contentsline {subsection}{Eliminar el zigzag}{7}{section*.9}
+\contentsline {subsection}{Descenso gradiente}{9}{section*.10}
+\contentsline {subsection}{Curvas B\IeC {\'e}zier}{10}{section*.11}
+\contentsline {section}{\numberline {3.3}Theta*}{13}{section.3.3}
+\contentsline {section}{\numberline {3.4}A* con v\IeC {\'e}rtices}{14}{section.3.4}
+\contentsline {section}{\numberline {3.5}\textit {Hybrid A*}}{15}{section.3.5}
+\contentsline {section}{\numberline {3.6}\textit {PID Controller}}{17}{section.3.6}
+\contentsline {section}{\numberline {3.7}Mapa de distancias}{19}{section.3.7}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo \textit {BrushFire} o \textit {GrassFire}}{21}{section*.12}
+\contentsline {section}{\numberline {3.8}Heur\IeC {\'\i }stica utilizada}{21}{section.3.8}
+\contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{23}{chapter*.13}
+\contentsline {section}{\numberline {4.1}Programas usados}{23}{section.4.1}
+\contentsline {subsubsection}{Unity}{23}{section*.14}
+\contentsline {subsubsection}{Texmaker}{24}{section*.15}
+\contentsline {subsubsection}{SmartGit}{24}{section*.16}
+\contentsline {subsubsection}{GitHub y ZenHub}{24}{section*.17}
+\contentsline {subsubsection}{Remarkable}{24}{section*.18}
+\contentsline {chapter}{Aspectos relevantes del desarrollo del proyecto}{25}{chapter*.19}
+\contentsline {section}{\numberline {5.1}\textit {Navigation Mesh}}{25}{section.5.1}
+\contentsline {section}{\numberline {5.2}Cola de prioridad}{26}{section.5.2}
+\contentsline {section}{\numberline {5.3}F\IeC {\'\i }sica del veh\IeC {\'\i }culo}{27}{section.5.3}
+\contentsline {section}{\numberline {5.4}Modelos utilizados}{28}{section.5.4}
+\contentsline {section}{\numberline {5.5}Comparativa de los algoritmos}{28}{section.5.5}
+\contentsline {chapter}{Trabajos relacionados}{30}{chapter*.20}
+\contentsline {chapter}{Conclusiones y L\IeC {\'\i }neas de trabajo futuras}{31}{chapter*.21}
+\contentsline {section}{\numberline {7.1}Conclusiones}{31}{section.7.1}
+\contentsline {section}{\numberline {7.2}L\IeC {\'\i }neas de trabajo futuras}{31}{section.7.2}
+\contentsline {chapter}{Bibliograf\'{\i }a}{33}{section*.23}

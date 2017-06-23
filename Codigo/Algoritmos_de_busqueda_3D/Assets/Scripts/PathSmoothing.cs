@@ -10,15 +10,15 @@ public class PathSmoothing {
 	private float tolerancia;
 	private float num_puntos_bezier;
 
-	public PathSmoothing (ObtenerMapa p_mapa, Vector3[] p_trayectoria){
+	public PathSmoothing (ObtenerMapa p_mapa, Vector3[] p_trayectoria, float p_peso_trayectoria, float p_peso_suavizado){
 		mapa = p_mapa;
 		trayectoria = p_trayectoria;
 
-		peso_trayectoria = 0.5f;
-		peso_suavizado = 0.1f;
-		tolerancia = 0.000001f;
+		peso_trayectoria = p_peso_trayectoria;
+		peso_suavizado = p_peso_suavizado;
+		tolerancia = Constantes.ps_tolerancia;
 
-		num_puntos_bezier = 10.0f;
+		num_puntos_bezier = Constantes.ps_num_puntos_bezier;
 	}
 
 	public Vector3 [] getTrayectoriaSuavizadaCurvasBezier () {

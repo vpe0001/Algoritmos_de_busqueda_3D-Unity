@@ -41,7 +41,7 @@ public class PathSmoothingTests {
 		correcto [7] = new Vector3 (3.970588f, 0.0f, 3.029412f);
 		correcto [8] = new Vector3 (4.0f,     0.0f, 4.0f);
 
-		PathSmoothing pruebaPS = new PathSmoothing (null, trayectoria_prueba);
+		PathSmoothing pruebaPS = new PathSmoothing (null, trayectoria_prueba, 0.5f, 0.1f);
 		pruebaPS.setPesoTrayectoria (0.5f);
 		pruebaPS.setPesoSuavizado (0.1f);
 		pruebaPS.setTolerancia (0.000001f);

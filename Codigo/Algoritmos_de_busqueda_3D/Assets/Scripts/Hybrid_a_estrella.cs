@@ -77,11 +77,11 @@ public class Hybrid_a_estrella  : A_estrella {
 		}
 		*/
 
-
-		//int inicio_ancho = (ancho / 2) * (-1);
-		//int inicio_largo = (largo / 2) * (-1);
-
 		/*
+		int inicio_ancho = (ancho / 2) * (-1);
+		int inicio_largo = (largo / 2) * (-1);
+
+
 		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
 			for (int j = inicio_largo; j <= (largo / 2); j++) {
 				Vector3 n = new Vector3 (i, 0.0f, j);
@@ -97,6 +97,7 @@ public class Hybrid_a_estrella  : A_estrella {
 			}
 		}
 		*/
+
 
 
 		tiempo_inicio = Time.realtimeSinceStartup;
