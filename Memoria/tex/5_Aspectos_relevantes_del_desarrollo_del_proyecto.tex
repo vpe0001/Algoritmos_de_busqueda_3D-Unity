@@ -57,7 +57,7 @@ Los \textit{assets} usados son gratuitos y siguen la licencia de la Unity Store 
 
 En esta sección vamos a comparar los algoritmos dependiendo de si utilizan una representación del espacio de búsqueda continua o discreta. A continuación también compararemos el rendimiento de los distintos algoritmos tomando como referencia al A*.
 
-En la tabla 5.1 comparamos los algoritmos teniendo en cuenta como representan el espacio de búsqueda y que limitaciones tienen en cuenta. Podemos observar que el \textit{Hybrid A*} es el único que tiene en cuenta el modelo físico de los autómatas, y con ello el único que busca rutas válidas para la mayoría de los casos con vehículos no holonómicos. Además, debido a esto, es el ñunico que puede buscar rutas que indiquen al autómata moverse en varios sentidos según su dirección. El resto de algoritmos realizan la búsqueda para autómatas holonomicos no teniendo en cuenta estás restricciones.
+En la tabla 5.1 comparamos los algoritmos teniendo en cuenta como representan el espacio de búsqueda y que limitaciones tienen en cuenta. Podemos observar que el \textit{Hybrid A*} es el único que tiene en cuenta el modelo físico de los autómatas, y con ello el único que busca rutas válidas para la mayoría de los casos con vehículos no holonómicos. Además, debido a esto, es el único que puede buscar rutas que indiquen al autómata moverse en varios sentidos según su dirección. El resto de algoritmos realizan la búsqueda para autómatas holonomicos no teniendo en cuenta estás restricciones.
 
 \tablaSmall{Comparación de los algoritmos según su representación}{l c c c c }{comparativadiscretocontinuo}
 { \multicolumn{1}{l}{Algoritmo} & Discreto & Continuo & Modelo Físico & Varios Sentidos \\}{ 
@@ -67,7 +67,7 @@ A* vértices & & X & &\\
 Hybrid A* & & X & X & X \\
 }
 
-En la tabla 5.2 comparamos el rendimiento de los algoritmos usados en las mismas condiciones y buscando una ruta con los mismo inicio y meta. Hemos tomado el A* como referencia ya que el resto se basan en el. Los resultados són los esperados. El Theta* es ligeramente más lento debido a los cálculos extra que debe hacer para comprbar si puede asignar un nodo anterior al nodo sucesor. La versión del A* con vértices es mucho más rápida debido a que el número de estados a explorar es mucho menor al usar los vértices del \textit{Nav Mesh}. El Hybrid A* es el más lento debido a que es el que más calculos tiene que realizar en la búsqueda de sucesores en el espacio continuo.
+En la tabla 5.2 comparamos el rendimiento de los algoritmos usados en las mismas condiciones y buscando una ruta con los mismo inicio y meta. Hemos tomado el A* como referencia ya que el resto se basan en el. Los resultados són los esperados. El Theta* es ligeramente más lento debido a los cálculos extra que debe hacer para comprobar si puede asignar un nodo anterior al nodo sucesor. La versión del A* con vértices es mucho más rápida debido a que el número de estados a explorar es mucho menor al usar los vértices del \textit{Nav Mesh}. El Hybrid A* es el más lento debido a que es el que más calculos tiene que realizar en la búsqueda de sucesores en el espacio continuo.
 
 \tablaSmall{Comparación de los algoritmos según su rendimiento}{l c c }{comparativarendimiento}
 { \multicolumn{1}{l}{Algoritmo} & Segundos & Porcentaje \\}{ 

@@ -16,6 +16,7 @@ public class Parrilla {
 	private GameObject distancias_4;
 	private GameObject distancias_5;
 	private GameObject distancias_6;
+	private Casilla [,,] array_casillas;
 
 	public int Ancho { get; set;} 
 	public int Largo { get; set;} 
@@ -33,7 +34,22 @@ public class Parrilla {
 		Largo = 0;
 	}
 
-	public Parrilla (GameObject c_abiertos, GameObject c_cerrados, GameObject c_distancias_0, GameObject c_distancias_1, GameObject c_distancias_2, GameObject c_distancias_3, GameObject c_distancias_4, GameObject c_distancias_5, GameObject c_distancias_6 ) {
+	public Parrilla (GameObject c_abiertos, GameObject c_cerrados, int c_ancho, int c_largo) {
+		casilla_abiertos = c_abiertos;
+		casilla_cerrados = c_cerrados;
+		//casillas = new List<GameObject> ();
+
+		//casillas2 = new SortedDictionary<Vector3, GameObject[]> (new ComparadorVectores());
+		casillas = new List<Casilla> ();
+		comparador_casillas = new ComparadorCasillas ();
+
+		Ancho = c_ancho;
+		Largo = c_largo;
+
+		array_casillas = new Casilla[Ancho+1, Largo+1, 1];
+	}
+
+	public Parrilla (GameObject c_abiertos, GameObject c_cerrados, int c_ancho, int c_largo, GameObject c_distancias_0, GameObject c_distancias_1, GameObject c_distancias_2, GameObject c_distancias_3, GameObject c_distancias_4, GameObject c_distancias_5, GameObject c_distancias_6 ) {
 		casilla_abiertos = c_abiertos;
 		casilla_cerrados = c_cerrados;
 		distancias_0 = c_distancias_0;
@@ -50,8 +66,10 @@ public class Parrilla {
 		casillas = new List<Casilla> ();
 		comparador_casillas = new ComparadorCasillas ();
 
-		Ancho = 0;
-		Largo = 0;
+		Ancho = c_ancho;
+		Largo = c_largo;
+
+		array_casillas = new Casilla[Ancho+1, Largo+1, 1];
 	}
 
 	// tipo = 1 -> cerrados
@@ -93,40 +111,18 @@ public class Parrilla {
 			GameObject.Destroy (c.go_casilla);
 		}
 
-		casillas.Clear ();
-	}
-
-	/*
-	public void crearTodasCasilla () {
-		Vector3 temp;
-		GameObject casilla;
-		int inicio_ancho = (Ancho / 2) * (-1);
-		int inicio_largo = (Largo / 2) * (-1);
-
-		for (int i=inicio_ancho; i<=(Ancho/2); i++) {
-			for (int j=inicio_largo; j<=(Largo/2); j++) {
-				Vector3 vector = new Vector3 (i, 0.0f, j);
-				GameObject[] casillas_vector = new GameObject[2];
-
-				temp = vector;
-				temp.y = 0.01f;
-
-				casilla = GameObject.Instantiate<GameObject> (casilla_abiertos);
-				casilla.transform.position = temp;
-				casillas_vector[1] = casilla;
-
-				casilla = GameObject.Instantiate<GameObject> (casilla_cerrados);
-				casilla.transform.position = temp;
-				casillas_vector[0] = casilla;
-
-				casillas.Add (vector, casillas_vector);
+		for (int i=0; i<=Ancho; i++){
+			for (int j=0 ;j<=Largo; j++){
+				if (array_casillas [i, j, 0] != null) {
+					GameObject.Destroy (array_casillas [i, j, 0].go_casilla);
+				}
 			}
+			
 		}
 
-		
+		casillas.Clear ();
 	}
-	*/
-
+		
 	public void dibujarTodas (Abiertos abiertos, Cerrados cerrados) {
 		SortedDictionary <Vector3, Nodo>.Enumerator enu_cerrados = cerrados.GetEnumerator();
 
@@ -193,5 +189,66 @@ public class Parrilla {
 		borrarCasilla (nueva_casilla); //si ya existe la borramos
 
 		casillas.Add (nueva_casilla);
+	}
+
+
+	private Casilla crearCasillaArray (Vector3 posicion, int tipo){
+		GameObject go_casilla;
+		Casilla casilla;
+		Vector3 temp;
+
+		if (tipo == Constantes._ABIERTOS) {
+			go_casilla = GameObject.Instantiate<GameObject> (casilla_abiertos);
+		} else {
+			go_casilla = GameObject.Instantiate<GameObject> (casilla_cerrados);
+		}
+
+		//La altura de la casilla independiente de la del vector posicion
+		temp = posicion;
+		temp.y = 0.01f;
+		go_casilla.transform.position = temp;
+
+		//Hacemos la casilla visible poniendo y a 1
+		temp = go_casilla.transform.localScale;
+		temp.y = 1;
+		go_casilla.transform.localScale = temp;
+
+		casilla = new Casilla (posicion, tipo, go_casilla);
+
+		return casilla;
+	}
+
+	private Casilla destruirCasillaArray (Vector3 posicion){
+		GameObject go_casilla;
+		Casilla casilla;
+		int x = Mathf.RoundToInt ( posicion.x + (Ancho/2));
+		int z = Mathf.RoundToInt (posicion.z + (Largo/2));
+
+		casilla = array_casillas[x,z,0];
+
+		GameObject.Destroy (casilla.go_casilla);
+
+		return casilla;
+	}
+
+	public void visualizarCasilla (Vector3 posicion, int tipo) {
+		Vector3 temp;
+		int x = Mathf.RoundToInt (posicion.x + (Ancho / 2));
+		int z = Mathf.RoundToInt (posicion.z + (Largo / 2));
+		Casilla casilla;
+
+		casilla = array_casillas [x, z, 0];
+
+		if (casilla != null) {
+			destruirCasillaArray (posicion);
+
+			casilla = crearCasillaArray (posicion, tipo);
+
+			array_casillas [x, z, 0] = casilla;
+		} else {
+			casilla = crearCasillaArray (posicion, tipo);
+
+			array_casillas [x, z, 0] = casilla;
+		}
 	}
 }

@@ -84,19 +84,31 @@ public class PID_control_hybrid {
 			//cambio_sentido = false;
 			//sentido_anterior = trayectoria [punto_actual].sentido;
 		} else {
-			if (trayectoria [punto_actual].sentido == Constantes.hacia_adelante) {
-				//distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				destino = trayectoria [punto_actual].vector_hybrid - eje_trasero.transform.position;
-			} else if ( trayectoria [punto_actual].sentido != trayectoria [punto_actual+1].sentido ) {
-				//distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				destino = trayectoria [punto_actual].vector_hybrid - eje_delantero.transform.position;
-
-			} else {
-				distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				//distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
-				destino = trayectoria [punto_actual].vector_hybrid - eje_delantero.transform.position;
+			if ( punto_actual < punto_meta) {
+				
+				if (trayectoria [punto_actual].sentido == Constantes.hacia_adelante) {
+					//distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					destino = trayectoria [punto_actual].vector_hybrid - eje_trasero.transform.position;
+				} else if (trayectoria [punto_actual].sentido != trayectoria [punto_actual + 1].sentido) {
+					//distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					destino = trayectoria [punto_actual].vector_hybrid - eje_delantero.transform.position;
+				} else {
+					distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					//distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					destino = trayectoria [punto_actual].vector_hybrid - eje_delantero.transform.position;
+				}
+			}else{
+				if (trayectoria [punto_actual].sentido == Constantes.hacia_adelante) {
+					//distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					destino = trayectoria [punto_actual].vector_hybrid - eje_trasero.transform.position;
+				}else {
+					distancia = Vector3.Distance (eje_trasero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					//distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual].vector_hybrid);
+					destino = trayectoria [punto_actual].vector_hybrid - eje_delantero.transform.position;
+				}
 			}
 			
 

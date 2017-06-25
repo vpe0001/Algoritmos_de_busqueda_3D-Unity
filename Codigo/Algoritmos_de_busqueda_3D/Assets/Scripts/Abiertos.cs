@@ -4,61 +4,72 @@ using System.Collections.Generic;
 using Priority_Queue;
 
 public class Abiertos {
-	//private List <Nodo> abiertos;
-	//private IComparer <Nodo> comparador;
 	private FastPriorityQueue <Nodo> abiertos;
-	private HashSet <Vector3> abiertos_comprobar;
-	//private SortedList <Nodo, Nodo> abiertos;
-	//Queue <Nodo> prueba = new Queue<Nodo> ();
+	private int [,,] abiertos_comprobar;
+	private int ancho;
+	private int largo;
 
-	public Abiertos (int max_num_nodos){
-		//abiertos = new List <Nodo> ();
-		//comparador = new ComparadorNodos ();
+	public Abiertos (int max_num_nodos, int p_ancho, int p_largo){
+		ancho = p_ancho;
+		largo = p_largo;
+		
 		abiertos = new FastPriorityQueue<Nodo>(max_num_nodos);
-		abiertos_comprobar = new HashSet<Vector3> (new ComparadorIgualdadVectores());
+		abiertos_comprobar = new int[ancho+1, largo+1, 1];
 
-		//abiertos = new SortedList <Nodo, Nodo> (new ComparadorNodosParaSorted());
+		for (int i=0; i<= ancho; i++){
+			for (int j=0; j<= largo; j++){
+				abiertos_comprobar [i, j, 0] = Constantes._LIBRE;
+			}
+		}
 	}
 
 	public void add (Nodo nodo) {
+		int x = Mathf.RoundToInt (nodo.vector.x + (ancho/2));
+		int z = Mathf.RoundToInt (nodo.vector.z + (largo/2));
+
 		abiertos.Enqueue(nodo, nodo.coste);
-		abiertos_comprobar.Add (nodo.vector);
+		abiertos_comprobar [x, z, 0] = Constantes._OCUPADO;
+
 	}
 
 	public bool comprobar (Nodo nodo) {
-		Nodo encontrado;
+		bool encontrado = false;
+		int x = Mathf.RoundToInt (nodo.vector.x + (ancho/2));
+		int z = Mathf.RoundToInt (nodo.vector.z + (largo/2));
 
-		return find (nodo, out encontrado);
-		//return abiertos.Contains(nodo);
+		if (abiertos_comprobar[x,z,0] == Constantes._OCUPADO) {
+			encontrado = true;
+		}
+
+		return encontrado;
 	}
 
 	public bool delete (Nodo nodo) {
 		bool existe = false;
+		int x = Mathf.RoundToInt (nodo.vector.x + (ancho/2));
+		int z = Mathf.RoundToInt (nodo.vector.z + (largo/2));
 
 		existe = comprobar (nodo);
 
 		if (existe) {
 			abiertos.Remove (nodo);
-			abiertos_comprobar.Remove (nodo.vector);
+			abiertos_comprobar[x,z,0] = Constantes._LIBRE;
 		}
 
 		return existe;
 	}
-	/*
+
 	public bool find (Nodo nodo, out Nodo encontrado) {
 		bool existe = false;
-		bool aniadido = false;
 		encontrado = null;
 
-		aniadido = abiertos_comprobar.Contains (nodo.vector);
+		existe = comprobar (nodo);
 
-		if (aniadido) { //no esta en abiertos;
-			
-			existe = true;
-
-			foreach (Nodo n in abiertos){
+		if (existe) {
+			foreach (Nodo n in abiertos) {
 				if (n.vector == nodo.vector) {
 					encontrado = n;
+					existe = true;
 
 					break;
 				}
@@ -67,38 +78,16 @@ public class Abiertos {
 
 		return existe;
 	}
-	*/
-
-	public bool find (Nodo nodo, out Nodo encontrado) {
-		bool existe = false;
-		encontrado = null;
-
-		//existe = comprobar (nodo);
-
-		foreach (Nodo n in abiertos){
-			if (n.vector == nodo.vector) {
-				encontrado = n;
-				existe = true;
-
-				break;
-			}
-		}
-
-		return existe;
-	}
 
 
 	public Nodo getFirst (){
-		/*
-			Nodo primero = null;
+		Nodo primero = abiertos.Dequeue ();
+		int x = Mathf.RoundToInt (primero.vector.x + (ancho/2));
+		int z = Mathf.RoundToInt (primero.vector.z + (largo/2));
 
-			if (abiertos.Count > 0) {
-				primero = abiertos.Keys [0];
-				abiertos.RemoveAt (0);
-			}
-			*/
+		abiertos_comprobar[x,z,0] = Constantes._LIBRE;
 
-		return abiertos.Dequeue ();
+		return primero;
 	}
 
 

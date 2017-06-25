@@ -36,6 +36,8 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private bool a_theta_estrella = false;
 	[SerializeField] private bool a_hybrid_a_estrella = false;
 
+	[SerializeField] private bool a_dibujar_casillas = true;
+
 	[SerializeField] private bool control_pid = true;
 	[SerializeField] private float control_pid_param_p = 0.5f;
 	[SerializeField] private float control_pid_param_i = 0.1f;
@@ -78,11 +80,17 @@ public class MoverCoche : MonoBehaviour {
 		int tam_parrilla;
 		int ancho;
 		int largo;
+		GameObject suelo;
 
 		error = false;
 		encontrada_meta = false;
 
-		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados, z_casilla_distancias_0, z_casilla_distancias_1, z_casilla_distancias_2, z_casilla_distancias_3, z_casilla_distancias_4, z_casilla_distancias_5, z_casilla_distancias_6);
+		suelo = GameObject.FindGameObjectWithTag ("Suelo");
+		largo = Mathf.FloorToInt((suelo.transform.localScale.z * 10.0f));
+		ancho = Mathf.FloorToInt((suelo.transform.localScale.x * 10.0f));
+		tam_parrilla = ancho * largo;
+
+		parrilla = new Parrilla (casilla_abiertos, casilla_cerrados, ancho, largo, z_casilla_distancias_0, z_casilla_distancias_1, z_casilla_distancias_2, z_casilla_distancias_3, z_casilla_distancias_4, z_casilla_distancias_5, z_casilla_distancias_6);
 
 		mapa = new ObtenerMapa ();
 
@@ -120,14 +128,10 @@ public class MoverCoche : MonoBehaviour {
 			Debug.Log ("Usando Theta Estrella");
 			script_algoritmo = GetComponent<Theta_estrella> ();
 		}
-			
 
 
 		meta = GameObject.FindGameObjectWithTag ("Meta").transform.position;
 		meta.y = meta.y - 0.01f; // Esto es porque esta posicionada elevada por motivos esteticos
-		largo = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.z * 10.0f));
-		ancho = Mathf.FloorToInt((GameObject.FindGameObjectWithTag ("Suelo").transform.localScale.x * 10.0f));
-		tam_parrilla = ancho * largo;
 
 		angulo_coche = coche.transform.rotation.eulerAngles.y;
 
@@ -146,7 +150,7 @@ public class MoverCoche : MonoBehaviour {
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
-		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo);
+		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo, a_dibujar_casillas);
 		parrilla.borrarTodasCasillas ();
 	}
 	

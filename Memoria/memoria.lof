@@ -1,16 +1,16 @@
 \select@language {spanish}
 \select@language {spanish}
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Ejemplo de suavizado usando descenso gradiente}}{7}{figure.3.1}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Comparaci\IeC {\'o}n entre la ruta del A estrella con y sin zigzag}}{8}{figure.3.2}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Comparaci\IeC {\'o}n entre los resultados del descenso gradiente con distintos $\alpha $ y $\beta $}}{10}{figure.3.3}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Comparaci\IeC {\'o}n entre la ruta del A* con y sin zigzag}}{8}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Efecto de $\alpha $ y $\beta $ en el descenso gradiente}}{10}{figure.3.3}
 \contentsline {figure}{\numberline {3.4}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica de Herman Tulleken}}{11}{figure.3.4}
 \contentsline {figure}{\numberline {3.5}{\ignorespaces Esquema de una curva B\IeC {\'e}zier cuadr\IeC {\'a}tica, Wikipedia}}{12}{figure.3.5}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Comparaci\IeC {\'o}n entre la ruta obtenida con el A estrella y con las curvas B\IeC {\'e}zier.}}{12}{figure.3.6}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Comparativa de rutas con A* y con curvas B\IeC {\'e}zier}}{12}{figure.3.6}
 \contentsline {figure}{\numberline {3.7}{\ignorespaces Comparaci\IeC {\'o}n de los caminos elegidos por el A* y el Theta*}}{13}{figure.3.7}
 \contentsline {figure}{\numberline {3.8}{\ignorespaces Comparaci\IeC {\'o}n entre los sucesores del A* y del A* usando los v\IeC {\'e}rtices}}{15}{figure.3.8}
 \contentsline {figure}{\numberline {3.9}{\ignorespaces Esquema del modelo de la bicicleta}}{16}{figure.3.9}
-\contentsline {figure}{\numberline {3.10}{\ignorespaces Esquema de un \textit {PID controller}}}{18}{figure.3.10}
-\contentsline {figure}{\numberline {3.11}{\ignorespaces Representaci\IeC {\'o}n del mapa de obst\IeC {\'a}culos}}{19}{figure.3.11}
-\contentsline {figure}{\numberline {3.12}{\ignorespaces Representaci\IeC {\'o}n del mapa de distancias}}{20}{figure.3.12}
-\contentsline {figure}{\numberline {5.13}{\ignorespaces Imag\IeC {\'e}n de un \textit {Nav Mesh} en Unity}}{26}{figure.5.13}
-\contentsline {figure}{\numberline {5.14}{\ignorespaces Representaci\IeC {\'o}n de los \textit {Wheel Colliders} en Unity}}{27}{figure.5.14}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Representaci\IeC {\'o}n del mapa de obst\IeC {\'a}culos}}{20}{figure.3.10}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Representaci\IeC {\'o}n del mapa de distancias}}{21}{figure.3.11}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Esquema de un \textit {PID controller}}}{24}{figure.3.12}
+\contentsline {figure}{\numberline {5.13}{\ignorespaces Imag\IeC {\'e}n de un \textit {Nav Mesh} en Unity}}{28}{figure.5.13}
+\contentsline {figure}{\numberline {5.14}{\ignorespaces Representaci\IeC {\'o}n de los \textit {Wheel Colliders} en Unity}}{29}{figure.5.14}

@@ -7,7 +7,7 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected int largo;
 	protected List<NodoObstaculo> mapa_obstaculos;
 	protected int[, , ] array_mapa_obstaculos;
-	int [,,] array_mapa_distancias;
+	protected int [,,] array_mapa_distancias;
 
 
 	private float radio_giro_rad;
@@ -15,12 +15,19 @@ public class Hybrid_a_estrella  : A_estrella {
 	private float tiempo_inicio;
 	private float tiempo_final;
 
-	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, float v_angulo_coche, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla, int v_ancho, int v_largo) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, float v_angulo_coche, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla, int v_ancho, int v_largo, bool v_dibujar_casillas) {
 		Vector3[] array_vertices;
 
+		dibujar_casillas = v_dibujar_casillas;
+
+		ancho = v_ancho;
+		largo = v_largo;
+
+		//cerrados = new Cerrados (ancho, largo);
 		cerrados = new Cerrados ();
 		sucesores = new List <Nodo> ();
-		abiertos = new Abiertos (tam_parrilla);
+		abiertos = new Abiertos (tam_parrilla, ancho, largo);
+		//abiertos = new Abiertos (tam_parrilla);
 
 		peso = p_peso;
 
@@ -54,8 +61,7 @@ public class Hybrid_a_estrella  : A_estrella {
 		nodo_inicio.coste = 0;
 
 		abiertos.add (nodo_inicio);
-		ancho = v_ancho;
-		largo = v_largo;
+
 
 
 		mapa.setRadio (0.5f); //
@@ -297,52 +303,52 @@ public class Hybrid_a_estrella  : A_estrella {
 		Vector3 distancia;
 		int pos_x = Mathf.RoundToInt ( nodo.vector.x + (ancho / 2) );
 		int pos_z = Mathf.RoundToInt ( nodo.vector.z + (largo / 2) );
-		int mapa_distancias = array_mapa_distancias [pos_x, pos_z, 0];
+		int distancia_obstaculo = array_mapa_distancias [pos_x, pos_z, 0];
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector_hybrid - nodo.padre.vector_hybrid;
-			coste += distancia.magnitude;
-
-			// Si va en linea recta es menos costoso que girar
-			if (Mathf.Approximately (nodo.padre.angulo_hybrid, nodo.angulo_hybrid)) {
-				coste *= 1.0f;
-				//coste *= 1.2f;
-			} else {
-				//coste *= 5.4f;
-				//coste *= 2.0f;
-				coste *= 1.7f;
-			}
+			coste = distancia.magnitude;
 		}else {
 			distancia = nodo.vector_hybrid - nodo_inicio.vector;
 
-			coste += distancia.magnitude;
+			coste = distancia.magnitude;
 		}
 
-		//IS hacia atras es mas costoso que hacia adelante
+		// Si va en linea recta es menos costoso que girar
+		if (Mathf.Approximately (nodo.padre.angulo_hybrid, nodo.angulo_hybrid)) {
+			coste *= 1.0f;
+			//coste *= 1.2f;
+		} else {
+			//coste *= 5.4f;
+			//coste *= 2.0f;
+			coste *= 1.7f;
+		}
+
+		//Si hacia atras es mas costoso que hacia adelante
 		if (nodo.sentido == Constantes.hacia_atras) {
 			//coste *= 14.8f;
-			coste *= 6.0f;
-			//coste *= 1.99f;
+			//coste *= 6.0f;
+			coste *= 5.0f;
 		} else {
 			coste *= 1.0f;
 		}
 
 		//coste += (ancho/10) - ((mapa_distancias)/10);
-		coste -= (mapa_distancias)/10;
+		coste -= (distancia_obstaculo)/10;
 
+		//coste *= 0.10f;
 		return coste;
 	}
 
-	protected override  float funcionH (Nodo nodo, Vector3 meta){
-		float coste = 0;
-
+	protected override float funcionH (Nodo nodo, Vector3 meta){
+		float coste = 0.0f;
 		Vector3 distancia;
+
 		distancia = nodo.vector_hybrid - meta;
 		coste = distancia.magnitude;
 
 		return coste;
 	}
-
 
 	protected override bool esMeta (Nodo nodo, Vector3 meta) {
 		bool es_meta = false;

@@ -20,13 +20,18 @@ public class A_estrella : ControladorCoche {
 	protected bool meta_encontrada;
 	protected float peso;
 	protected HashSet <Vector3> vertices;
+	protected bool dibujar_casillas;
 
-	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, float v_angulo_coche, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla, int ancho, int largo) {
+	public override void iniciarCalcularRuta(Vector3 v_inicio, Vector3 v_meta, float v_angulo_coche, ObtenerMapa v_mapa, Parrilla v_parrilla, float p_peso, int tam_parrilla, int ancho, int largo, bool v_dibujar_casillas) {
 		Vector3[] array_vertices;
 
+		dibujar_casillas = v_dibujar_casillas;
+
+		//cerrados = new Cerrados (ancho, largo);
 		cerrados = new Cerrados ();
 		sucesores = new List <Nodo> ();
-		abiertos = new Abiertos (tam_parrilla);
+		abiertos = new Abiertos (tam_parrilla, ancho, largo);
+		//abiertos = new Abiertos (tam_parrilla);
 
 		peso = p_peso;
 
@@ -84,6 +89,7 @@ public class A_estrella : ControladorCoche {
 			} else {
 				cerrados.add ( nodo_actual );
 				//parrilla.crearCasilla (nodo_actual.vector, Constantes._CERRADOS);
+				if (dibujar_casillas) {parrilla.visualizarCasilla (nodo_actual.vector, Constantes._CERRADOS);}
 
 				sucesores = CalcularSucesores (nodo_actual, vector_meta, mapa);
 
@@ -118,10 +124,12 @@ public class A_estrella : ControladorCoche {
 								cerrados.delete (anterior);
 								abiertos.add (sucesor);
 								//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+								if (dibujar_casillas) {parrilla.visualizarCasilla (sucesor.vector, Constantes._ABIERTOS);}
 							}
 						} else { //No esta ni en abiertos ni en cerrados
 							abiertos.add (sucesor);
 							//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+							if (dibujar_casillas) {parrilla.visualizarCasilla (sucesor.vector, Constantes._ABIERTOS);}
 						}
 					}
 
@@ -134,7 +142,7 @@ public class A_estrella : ControladorCoche {
 			}
 		}
 
-		//parrilla.dibujarTodas (abiertos, cerrados);
+		//if (dibujar_casillas) {parrilla.dibujarTodas (abiertos, cerrados);}
 			
 		return meta_encontrada;
 	}
@@ -148,11 +156,11 @@ public class A_estrella : ControladorCoche {
 	}
 
 	// A*
-	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float v_angulo_coche, ObtenerMapa mapa, Parrilla parrilla, float p_peso, int tam_parrilla, int ancho, int largo) {
+	public override Vector3[] CalcularRuta (Vector3 inicio, Vector3 meta, float v_angulo_coche, ObtenerMapa mapa, Parrilla parrilla, float p_peso, int tam_parrilla, int ancho, int largo, bool v_dibujar_casillas) {
 		bool error;
 		peso = p_peso;
 		
-		iniciarCalcularRuta(inicio, meta, v_angulo_coche, mapa, parrilla, peso, tam_parrilla, ancho, largo);
+		iniciarCalcularRuta(inicio, meta, v_angulo_coche, mapa, parrilla, peso, tam_parrilla, ancho, largo, v_dibujar_casillas);
 
 		while (!pasoCalcularRuta (out error)) {
 		}

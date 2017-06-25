@@ -6,6 +6,7 @@ public static class Constantes {
 	public const float coche_ancho = 2.43f;
 	public const int _OBSTACULO = 1;
 	public const int _LIBRE = 0;
+	public const int _OCUPADO = 1;
 	public const int _CERRADOS = 1;
 	public const int _ABIERTOS = 0;
 	public const float coche_max_angulo = 45.0f;

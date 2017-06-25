@@ -12,12 +12,14 @@ La función F() de evaluación calcula el coste de cada nodo, con lo que se elig
 
 Al algoritmo comienza desde el nodo inicial explorando los nodos adyacentes o sucesores, cual es de menor coste. Un nodo ya explorado, es decir del que ya se ha buscado sus sucesores, se manda a la lista de nodos cerrados. Con los sucesores se forma una lista de nodos abiertos o por explorar, de la cual se elige el de menor coste para ser el siguiente en ser explorado, hasta que se alcance el nodo meta o no queden más nodos por ser explorados (si no quedasen más nodos significaría que no hay un camino entre el nodo inicial y la meta). Si al explorar un nodo esta ya se encontraba en alguna de las listas de nodos abiertos o cerrados, se actualizarán los valores de los nodos al de menor coste encontrado.
 
-\subsubsection{Heurística}
+\subsubsection{Heurística} \label{heuristicaaestrella}
 Al algoritmo A* es completo, lo que significa que encontrará un camino hasta la meta siempre que este exista. Además, para que sea admisible, que significa que siempre encontrará un camino óptimo, su función H() también debe ser admisible.
 
 Una función H() es admisible siempre y cuando no sobrestime el coste del camino desde un nodo hasta la meta. Por ejemplo se puede considerar que el camino desde un nodo hasta la meta será la línea recta.
 
 La admisibilidad del A* trae consigo un gran coste computacional debido al gran número de nodos explorados. Para mejorar la eficiencia podemos dar pesos a las funciones G() y H(), de tal forma que si damos más valor a G() la búsqueda se expandirá en anchura buscando el camino, mientras que si damos más valor a H() se expandirá más rápido acercándose a la meta.
+
+Para el A*, el Theta* \ref{referenciaTheta} y el A* con vértices \ref{avertices} hemos usado la distancia euclídea tanto para la función G() como para la función H(). La función G() es la distancia recorrida desde el inicio hasta ese punto, y la función H() es la distancia en línea recta desde donde nos encontremos a la meta.
 
 \subsection{Pseudocódigo A*}
 
@@ -87,7 +89,7 @@ La forma para eliminar el zigzag, es comprobar si es posible eliminar estos paso
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=\textwidth,height=11cm,keepaspectratio=true]{comparacion_a_star_zingzag}
-    \caption[Comparación entre la ruta del A estrella con y sin zigzag]{A la izquierda la ruta obtenida con el A estrella, y a la derecha la ruta después de eliminar el zigzag.}
+    \caption[Comparación entre la ruta del A* con y sin zigzag]{A la izquierda la ruta obtenida con el A*, y a la derecha la ruta después de eliminar el zigzag.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
@@ -123,7 +125,7 @@ En la figura 3.3 podemos ver los distintos resultados que obtenemos al usar dist
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=\textwidth,height=11cm,keepaspectratio=true]{comparacion_a_star_descenso}
-    \caption[Comparación entre los resultados del descenso gradiente con distintos $\alpha$ y $\beta$]{Comparación entre los resultados del descenso gradiente con distintos $\alpha$ y $\beta$.}
+    \caption[Efecto de $\alpha$ y $\beta$ en el descenso gradiente]{Comparación entre los resultados del descenso gradiente con distintos $\alpha$ y $\beta$.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
@@ -168,7 +170,7 @@ $z = (1 – t)^2z_0 + 2(1 – t)tz_1 + t^2z_2$
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=\textwidth,height=9cm,keepaspectratio=true]{comparacion_a_star_bezier}
-    \caption[Comparación entre la ruta obtenida con el A estrella y con las curvas Bézier.]{Comparación entre la ruta obtenida con el A estrella y con las curvas Bézier.}
+    \caption[Comparativa de rutas con A* y con curvas Bézier]{Comparación entre la ruta obtenida con el A* y con las curvas Bézier.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
@@ -190,7 +192,7 @@ Podemos observar el funcionamiento del algoritmo en la figura 3.7. La línea dis
     \label{fig:basics AFM sketch}
 \end{figure}
 
-\section{A* con vértices}
+\section{A* con vértices} \label{avertices}
 El algoritmo A* como hemos visto, divide el espacio de búsqueda en casillas de un espacio discreto. Esto presenta los problemas de rutas poco realistas, y además al ser discreto, no podemos representar una línea recta entre dos puntos distantes, si no que debemos recorrer todas las casillas intermedias.
 
 Podemos mejorar ambos problemas usando un \textit{Nav Mesh} \ref{referenciaNavMesh}.  Un \textit{Nav Mesh}\footnote{\textit{Nav Mesh} es un conjunto de polígonos que se usan en los motores gráficos 3D para representar la zona recorrible de un agente} usa polígonos para representar el espacio de búsqueda de tal forma que los lados de estos polígonos y sus vértices se encuentran en los bordes del espacio recorrible, que es el espacio del mapa sin obstáculos por donde puede moverse en nuestro caso el vehículo. De esta forma, podemos usar esos vértices como las casillas del espacio discreto, lo que produce tres mejoras importantes:
@@ -203,11 +205,11 @@ Podemos mejorar ambos problemas usando un \textit{Nav Mesh} \ref{referenciaNavMe
 
 Este algoritmo es una variante del A*, donde la función de sucesores cambia de los espacios contiguos a la casilla que se va a explorar, a los vértices que son visibles desde el la casilla actual. Las casillas ahora no son las contiguas si no que se encuentran en la posición de los vértices.
 
-En la figura 3.8 podemos ver una comparación entre los sucesores generados por el A* a la izquierda, y el A* usando los vértices a la derecha. Las casillas rojas representan un obstáculo, la amarilla la casilla que se va explorar, y las casillas azules representan a los sucesores. Mientras que en el A* los sucesores son las casillas contiguas, usando los vértices se desplaza directamente a las casillas posibles más alejadas, son donde se encuentran los vértices del \textit{Nav Mesh.}
+En la figura 3.8 podemos ver una comparación entre los sucesores generados por el A* a la izquierda, y el A* usando los vértices a la derecha. Las casillas rojas representan un obstáculo, la amarilla la casilla que se está explorando, y las casillas azules representan a los sucesores. Mientras que en el A* los sucesores son las casillas contiguas, usando los vértices se desplaza directamente a las casillas posibles más alejadas, son donde se encuentran los vértices del \textit{Nav Mesh.}
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=\textwidth,height=5cm,keepaspectratio=true]{sucesoresVertices}
-    \caption[Comparación entre los sucesores del A* y del A* usando los vértices]{Comparación entre los sucesores del A* y del A* usando los vértices}
+    \caption[Comparación entre los sucesores del A* y del A* usando los vértices]{Comparación entre los sucesores del A* y del A* usando los vértices. Las casilla rojas representan obstáculos, las amarillas la casilla que se está explorando y las casillas azules los sucesores.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
@@ -228,7 +230,7 @@ El \textit{Hybrid A*}, utiliza una aproximación continua al A*. En nuestro caso
     \label{fig:basics AFM sketch}
 \end{figure}
 
-Los elementos de este modelo son:
+Los elementos del modelo de la bicicleta son:
 \begin{enumerate}
 \item La rotación del vehículo $\theta$.
 \item El ángulo de giro de las ruedas $\alpha$
@@ -238,7 +240,7 @@ Los elementos de este modelo son:
 
 Con estos elementos podemos calcular en que posición se encontrará el vehículo en un espacio de tiempo, teniendo en cuenta su capacidad de maniobra.
 
-Las fórmulas para el cálculo de la nueva posición del vehículo son:
+\label{formulashybrid}Las fórmulas para el cálculo de la nueva posición del vehículo son:
 \begin{center}
 $x' = x +  v \Delta t \sin \theta$
 
@@ -247,7 +249,7 @@ $z' = z +  v \Delta t \cos \theta$
 $\theta' = \theta + \Delta t \omega $
 \end{center}
 
-Para $v \Delta t$ hemos realizado una aproximación, tal que hemos considerado que la velocidad del vehículo $v$ va a ser constante, y que $\Delta t$ es el tiempo que tarda en recorrer una unidad de nuestra representación. Esto es válido en nuestro caso y nos permite simplificar las ecuaciones porque la velocidad de nuestro vehículo a través del \textit{PID Control} va a ser aproximadamente constante. En un entorno real $v$ sería la velocidad del vehículo entre el lapso de tiempo recorrido entre las mediciones representado por $\Delta T$ 
+Para $v \Delta t$ hemos realizado una aproximación, tal que hemos considerado que la velocidad del vehículo $v$ va a ser constante, y que $\Delta t$ es el tiempo que tarda en recorrer una unidad de nuestra representación. Esto es válido en nuestro caso y nos permite simplificar las ecuaciones porque la velocidad de nuestro vehículo a través del \textit{PID Controller} (ver sección \ref{pidcontroller}) va a ser aproximadamente constante. En un entorno real $v$ sería la velocidad del vehículo entre el lapso de tiempo recorrido entre las mediciones representado por $\Delta T$ 
 
 Para calcular $\omega$, que es el radio de giro que realiza el vehículo en ese espacio de tiempo continuo, usamos la siguiente fórmula
 \footnote{Del curso de Udacity de Norvig y Thrun: \href{https://www.udacity.com/course/intro-to-artificial-intelligence--cs271}{Intro to Artificial Intelligence}}:
@@ -261,44 +263,49 @@ Esto nos permite además de obtener rutas más realistas, rutas que se adecuan a
 
 Una de las desventajas del \textit{Hybrid A*} es que no es un algoritmo completo, es decir que aunque exista una solución no siempre dará con ella, al contrario que el A*. Cuando calculamos los sucesores de un estado se asigna el mejor a una casilla discreta correspondiente del espacio discreto. Además, de forma tradicional el \textit{Hybrid A*} si vuelve a una casilla ya explorada, descarta ese camino. De esta forma, aunque en la mayoría de los casos encontrará un camino, no siempre lo hará aunque exista.
 
-\section{\textit{PID Controller}}
-Para mover el vehículo vamos a usar un \textit{PID Controller} (Controlador Proporcional, Integral y Derivativo). Un controlador de este tipo itera y se retroalimenta para corregir el error existente entre el valor actual y el resultado que se quiere conseguir.
+\subsection{Definición de los estados}
+En el A* cada estado tenia asociado solamente la posición y su coste. En cambio en el \textit{Hybrid A*} necesitamos más parámetros para poder definir cada estado.
 
-La parte proporcional considera la diferencia entre el valor actual y el valor objetivo, y aplica la corrección (la fuerza que debe hacer un motor, o el angulo de giro de las ruedas) de forma proporcional a ese error. El problema con la parte proporcional es que puede excederse. Es decir, al acercarse al valor correcto utilizar una corrección excesiva que haga que sobrepase el valor correcto, y tenga que corregirse en sentido contrario a continuación.
+Los parámetros necesarios para cada estado el \textit{Hybrid A*} son:
+\begin{itemize}
+\item \textbf{Posición continua:} es la posición a donde se puede mover el vehículo teniendo en cuenta sus características y limitaciones.
+\item \textbf{Posición discreta:} es la casilla del mapa representado de forma discreta que le corresponde a la posición continua.
+\item \textbf{Orientación:} es el ángulo que forma el vehículo con el eje de referencia después de haber alcanzado la posición continua correspondiente..
+\item \textbf{Sentido:} indica si el vehículo se tienen que mover hacia adelante o hacia atrás para alcanzar la posición.
+\item \textbf{Coste:} es la suma del coste del camino hasta la posición continua más la estimación del camino hasta la meta.
+\end{itemize}
 
-La parte diferencial sirve para corregir el exceso que se puede producir en la parte proporcional. No tiene en cuenta el error si no su variación en el tiempo e intenta que esta variación sea continua en el tiempo. De esta forma, cuando se acerca al valor deseado suaviza la corrección que produce la parte proporcional, y si nos excedemos evita que se realice una corrección brusca en el otro sentido. Así evita que el controlador balancee alrededor del valor objetivo y se acerque de una forma estable.
+\subsection{Función de sucesores}
+Cuando con el A* calculamos los sucesores, cada uno de ellos corresponde a una posición discreta que a su vez corresponde a una casilla. Pero cuando calculamos lo sucesores de forma continua para el \textit{Hybrid A*} esto no ocurre.
 
-La parte integral se encarga de corregir el error que se produce por causas externas. Por ejemplo, si en un vehículo se produce siempre un sobregiro hacia un lado por una avería o alguna otra causa, la parte integral se encarga de añadir la corrección necesaria para compensarlo. Para ello no considera sólo del error si no como se ha mantenido a lo largo del tiempo. Si un error persiste e impide acercarnos al objetivo, la parte integral intentará compensarlo. Por ejemplo, en el caso del vehículo con un problema de sobregiro, aplicará una corrección a la parte proporcional para compensar el sobregiro y que no gire en exceso las ruedas.
+A través de las formulas \ref{formulashybrid} para calcular la posición continua, podemos calcular tantos sucesores como se crea conveniente. Tendremos un sucesor en línea recta hacía delante, y un sucesor en línea recta hacia atrás. Pero para los giros tendremos tantos como deseemos desde $0º$ hasta el ángulo máximo de giro de las ruedas del vehículo. Aunque cuantos más sucesores se decida calcular, el coste computacional de la exploración será mucho mayor. Por ello, para este proyecto se calculan seis sucesores correspondientes a los dos mencionados anteriormente que van en línea recta adelante y atrás, y a los lados con el ángulo máximo de giro de las ruedas.
 
-\begin{figure}[htpb]
-    \centering
-    \includegraphics[width=\textwidth,height=10cm,keepaspectratio=true]{PID_wikipedia}
-    \caption[Esquema de un \textit{PID controller}]{Esquema de un \textit{PID controller} de \cite{wiki:pidimagen}.}
-    \label{fig:basics AFM sketch}
-\end{figure}
+A continuación hay que asignar esos sucesores a una casillas discreta. Para ello tomamos el valor entero de su vector de posición, pero al hacer esto es posible que varios sucesores coincidan en la misma casilla discreta. En ese caso se elige aquel sucesor cuyo coste sea menor, descartando los otros. Es posible guardar todos los sucesores, el problema es el mismo que cuando se decide cuantos sucesores generar, el coste computacional sería muy alto debido a que el número de sucesores que se generaría con las posiciones continuas sería mucho mayor que su equivalente en una representación discreta. Descartando los peores sucesores continuos de cada posición discreta, contenemos el coste computacional.
 
-Cada parte del controlador recibe un parámetro que controla cuanto afecta al resultado. Normalmente queremos que la mayor parte del resultado venga establecido por el a parte proporcional, dando valores bajos tanto a la parte diferencial como a la integral. Si se diese un peso alto a la parte diferencial podría producir el efecto contrario al que pretende evitar y excederse. Si se diese un peso alto a la parte integral, podría producir un estado inestable debido al error acumulado a lo largo del tiempo.
+\subsection{Calculo del coste de la ruta} \label{hybridcoste}
+El calculo del coste a través de las funciones G() y H(), es la forma que tenemos de controlar como se va a realizar la búsqueda de la ruta, así como también que rutas se van a seleccionar con respecto a otras posibles.
 
-Las fórmulas de un PID Controller son las siguiente:
-\begin{center}
-$P = paramP * (valorObjetivo(t) - valorActual(t))$
+Para el \textit{Hybrid A*} hemos ampliado la función G() con las distancias euclídeas para tener en cuenta que:
+\begin{enumerate}
+\item Si el vehículo gira es un coste adicional.
+\item Si el vehículo retrocede es un gran coste adicional
+\item Si pasa cerca de un obstáculo es un coste adicional
+\end{enumerate}
 
-$I = paramI * (\displaystyle \int_{0}^{t} errorAcumulado(t) dt)$
+De esta manera se pretende que se seleccionen las rutas más realistas posibles. Por ejemplo, si no se penalizará el ir hacia atrás, podrían resultar casos donde el \textit{Hybrid A*} seleccionase una ruta donde fuese desde el inicio hasta la meta de forma continua marcha atrás, aunque pudiese girar e ir hacia adelante. Si ir marcha atrás es igual de válido que ir hacia adelante no habría motivo para dar la vuelta, pero ese resultado es poco realista debido a que en la realidad es peligroso y poco deseable ir marcha atrás más tiempo del necesario.
 
-$D = paramD * (\displaystyle \frac{errorAnterior(t)-errorActual(t)}{dt})$
-\end{center}
+Al penalizar los giros ocurre un caso parecido puesto que en la realidad se prefiere ir en línea recta. Aunque, en este caso surge un conflicto con el tercer caso de mantener una distancia con los obstáculos. Es decir, a través de los pesos de la heurística el algoritmo debe decidir si es mejor girar y alejarse de un obstáculo o si es preferible mantenerse cerca pero ir en línea recta.
 
-Y el valor final que se usará para corregir el valor actual y acercarnos al valor objetivo lo obtenemos sumando los tres resultados:
-\begin{center}
-$error = P + I + D$
-\end{center}
+La formula utilizada para la función G() ha sido:
+$coste = (distanciaRecorrida * pgiro * patras) - distanciaObstaculo$
+Siendo $pgiro$ la penalización que se le aplica por realizar un giro y $patras$ la penalización que le aplica por ir marcha atrás.
 
-\section{Mapa de distancias}
+\subsection{Mapa de distancias}
 Cuando los algoritmos que hemos visto buscan la mejor ruta, a veces tienen el problema que el resultado que obtienen es un ruta que se pega a los obstáculos. Puede ser debido a varios factores, como que la ruta más corta sea esa o que al realizar las heurísticas se haya preferido penalizar los giros para maximizar los tramos en que el vehículo sigue una línea recta evitando girar para alejarse de los obstáculos.
 
 Pero normalmente no es conveniente que la ruta pase demasiado cerca de los obstáculos si no es necesario para evitar que se produzcan choques, por ejemplo, al cambiar de dirección.
 
-Para intentar evitar que se acerque demasiado hemos utilizado dos métodos. Primero hemos dado un radio al \textit{Nav Mesh} de forma que no haya posiciones válidas demasiado cerca de los obstáculos. Y segundo, hemos creado un mapa de distancias que almacena la distancia de cada posición discreta al obstáculo más cercano. Al incorporar esta distancia a la heurística, el algoritmo prefiere posiciones que estén alejadas de los obstáculos.
+Para intentar evitar que se acerque demasiado hemos utilizado dos métodos. Primero hemos dado un radio al \textit{Nav Mesh} de forma que no haya posiciones válidas demasiado cerca de los obstáculos. Y segundo, hemos creado un mapa de distancias que almacena la distancia de cada posición discreta al obstáculo más cercano. Al incorporar esta distancia a la función G(), el algoritmo prefiere posiciones que estén alejadas de los obstáculos.
 
 \begin{figure}[htpb]
     \centering
@@ -320,7 +327,8 @@ Primero se inicializa con un valor máximo a todas las casillas. Una vez inicial
     \label{fig:basics AFM sketch}
 \end{figure}
 
-\subsection{Pseudocódigo \textit{BrushFire} o \textit{GrassFire}}
+\clearpage
+\subsubsection{Pseudocódigo \textit{BrushFire} o \textit{GrassFire}}
 \begin{algorithm}[H]
 	abiertos = $\O$\;
 
@@ -355,19 +363,49 @@ Primero se inicializa con un valor máximo a todas las casillas. Una vez inicial
  \caption{Pseudocódigo del \textit{BrushFire} o \textit{GrassFire}}
 \end{algorithm}
 
-\section{Heurística utilizada}
-La heurística es la forma que tenemos de controlar como se va a realizar la búsqueda de la ruta, así como también que rutas se van a seleccionar con respecto a otras posibles.
+\subsection{Heurística \textit{Hybrid A*}} \label{hueristicahybrid}
+Para la realización de las función heurística podemos considerar tres posibilidades principalmente:
 
-Para el A*, el Theta* y el A* con vértices hemos usado la distancia euclídea tanto para la función G() como para la función H(). La función G() es la distancia recorrida desde el inicio hasta ese punto, y la función H() es la distancia en línea recta desde donde nos encontremos a la meta.
-
-Para el \textit{Hybrid A*} hemos ampliado la heurística con las distancias euclídeas para tener en cuenta que:
 \begin{enumerate}
-\item Si el vehículo gira es un coste adicional.
-\item Si el vehículo retrocede es un gran coste adicional
-\item Si pasa cerca de un obstáculo es un coste adicional
+\item La distancia euclídea en línea recta desde las posición actual hasta la meta.
+\item La distancia hasta la meta teniendo en cuenta los obstáculos que se encuentren pero sin tener en cuenta las restricciones de movimiento.
+\item La distancia hasta la meta sin tener en cuenta los obstáculos pero teniendo en cuenta las restricciones de movimiento.
 \end{enumerate}
 
-De esta manera se pretende que se seleccionen las rutas más realistas posibles. Por ejemplo, si no se penalizará el ir hacia atrás, podrían resultar casos donde el \textit{Hybrid A*} seleccionase una ruta donde fuese desde el inicio hasta la meta de forma continua marcha atrás, aunque pudiese girar e ir hacia adelante. Si ir marcha atrás es igual de válido que ir hacia adelante no habría motivo para dar la vuelta, pero ese resultado es poco realista debido a que en la realidad es peligroso y poco deseable ir marcha atrás más tiempo del necesario.
+Todos estos casos son una simplificación del caso real, debido a que la función heurística es una estimación del coste y como vimos en la heurística del A* \ref{heuristicaaestrella}, para que el algoritmo sea admisible no se debe sobreestimar el coste hasta la meta.
 
-Al penalizar los giros ocurre un caso parecido puesto que en la realidad se prefiere ir en línea recta. Aunque, en este caso surge un conflicto con el tercer caso de mantener una distancia con los obstáculos. Es decir, a través de los pesos de la heurística el algoritmo debe decidir si es mejor girar y alejarse de un obstáculo o si es preferible mantenerse cerca pero ir en línea recta.
+\textcolor{blue}{Y cuenta que en tu implementación de hybrid por cuestiones de tiempo has usado solo euclidea, salvo que hicieras la 2}
 
+\section{\textit{PID Controller}}\label{pidcontroller}
+Para mover el vehículo vamos a usar un \textit{PID Controller} (Controlador Proporcional, Integral y Derivativo). Un controlador de este tipo itera y se retroalimenta para corregir el error existente entre el valor actual y el resultado que se quiere conseguir.
+
+Este algoritmo se usa para conseguir que el vehículo siga la ruta planificada lo más fielmente posible y es posible usarlo con cualquiera de los algoritmos anteriores. En nuestro caso, comprueba en cada momento el error que existe entre la posición del vehículo y la ruta obtenida con los algoritmos para obtener el giro del volante necesario.
+
+La parte \textbf{proporcional} considera la diferencia entre el valor actual y el valor objetivo, y aplica la corrección (la fuerza que debe hacer un motor, o el angulo de giro de las ruedas) de forma proporcional a ese error. El problema con la parte \textbf{proporcional} es que puede excederse. Es decir, al acercarse al valor correcto utilizar una corrección excesiva que haga que sobrepase el valor correcto, y tenga que corregirse en sentido contrario a continuación. El efecto de solo considerar la parte \textbf{proporcional} sería un vehículo balanceándose de un lado al otro de la ruta que intenta seguir.
+
+La parte \textbf{diferencial} sirve para corregir el exceso que se puede producir en la parte \textbf{proporcional}. No tiene en cuenta el error si no su variación en el tiempo e intenta que esta variación sea continua en el tiempo. De esta forma, cuando se acerca al valor deseado suaviza la corrección que produce la parte \textbf{proporcional}, y si nos excedemos evita que se realice una corrección brusca en el otro sentido. Así evita que el controlador balancee alrededor del valor objetivo y se acerque de una forma estable.
+
+La parte \textbf{integral} se encarga de corregir el error que se produce por causas externas. Por ejemplo, si en un vehículo se produce siempre un sobregiro hacia un lado por una avería o alguna otra causa, la parte \textbf{integral} se encarga de añadir la corrección necesaria para compensarlo. Para ello no considera sólo del error si no como se ha mantenido a lo largo del tiempo. Si un error persiste e impide acercarnos al objetivo, la parte \textbf{integral} intentará compensarlo. Por ejemplo, en el caso del vehículo con un problema de sobregiro, aplicará una corrección a la parte \textbf{proporcional} para compensar el sobregiro y que no gire en exceso las ruedas.
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth,height=10cm,keepaspectratio=true]{PID_wikipedia}
+    \caption[Esquema de un \textit{PID controller}]{Esquema de un \textit{PID controller} de \cite{wiki:pidimagen}.}
+    \label{fig:basics AFM sketch}
+\end{figure}
+
+Cada parte del controlador recibe un parámetro que controla cuanto afecta al resultado. Normalmente queremos que la mayor parte del resultado venga establecido por el a parte \textbf{proporcional}, dando valores bajos tanto a la parte \textbf{diferencial} como a la \textbf{integral}. Si se diese un peso alto a la parte \textbf{diferencial} podría producir el efecto contrario al que pretende evitar y excederse. Si se diese un peso alto a la parte \textbf{integral}, podría producir un estado inestable debido al error acumulado a lo largo del tiempo.
+
+Las fórmulas de un PID Controller son las siguiente:
+\begin{center}
+$P = paramP * (valorObjetivo(t) - valorActual(t))$
+
+$I = paramI * (\displaystyle \int_{0}^{t} errorAcumulado(t) dt)$
+
+$D = paramD * (\displaystyle \frac{errorAnterior(t)-errorActual(t)}{dt})$
+\end{center}
+
+Y el valor final que se usará para corregir el valor actual y acercarnos al valor objetivo lo obtenemos sumando los tres resultados:
+\begin{center}
+$error = P + I + D$
+\end{center}
