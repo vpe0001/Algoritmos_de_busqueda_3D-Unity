@@ -7,6 +7,7 @@
 \usepackage{placeins}
 \usepackage{mathtools}
 \usepackage[]{algorithm2e}
+\usepackage[T1]{fontenc}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
@@ -328,7 +329,11 @@
     \noindent\LARGE
     Presentado por \@author{}\\ 
     en Universidad de Burgos --- \@date{}\\
-    Tutor: \@tutor{}\\
+     \begin{tabbing}
+    Tutores: \= \tutorjose \kill
+    Tutores: \= \tutorjose  \\
+    \> \tutorcesar 
+    \end{tabbing}
   }%
   \end{center}%
   \null
@@ -340,9 +345,10 @@
 \newcommand{\nombre}{Víctor Pérez Esteban} % cambio de comando
 \newcommand{\tituloc}{Algoritmos de búsqueda en visor 3D} % cambio de comando
 \newcommand{\tutorjose}{Dr. José Francisco Diez Pastor} % cambio de comando
-\newcommand{\tutorcesar}{Dr. César García Osorio} % cambio de comando
+\newcommand{\tutorcesar}{Dr. César Ignacio García Osorio} % cambio de comando
 \newcommand{\tutorportada}{\tutorjose , \space \tutorcesar} % cambio de comando
 \newcommand{\dni}{71279579A} % cambio de comando
+\newcommand{\Astar}{A$\!$*\xspace}
 
 % Datos de portada
 \title{\tituloc}
@@ -368,9 +374,9 @@
 
 \noindent Exponen:
 
-\noindent Que el alumno D. \nombre, con DNI \dni, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado \tituloc. 
+\noindent Que el alumno D. \nombre, con DNI \dni, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado «\tituloc». 
 
-\noindent Y que dicho trabajo ha sido realizado por el alumno bajo la dirección del que suscribe, en virtud de lo cual se autoriza su presentación y defensa.
+\noindent Y que dicho trabajo ha sido realizado por el alumno bajo la dirección de los que suscriben, en virtud de lo cual se autoriza su presentación y defensa.
 
 \begin{center} %\large
 En Burgos, {\large \today}
@@ -412,11 +418,11 @@ D. \tutorcesar
 % Abstract en castellano
 \renewcommand*\abstractname{Resumen}
 \begin{abstract}
-En los últimos años hemos visto que la evolución de los sistemas inteligentes se hace cada vez más presente en la sociedad. Uno de los sistemas inteligentes en que más se han observado esfuerzo en el desarrollo, inversiones por las grandes compañías y relevancia social ha sido la aparición de los primeros prototipos de los vehículos autónomos. Coches que se conducen solos.
+En los últimos años hemos visto que la evolución de los sistemas inteligentes se hace cada vez más presente en la sociedad. Uno de los sistemas inteligentes en que más se han observado esfuerzo en el desarrollo, inversiones por las grandes compañías y relevancia social han sido la aparición de los primeros prototipos de los vehículos autónomos, coches que se conducen solos.
 
-Para la realización de estos sistemas inteligentes se tienen que combinar muchos procedimientos que doten del conocimiento necesario al sistema inteligente sobre su entorno, y que permitan una vez adquirido su utilización para desplazarse a su destino. Dos de estos procedimientos principales son el cómo conocer la ruta a seguir, y una vez conocida la ruta cómo seguirla hasta alcanzar su final.
+Para la realización de estos sistemas inteligentes se tienen que combinar muchos procedimientos que doten del conocimiento necesario al sistema inteligente sobre su entorno, y que permitan, una vez adquirido, su utilización para desplazarse a su destino. Dos de estos procedimientos principales son el cómo conocer la ruta a seguir, y una vez conocida la ruta cómo seguirla, hasta alcanzar su final.
 
-En este trabajo simularemos estos procesos en un entorno tridimensional, para poder simular algunos de los problemas que se encuentran los vehículos autónomos en el mundo real y tener una visión de como solventar los problemas que plantea. Se calcularán rutas que se puedan seguir por parte del vehículo y se implementarán métodos para seguir esas rutas de forma autónoma, viendo en cada paso los problemas que se presentan.
+En este trabajo estudiaremos estos procesos en un entorno tridimensional, para poder simular algunos de los problemas que se encuentran los vehículos autónomos en el mundo real y tener una visión de como solventar los problemas que plantea. Se calcularán rutas que se puedan seguir por parte del vehículo y se implementarán métodos para seguir esas rutas de forma autónoma, viendo en cada paso los problemas que se presentan.
 
 
 \end{abstract}
@@ -431,11 +437,11 @@ Búsqueda de rutas, vehículos autónomos, seguimiento de rutas
 % Abstract en inglés
 \renewcommand*\abstractname{Abstract}
 \begin{abstract}
-In recent years we have seen the evolution of intelligent systems that are beginning to be present in society. One of these intelligent systems in what has seen the most effort in development, investments by large companies and social relevance has been the appearance of the first prototypes of autonomous vehicles. Cars that are driven by itselves.
+In recent years, we have seen the evolution of intelligent systems that are beginning to be present in society. One of these intelligent systems that has experimented the bigger development effort, investments by large companies and social relevance has been the first prototypes of autonomous vehicles, cars that are driven by themselves.
 
-For the realization of these intelligent systems many procedures have to be combined to provide the intelligent system with the necessary knowledge about its environment and to allow it to be used once it has reached its destination. Two of these main procedures are how to know the route to follow, and once known the route how to follow it until reaching its end.
+For the realization of these intelligent systems many procedures have to be combined to provide the intelligent system with the necessary knowledge about its environment and to allow it to be used once it has reached its destination. Two of these main procedures are how to know the route to follow, and once the route is known, how to follow it until its end is reached.
 
-In this work, we will simulate these processes in a three-dimensional environment, in order to simulate some of the problems that autonomous vehicles find in the real world and to have a vision of how to solve the problems that it poses. Routes will be calculated that can be followed by the vehicle and will be implemented methods to follow these routes autonomously, seeing at each step the problems that arise.
+In this work, we will investigate these processes in a three-dimensional environment, in order to simulate some of the problems that autonomous vehicles find in the real world and to have a vision of how to solve the problems that it poses. Routes will be calculated that can be followed by the vehicle and will be implemented methods to follow these routes autonomously, seeing at each step the problems that arise.
 \end{abstract}
 
 \renewcommand*\abstractname{Keywords}

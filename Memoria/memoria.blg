@@ -23,45 +23,45 @@ Warning--missing publisher in bradley2012path
 Warning--missing publisher in vanni2016drones
 
 Done.
-You've used 20 entries,
+You've used 22 entries,
             4087 wiz_defined-function locations,
-            1447 strings with 21299 characters,
-and the built_in function-call counts, 9584 in all, are:
-= -- 762
-> -- 148
-< -- 24
-+ -- 82
-- -- 37
-* -- 418
-:= -- 1671
-add.period$ -- 40
-call.type$ -- 20
-change.case$ -- 32
-chr.to.int$ -- 60
-cite$ -- 22
-duplicate$ -- 743
-empty$ -- 878
-format.name$ -- 35
-if$ -- 2124
+            1459 strings with 21657 characters,
+and the built_in function-call counts, 10898 in all, are:
+= -- 879
+> -- 169
+< -- 35
++ -- 94
+- -- 40
+* -- 478
+:= -- 1886
+add.period$ -- 44
+call.type$ -- 22
+change.case$ -- 35
+chr.to.int$ -- 84
+cite$ -- 24
+duplicate$ -- 838
+empty$ -- 977
+format.name$ -- 39
+if$ -- 2424
 int.to.chr$ -- 0
-int.to.str$ -- 20
-missing$ -- 167
-newline$ -- 113
-num.names$ -- 20
-pop$ -- 464
+int.to.str$ -- 22
+missing$ -- 184
+newline$ -- 121
+num.names$ -- 22
+pop$ -- 501
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 722
+skip$ -- 826
 stack$ -- 0
-substring$ -- 202
-swap$ -- 472
-text.length$ -- 4
+substring$ -- 262
+swap$ -- 549
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 20
+type$ -- 22
 warning$ -- 2
-while$ -- 28
-width$ -- 22
-write$ -- 224
+while$ -- 34
+width$ -- 24
+write$ -- 246
 (There were 2 warnings)

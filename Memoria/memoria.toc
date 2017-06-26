@@ -6,22 +6,22 @@
 \contentsline {chapter}{Introducci\IeC {\'o}n}{1}{chapter*.4}
 \contentsline {chapter}{Objetivos del proyecto}{3}{chapter*.5}
 \contentsline {chapter}{Conceptos te\IeC {\'o}ricos}{4}{chapter*.6}
-\contentsline {section}{\numberline {3.1}Algoritmo A*}{4}{section.3.1}
+\contentsline {section}{\numberline {3.1}Algoritmo A$\tmspace -\thinmuskip {.1667em}$*\xspace }{4}{section.3.1}
 \contentsline {subsubsection}{Heur\IeC {\'\i }stica}{5}{section*.7}
-\contentsline {subsection}{Pseudoc\IeC {\'o}digo A*}{6}{section*.8}
+\contentsline {subsection}{Pseudoc\IeC {\'o}digo A$\tmspace -\thinmuskip {.1667em}$*\xspace }{6}{section*.8}
 \contentsline {section}{\numberline {3.2}\textit {Path Smoothing} o Suavizado}{7}{section.3.2}
 \contentsline {subsection}{Eliminar el zigzag}{7}{section*.9}
 \contentsline {subsection}{Descenso gradiente}{9}{section*.10}
 \contentsline {subsection}{Curvas B\IeC {\'e}zier}{10}{section*.11}
 \contentsline {section}{\numberline {3.3}Theta*}{13}{section.3.3}
-\contentsline {section}{\numberline {3.4}A* con v\IeC {\'e}rtices}{14}{section.3.4}
-\contentsline {section}{\numberline {3.5}\textit {Hybrid A*}}{15}{section.3.5}
+\contentsline {section}{\numberline {3.4}A$\tmspace -\thinmuskip {.1667em}$*\xspace con v\IeC {\'e}rtices}{14}{section.3.4}
+\contentsline {section}{\numberline {3.5}\textit {Hybrid A$\tmspace -\thinmuskip {.1667em}$*\xspace }}{15}{section.3.5}
 \contentsline {subsection}{Definici\IeC {\'o}n de los estados}{17}{section*.12}
 \contentsline {subsection}{Funci\IeC {\'o}n de sucesores}{18}{section*.13}
-\contentsline {subsection}{Calculo del coste de la ruta}{18}{section*.14}
+\contentsline {subsection}{C\IeC {\'a}lculo del coste de la ruta}{18}{section*.14}
 \contentsline {subsection}{Mapa de distancias}{19}{section*.15}
 \contentsline {subsubsection}{Pseudoc\IeC {\'o}digo \textit {BrushFire} o \textit {GrassFire}}{22}{section*.16}
-\contentsline {subsection}{Heur\IeC {\'\i }stica \textit {Hybrid A*}}{22}{section*.17}
+\contentsline {subsection}{Heur\IeC {\'\i }stica \textit {Hybrid A$\tmspace -\thinmuskip {.1667em}$*\xspace }}{22}{section*.17}
 \contentsline {section}{\numberline {3.6}\textit {PID Controller}}{23}{section.3.6}
 \contentsline {chapter}{T\IeC {\'e}cnicas y herramientas}{26}{chapter*.18}
 \contentsline {section}{\numberline {4.1}Programas usados}{26}{section.4.1}

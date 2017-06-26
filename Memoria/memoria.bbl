@@ -152,4 +152,17 @@ Microsoft, ``Airsim,'' 2017, [Online; accessed 23-June-2017]. [Online].
   Available: \url{https://github.com/Microsoft/AirSim}
 \BIBentrySTDinterwordspacing
 
+\bibitem{wiki:voronoi}
+\BIBentryALTinterwordspacing
+Wikipedia, ``Voronoi diagram --- wikipedia{,} the free encyclopedia,'' 2017,
+  [Online; accessed 26-June-2017]. [Online]. Available:
+  \url{https://en.wikipedia.org/w/index.php?
+  title=Voronoi_diagram&oldid=786507557}
+\BIBentrySTDinterwordspacing
+
+\bibitem{reeds1990optimal}
+J.~Reeds and L.~Shepp, ``Optimal paths for a car that goes both forwards and
+  backwards,'' \emph{Pacific journal of mathematics}, vol. 145, no.~2, pp.
+  367--393, 1990.
+
 \end{thebibliography}
