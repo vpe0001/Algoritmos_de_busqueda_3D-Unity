@@ -89,7 +89,7 @@ public class PID_control {
 			}
 		}
 
-		//Debug.Log ("Angulo giro: " + angulo_giro); 
+		//Debug.Log ("Angulo giro: " + angulo_giro + " || motor: " + fuerza_motor); 
 
 		retorno [0] = fuerza_motor;
 		retorno [1] = angulo_giro;

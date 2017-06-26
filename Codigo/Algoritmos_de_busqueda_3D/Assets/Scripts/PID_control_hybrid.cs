@@ -178,7 +178,7 @@ public class PID_control_hybrid {
 				}
 			}
 
-			if (distancia_anterior < (distancia - 0.0001f) && !fin) {
+			if (distancia_anterior < (distancia - 0.0005f) && !fin) {
 				punto_actual++;
 				distancia_anterior = 9999.9f;
 				parrilla.crearCasilla (trayectoria [punto_actual].vector_hybrid, Constantes._ABIERTOS);
@@ -197,7 +197,7 @@ public class PID_control_hybrid {
 			punto_actual = punto_meta;
 		}
 
-		//Debug.Log ("Angulo giro: " + angulo_giro); 
+		//Debug.Log ("Angulo giro: " + angulo_giro + " | motor: " + fuerza_motor); 
 
 		retorno [0] = fuerza_motor;
 		retorno [1] = angulo_giro;

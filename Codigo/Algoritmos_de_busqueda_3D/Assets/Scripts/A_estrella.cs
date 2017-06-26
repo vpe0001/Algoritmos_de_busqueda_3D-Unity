@@ -187,7 +187,7 @@ public class A_estrella : ControladorCoche {
 		sucesores = SucesoresValidos (sucesor, mapa);
 
 		foreach (Nodo sucesor_valido in sucesores) {
-			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
+			sucesor_valido.costeG = funcionG (sucesor_valido);
 			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
 			sucesor_valido.coste = (peso * sucesor_valido.costeG) + sucesor_valido.costeH;
 		}
@@ -240,11 +240,12 @@ public class A_estrella : ControladorCoche {
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector - nodo.padre.vector;
+			coste = distancia.magnitude;
 		}else {
 			distancia = nodo.vector - nodo_inicio.vector;
-		}
 
-		coste = distancia.magnitude;
+			coste = distancia.magnitude;
+		}
 
 		return coste;
 	}

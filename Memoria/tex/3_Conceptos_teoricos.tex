@@ -78,7 +78,7 @@ Por este motivo una vez obtenida la ruta, es necesario un proceso de suavizado d
 
 \subsection{Eliminar el zigzag}
 
-El primer método que hemos usado y que suele dar buenos resultados, es eliminar el zigzag. Este método es básicamente lo mismo que realiza el theta* que explicaremos más adelante en \ref{referenciaTheta}.
+El primer método que hemos usado y que suele dar buenos resultados, es eliminar el zigzag. Este método es básicamente lo mismo que realiza el Theta* que explicaremos más adelante en \ref{referenciaTheta}.
 
 El zigzag es el problema más habitual que nos hemos encontrado. Al representar un espacio de tres dimensiones a través de casillas, se produce habitualmente porque aunque se use la representación octal permitiendo el movimiento diagonal, esto al pasarlo a un espacio en tres dimensiones quiere decir que sólo tenemos ocho posibles ángulos de movimiento: 0º, 45º, 90º, 135º, 180º, 225º, 270º y 315º
 
@@ -177,18 +177,18 @@ $z = (1 – t)^2z_0 + 2(1 – t)tz_1 + t^2z_2$
 \newpage
 
 \section{Theta*} \label{referenciaTheta}
-Theta A* es un algoritmo desarrollado por A. Nash, K. Daniel, S. Koenig y A. Felner \cite{thetaestrella, thetaestrellaweb} en 2010 que modifica el A* original para obtener rutas más realistas.
+Theta* es un algoritmo desarrollado por A. Nash, K. Daniel, S. Koenig y A. Felner \cite{thetaestrella, thetaestrellaweb} en 2010 que modifica el A* original para obtener rutas más realistas.
 
-Como explicamos anteriormente, el A* por la forma en la que representa el espacio de búsqueda da resultados poco realistas, con lo que hay que realizar un postprocesado de la ruta obtenida. El theta* incorpora este proceso al propio A* para obtener de forma directa rutas que no requieran del proceso de suavizado o que lo minimice.
+Como explicamos anteriormente, el A* por la forma en la que representa el espacio de búsqueda da resultados poco realistas, con lo que hay que realizar un postprocesado de la ruta obtenida. El Theta* incorpora este proceso al propio A* para obtener de forma directa rutas que no requieran del proceso de suavizado o que lo minimice.
 
-Para ello, el cambio que hace el Theta* respecto al A* es que un sucesor a una casilla puede ser cualquier casilla, en vez de ser unicamente las que tiene alrededor. El algoritmo es el mismo que el A* original, pero cuando se calculan los sucesores, además de calcular si es un sucesor válido y el coste de ese sucesor, comprueba si hay linea de visión con la casilla del nodo padre del nodo que lo generó. Si no hay línea de visión, sigue el algoritmo del A* y le asigna al sucesor como padre la casilla que lo originó. Pero si hay línea de visión, le asigna como padre no el nodo que lo generó, sino el padre de este, calculando el coste del sucesor teniendo en cuenta esta otra casilla. De esta forma elimina las casillas intermedias que origina el A* que no son necesarias de forma similar a como se realizaría en el post procesado para eliminar el zigzag.
+Para ello, el cambio que hace el Theta* respecto al A* es que un sucesor a una casilla puede ser cualquier casilla, en vez de ser unicamente las que tiene alrededor. El algoritmo es el mismo que el A* original, pero cuando se calculan los sucesores, además de calcular si es un sucesor válido y el coste de ese sucesor, comprueba si hay linea de visión con la casilla del nodo padre del nodo que lo generó. Si no hay línea de visión, sigue el algoritmo del A* y le asigna al sucesor como padre la casilla que lo originó. Pero si hay línea de visión, le asigna como padre no el nodo que lo generó, sino el padre de este, calculando el coste del sucesor teniendo en cuenta esta otra casilla. De esta forma elimina las casillas intermedias que origina el A* que no son necesarias de forma similar a como se realizaría en el postprocesado para eliminar el zigzag.
 
 Podemos observar el funcionamiento del algoritmo en la figura 3.7. La línea discontinua roja muestra el camino encontrado por el A*. En cambio, el Theta*, al haber una línea de visión entre el nodo $S_{start}$ y el nodo $S'$, le asigna como padre al nodo $S'$ el nodo $S_{start}$ sin pasar por el nodo intermedio $S$ como hace el A*.
 
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=\textwidth,height=5cm,keepaspectratio=true]{Theta_path_12}
-    \caption[Comparación de los caminos elegidos por el A* y el Theta*]{Comparación de los caminos elegidos por el A* (path1) y el theta* (path2) de \cite{thetaestrellawebimagen}.}
+    \caption[Comparación de los caminos elegidos por el A* y el Theta*]{Comparación de los caminos elegidos por el A* (path1) y el Theta* (path2) de \cite{thetaestrellawebimagen}.}
     \label{fig:basics AFM sketch}
 \end{figure}
 
@@ -278,9 +278,9 @@ Los parámetros necesarios para cada estado el \textit{Hybrid A*} son:
 \subsection{Función de sucesores}
 Cuando con el A* calculamos los sucesores, cada uno de ellos corresponde a una posición discreta que a su vez corresponde a una casilla. Pero cuando calculamos lo sucesores de forma continua para el \textit{Hybrid A*} esto no ocurre.
 
-A través de las formulas \ref{formulashybrid} para calcular la posición continua, podemos calcular tantos sucesores como se crea conveniente. Tendremos un sucesor en línea recta hacía delante, y un sucesor en línea recta hacia atrás. Pero para los giros tendremos tantos como deseemos desde $0º$ hasta el ángulo máximo de giro de las ruedas del vehículo. Aunque cuantos más sucesores se decida calcular, el coste computacional de la exploración será mucho mayor. Por ello, para este proyecto se calculan seis sucesores correspondientes a los dos mencionados anteriormente que van en línea recta adelante y atrás, y a los lados con el ángulo máximo de giro de las ruedas.
+A través de las fórmulas \ref{formulashybrid} para calcular la posición continua, podemos calcular tantos sucesores como se crea conveniente. Tendremos un sucesor en línea recta hacía delante, y un sucesor en línea recta hacia atrás. Pero para los giros tendremos tantos como deseemos desde $0º$ hasta el ángulo máximo de giro de las ruedas del vehículo. Aunque cuantos más sucesores se decida calcular el coste computacional de la exploración será mucho mayor. Por ello, para este proyecto se calculan seis sucesores correspondientes a los dos mencionados anteriormente que van en línea recta adelante y atrás, y a los lados con el ángulo máximo de giro de las ruedas.
 
-A continuación hay que asignar esos sucesores a una casillas discreta. Para ello tomamos el valor entero de su vector de posición, pero al hacer esto es posible que varios sucesores coincidan en la misma casilla discreta. En ese caso se elige aquel sucesor cuyo coste sea menor, descartando los otros. Es posible guardar todos los sucesores, el problema es el mismo que cuando se decide cuantos sucesores generar, el coste computacional sería muy alto debido a que el número de sucesores que se generaría con las posiciones continuas sería mucho mayor que su equivalente en una representación discreta. Descartando los peores sucesores continuos de cada posición discreta, contenemos el coste computacional.
+A continuación hay que asignar esos sucesores a una casilla discreta. Para ello tomamos el valor entero de su vector de posición, pero al hacer esto es posible que varios sucesores coincidan en la misma casilla discreta. En ese caso se elige aquel sucesor cuyo coste sea menor, descartando los otros. Es posible guardar todos los sucesores, el problema es el mismo que cuando se decide cuantos sucesores generar, el coste computacional sería muy alto debido a que el número de sucesores que se generaría con las posiciones continuas sería mucho mayor que su equivalente en una representación discreta. Descartando los peores sucesores continuos de cada posición discreta, contenemos el coste computacional.
 
 \subsection{Calculo del coste de la ruta} \label{hybridcoste}
 El calculo del coste a través de las funciones G() y H(), es la forma que tenemos de controlar como se va a realizar la búsqueda de la ruta, así como también que rutas se van a seleccionar con respecto a otras posibles.
@@ -297,10 +297,17 @@ De esta manera se pretende que se seleccionen las rutas más realistas posibles.
 Al penalizar los giros ocurre un caso parecido puesto que en la realidad se prefiere ir en línea recta. Aunque, en este caso surge un conflicto con el tercer caso de mantener una distancia con los obstáculos. Es decir, a través de los pesos de la heurística el algoritmo debe decidir si es mejor girar y alejarse de un obstáculo o si es preferible mantenerse cerca pero ir en línea recta.
 
 La formula utilizada para la función G() ha sido:
-$coste = (distanciaRecorrida * pgiro * patras) - distanciaObstaculo$
-Siendo $pgiro$ la penalización que se le aplica por realizar un giro y $patras$ la penalización que le aplica por ir marcha atrás.
+\begin{center}
+$distanciaRecorrida = dsitanciaDesdeElPadre + distanciaPadre$
 
-\subsection{Mapa de distancias}
+$pObstaculos = (100-(distanciaObstaculo/10))/100$
+
+$coste = (distanciaRecorrida * pgiro * patras) * distanciaObstaculo$
+\end{center}
+
+Siendo $pgiro$ la penalización que se le aplica por realizar un giro, $patras$ la penalización que le aplica por ir marcha atrás y $pObstaculo$ la penalización por pasar cerca de un obstáculo.
+
+\subsection{Mapa de distancias} \label{mapadistancias}
 Cuando los algoritmos que hemos visto buscan la mejor ruta, a veces tienen el problema que el resultado que obtienen es un ruta que se pega a los obstáculos. Puede ser debido a varios factores, como que la ruta más corta sea esa o que al realizar las heurísticas se haya preferido penalizar los giros para maximizar los tramos en que el vehículo sigue una línea recta evitando girar para alejarse de los obstáculos.
 
 Pero normalmente no es conveniente que la ruta pase demasiado cerca de los obstáculos si no es necesario para evitar que se produzcan choques, por ejemplo, al cambiar de dirección.
@@ -316,7 +323,7 @@ Para intentar evitar que se acerque demasiado hemos utilizado dos métodos. Prim
 
 Para crear el mapa de distancias, primero hemos creado un mapa de los obstáculos. Para ello hemos usado el \textit{Nav Mesh} para generar una matriz con las casillas libre y las ocupadas. Iterando a través de todas las posiciones discretas hemos comprobado con el \textit{Nav Mesh} si correspondían a una casilla recorrible o no.
 
-A partir del mapa de obstáculos hemos creado el mapa de distancias. Hemos utilizado el algoritmo \textit{BrushFire} o \textit{GrassFire}. Este algoritmo parte desde una posición inicial a la que asigna un valor, generalmente cero, y asigna o actualiza a todas las posiciones adyacentes su valor más uno. A continuación realiza el mismo proceso con esas posiciones adyacentes. De está manera, partiendo desde las casillas de los obstáculos, podemos actualizar la distancia a la que se encuentran de ese obstáculos y crear el mapa de las distancias.
+A partir del mapa de obstáculos hemos creado el mapa de distancias \label{mapaobstaculos}. Hemos utilizado el algoritmo \textit{BrushFire} o \textit{GrassFire}. Este algoritmo parte desde una posición inicial a la que asigna un valor, generalmente cero, y asigna o actualiza a todas las posiciones adyacentes su valor más uno. A continuación realiza el mismo proceso con esas posiciones adyacentes. De está manera, partiendo desde las casillas de los obstáculos, podemos actualizar la distancia a la que se encuentran de ese obstáculos y crear el mapa de las distancias.
 
 Primero se inicializa con un valor máximo a todas las casillas. Una vez inicializado el mapa de distancias, partiendo de los obstáculos a los que se les asigna el valor cero, se recorre las casillas adyacentes que se actualizará su distancia al valor de la casilla previa más uno. si una casilla ya ha sido actualizada previamente, se le asignará el valor menor que corresponde a la distancia al obstáculo más cercano.
 
@@ -328,7 +335,7 @@ Primero se inicializa con un valor máximo a todas las casillas. Una vez inicial
 \end{figure}
 
 \clearpage
-\subsubsection{Pseudocódigo \textit{BrushFire} o \textit{GrassFire}}
+\subsubsection{Pseudocódigo \textit{BrushFire} o \textit{GrassFire}} \label{brushfire}
 \begin{algorithm}[H]
 	abiertos = $\O$\;
 
@@ -374,7 +381,9 @@ Para la realización de las función heurística podemos considerar tres posibil
 
 Todos estos casos son una simplificación del caso real, debido a que la función heurística es una estimación del coste y como vimos en la heurística del A* \ref{heuristicaaestrella}, para que el algoritmo sea admisible no se debe sobreestimar el coste hasta la meta.
 
-\textcolor{blue}{Y cuenta que en tu implementación de hybrid por cuestiones de tiempo has usado solo euclidea, salvo que hicieras la 2}
+Para este proyecto hemos usado la heurística del segundo caso, y hemos precalculado el coste desde todos los posibles estados hasta la meta teniendo en cuenta los obstáculos que se encuentran en el mapa. Para ello, hemos usado el mapa de obstáculos \ref{mapaobstaculos} que generamos previamente, y usando el algoritmo \textit{Brushfire o Grassfire} \ref{brushfire} desde la meta, hemos guardado un mapa con las distancias de cada estado hasta la meta dando a las casillas de obstáculos un valor máximo.
+
+De esta forma conseguimos mejorar el coste computacional del \textit{Hybrid A*} puesto que la estimación del coste del camino hasta la meta, se acerca más al coste real aún no teniendo en cuenta las limitaciones del movimiento, consiguiendo reducir el número de estados a explorar.
 
 \section{\textit{PID Controller}}\label{pidcontroller}
 Para mover el vehículo vamos a usar un \textit{PID Controller} (Controlador Proporcional, Integral y Derivativo). Un controlador de este tipo itera y se retroalimenta para corregir el error existente entre el valor actual y el resultado que se quiere conseguir.

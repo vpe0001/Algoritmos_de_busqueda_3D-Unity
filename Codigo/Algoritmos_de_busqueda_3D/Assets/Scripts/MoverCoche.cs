@@ -111,12 +111,12 @@ public class MoverCoche : MonoBehaviour {
 
 			salida_coche = salida_frontal;
 
-			//if ( mapa.lineaVision (salida_coche, salida_frontal) ) { //no hace falta salir hacia atras
-			//	salida_coche = salida_frontal;
+			if ( mapa.lineaVision (salida_coche, salida_frontal) ) { //no hace falta salir hacia atras
+				salida_coche = salida_frontal;
 				
-			//} else if ( mapa.lineaVision (salida_coche, salida_trasera) ) { //salir hacia atras
-			//	salida_coche = salida_trasera;
-			//}
+			} else if ( mapa.lineaVision (salida_coche, salida_trasera) ) { //salir hacia atras
+				salida_coche = salida_trasera;
+			}
 
 		} else if (a_A_estrella) {
 			Debug.Log ("Usando A Estrella");

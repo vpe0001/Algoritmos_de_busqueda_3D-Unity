@@ -6,8 +6,9 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected int ancho;
 	protected int largo;
 	protected List<NodoObstaculo> mapa_obstaculos;
-	protected int[, , ] array_mapa_obstaculos;
+	protected int [,,] array_mapa_obstaculos;
 	protected int [,,] array_mapa_distancias;
+	protected int [,,] array_heuristica_obstaculos;
 
 
 	private float radio_giro_rad;
@@ -134,6 +135,26 @@ public class Hybrid_a_estrella  : A_estrella {
 		}
 		*/
 
+		tiempo_inicio = Time.realtimeSinceStartup;
+		array_heuristica_obstaculos = crearMapaHeuristicaObstaculos ();
+		tiempo_final = Time.realtimeSinceStartup;
+
+		Debug.Log ("Mapa de heuristica de obstaculos creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
+
+		int inicio_ancho = (ancho / 2) * (-1);
+		int inicio_largo = (largo / 2) * (-1);
+
+
+		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
+			for (int j = inicio_largo; j <= (largo / 2); j++) {
+				if (array_heuristica_obstaculos [i+(ancho/2), j+(largo/2), 0] == int.MaxValue) {
+					if (array_mapa_obstaculos [i+(ancho/2), j+(largo/2), 0] == Constantes._LIBRE) {
+						Debug.Log ("Error heuristica: x=" + i + " | z=" + j + " | H=" + array_heuristica_obstaculos [i+(ancho/2), j+(largo/2), 0]);
+					}
+				}
+			}
+		}
+
 		radio_giro_rad = ((Constantes.distancia / Constantes.coche_largo) * Mathf.Tan (Mathf.Deg2Rad * Constantes.coche_max_angulo));
 		radio_giro = Mathf.Rad2Deg * radio_giro_rad;
 		Debug.Log ("Radio giro rad: " + radio_giro_rad);
@@ -185,6 +206,9 @@ public class Hybrid_a_estrella  : A_estrella {
 		//					 adelante giro izquierda, adelante giro derecha
 		//					 retroceder giro izquierda, retroceder giro derecha
 		Nodo[] sucesores_array = new Nodo[6];
+		Nodo[] sucesores_validos;
+		List <Nodo> sucesores_discretos = new List<Nodo>();
+		List <Nodo> sucesores_seleccionados = new List<Nodo>();
 		List <Nodo> final = new List<Nodo> ();
 
 		float angulo_coche = n_actual.angulo_hybrid;
@@ -196,6 +220,7 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		int indice_sucesor = 0;
 
+		//Calculamos la posicion continua
 		for (int i = 0; i < Constantes.numero_marchas; i++) {
 			int direccion_giro = ((Constantes.numero_angulos - 1) / 2) * (-1);
 
@@ -239,47 +264,61 @@ public class Hybrid_a_estrella  : A_estrella {
 			}
 		}
 
-		//Sucesores validos
-		sucesores = SucesoresValidos(sucesores_array, mapa);
+		//Calculamos la posicion discreta
+	
+		//Calcular casilla
+		for (int i =0; i < sucesores_array.Length; i++){
+			Nodo actual = sucesores_array [i];
+
+
+			float x_casilla_i = Mathf.Round (sucesores_array[i].vector_hybrid.x);
+			float y_casilla_i = Mathf.Round (sucesores_array[i].vector_hybrid.y);
+			float z_casilla_i = Mathf.Round (sucesores_array[i].vector_hybrid.z);
+
+			Vector3 nuevo_casilla = new Vector3 (x_casilla_i, y_casilla_i, z_casilla_i);
+			actual.vector = nuevo_casilla;
+			sucesores_discretos.Add (actual);
+
+
+			//actual.vector = actual.vector_hybrid;
+			//sucesores_discretos.Add (actual);
+		}
 
 		//Calcular coste
-		foreach (Nodo sucesor_valido in sucesores) {
-			sucesor_valido.costeG = funcionG (sucesor_valido) + sucesor_valido.padre.costeG;
+		foreach (Nodo sucesor_valido in sucesores_discretos) {
+			sucesor_valido.costeG = funcionG (sucesor_valido);
 			sucesor_valido.costeH = funcionH (sucesor_valido, meta);
 			sucesor_valido.coste = (peso * sucesor_valido.costeG) + sucesor_valido.costeH;
 		}
 			
-		//Calcular casilla
-		for (int i =0; i < sucesores.Count; i++){
-			Nodo actual = sucesores [i];
-			float x_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.x);
-			float y_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.y);
-			float z_casilla_i = Mathf.Round (sucesores[i].vector_hybrid.z);
+		//Descartar peores
 
-			for (int j= i+1; j < sucesores.Count; j++) {
+		for (int i=0; i<sucesores_discretos.Count; i++) {
+			int contador = 0;
 
-				//float x_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.x);
-				//float y_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.y);
-				//float z_casilla_j = Mathf.Round (sucesores[j].vector_hybrid.z);
-				float x_casilla_j = round (sucesores[j].vector_hybrid.x);
-				float y_casilla_j = round (sucesores[j].vector_hybrid.y);
-				float z_casilla_j = round (sucesores[j].vector_hybrid.z);
-
-				if ( actual.coste > sucesores[j].coste &&
-														Mathf.Approximately (x_casilla_i, x_casilla_j) &&
-														Mathf.Approximately (y_casilla_i, y_casilla_j) && 
-														Mathf.Approximately (z_casilla_i, z_casilla_j) ) {
-					actual = sucesores [j];
+			for (int j=1; j<sucesores_discretos.Count; j++) {
+				if (sucesores_discretos [i].vector == sucesores_discretos [j].vector) {
+					if (sucesores_discretos [i].coste > sucesores_discretos [j].coste) {
+						contador++;
+					}
 				}
 			}
 
-			Vector3 nuevo_casilla = new Vector3 (x_casilla_i, y_casilla_i, z_casilla_i);
-			actual.vector = nuevo_casilla;
-			final.Add (actual);
-		}
-	
 
-		return final;
+			if (contador == 0) {
+				sucesores_seleccionados.Add (sucesores_discretos [i]);
+			}
+		}
+
+		sucesores_validos = new Nodo[sucesores_seleccionados.Count];
+		for (int i = 0; i < sucesores_seleccionados.Count; i++) {
+			sucesores_validos [i] = sucesores_seleccionados [i];
+		}
+
+		//Sucesores validos
+		sucesores = SucesoresValidos (sucesores_validos, mapa);
+	
+		return sucesores;
 	}
 
 	// comprueba que los posibles sucesores esten dentro del rango posible
@@ -290,8 +329,7 @@ public class Hybrid_a_estrella  : A_estrella {
 			//Comprobamos las dos direcciones porque hemos encontrado que no siempre, aunque deberia, da el mismo resultado
 			//Asi evitamos bugs debido a que sea visible/alcanzable desde una direccion pero no desde la otra
 			if ( mapa.lineaVision (sucesor_valido.padre.vector_hybrid, sucesor_valido.vector_hybrid) ){
-				//if ( mapa.lineaVision (sucesor_valido.padre.vector, sucesor_valido.vector)){
-				sucesores.Add (sucesor_valido);
+					sucesores.Add (sucesor_valido);	
 			}
 		}
 
@@ -304,10 +342,11 @@ public class Hybrid_a_estrella  : A_estrella {
 		int pos_x = Mathf.RoundToInt ( nodo.vector.x + (ancho / 2) );
 		int pos_z = Mathf.RoundToInt ( nodo.vector.z + (largo / 2) );
 		int distancia_obstaculo = array_mapa_distancias [pos_x, pos_z, 0];
+		float penalizacion_distancias = 1.0f;
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector_hybrid - nodo.padre.vector_hybrid;
-			coste = distancia.magnitude;
+			coste = distancia.magnitude + nodo.padre.costeG;
 		}else {
 			distancia = nodo.vector_hybrid - nodo_inicio.vector;
 
@@ -319,22 +358,24 @@ public class Hybrid_a_estrella  : A_estrella {
 			coste *= 1.0f;
 			//coste *= 1.2f;
 		} else {
-			//coste *= 5.4f;
-			//coste *= 2.0f;
-			coste *= 1.7f;
+			//coste *= 1.0f;
+			coste *= 1.009f;
+			//coste *= 1.005f;
 		}
 
 		//Si hacia atras es mas costoso que hacia adelante
 		if (nodo.sentido == Constantes.hacia_atras) {
 			//coste *= 14.8f;
-			//coste *= 6.0f;
 			coste *= 5.0f;
+			//coste *= 5.0f;
 		} else {
 			coste *= 1.0f;
 		}
 
 		//coste += (ancho/10) - ((mapa_distancias)/10);
-		coste -= (distancia_obstaculo)/10;
+		penalizacion_distancias = (100-(distancia_obstaculo/10));
+		penalizacion_distancias /= 100;
+		coste *= penalizacion_distancias;
 
 		//coste *= 0.10f;
 		return coste;
@@ -343,9 +384,20 @@ public class Hybrid_a_estrella  : A_estrella {
 	protected override float funcionH (Nodo nodo, Vector3 meta){
 		float coste = 0.0f;
 		Vector3 distancia;
+		int distancia_array_heuristcia = 0;
+		int x = Mathf.RoundToInt (nodo.vector.x + (ancho / 2));
+		int z = Mathf.RoundToInt (nodo.vector.z + (largo / 2));
 
+		distancia_array_heuristcia = (array_heuristica_obstaculos [x, z, 0] / 10);
 		distancia = nodo.vector_hybrid - meta;
-		coste = distancia.magnitude;
+
+		if (distancia_array_heuristcia > distancia.magnitude) {
+			coste = distancia_array_heuristcia;	
+		} else {
+			coste = distancia.magnitude;
+		}
+
+		//coste = distancia.magnitude;
 
 		return coste;
 	}
@@ -438,6 +490,64 @@ public class Hybrid_a_estrella  : A_estrella {
 		return mapa_distancias;
 	}
 
+	private int[,,] crearMapaHeuristicaObstaculos (){
+		int [,,] mapa_heuristica_obstaculos = new int[ancho+1, largo+1, 1];
+
+		Queue <ItemMapaDistancias> cola = new Queue <ItemMapaDistancias> ();
+
+		//mapa.setRadio (0.5f);
+
+		//int inicio_ancho = (ancho / 2) * (-1);
+		//int inicio_largo = (largo / 2) * (-1);
+
+		//rellenamos el mapa antes de empezar
+		for (int i = 0; i <= ancho; i++) {
+			for (int j = 0; j <= largo; j++) {
+				mapa_heuristica_obstaculos [i, j, 0] = int.MaxValue;
+			}
+		}
+
+		int x_meta = Mathf.RoundToInt (vector_meta.x + (ancho/2));
+		int z_meta = Mathf.RoundToInt (vector_meta.z + (largo/2));
+
+		mapa_heuristica_obstaculos [x_meta, z_meta, 0] = 0;
+
+		ItemMapaDistancias celda_meta = new ItemMapaDistancias ();
+		celda_meta.x = x_meta - (ancho/2);
+		celda_meta.y = 0;
+		celda_meta.z = z_meta - (largo/2);
+		celda_meta.distancia = 0;
+
+		cola.Enqueue (celda_meta);
+
+		while (cola.Count > 0) {
+			//Debug.Log ("Cola count: " + cola.Count);
+			ItemMapaDistancias actual = cola.Dequeue ();
+			ItemMapaDistancias[] siguientes = siguienteCeldas (actual);
+
+			foreach (ItemMapaDistancias item_dis in siguientes) {
+				int pos_x = item_dis.x + (ancho / 2);
+				int pos_z = item_dis.z + (largo / 2);
+
+				//Esta dentro de nuestro array
+				if ( pos_x >= 0 && pos_z >=0 && pos_x <= ancho && pos_z <= largo ) {
+					//Debug.Log ("Pos_X: " + pos_x + " | Pos_Z: " + pos_z);
+					if ( array_mapa_obstaculos [pos_x, pos_z, 0] == Constantes._LIBRE ) { //Si es libre aun no esta en la cola
+						if ( mapa_heuristica_obstaculos [pos_x, pos_z, 0] > item_dis.distancia ) { //Si es mayor es que hemos enconstrado un obstaculo mas cercano
+							mapa_heuristica_obstaculos [pos_x, pos_z, 0] = item_dis.distancia;
+
+							cola.Enqueue (item_dis);
+						}
+					}	
+				}
+
+			}
+		}
+
+
+		return mapa_heuristica_obstaculos;
+	}
+
 	private class ItemMapaDistancias {
 		public int x;
 		public int y;
@@ -506,4 +616,5 @@ public class Hybrid_a_estrella  : A_estrella {
 		return siguientes;
 	}
 }
+
 

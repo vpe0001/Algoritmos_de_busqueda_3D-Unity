@@ -9,7 +9,7 @@ public static class Constantes {
 	public const int _OCUPADO = 1;
 	public const int _CERRADOS = 1;
 	public const int _ABIERTOS = 0;
-	public const float coche_max_angulo = 45.0f;
+	public const float coche_max_angulo = 40.0f;
 	public const float coche_max_torque = 1000.0f;
 	public const float distancia = 1.8f; //la distancia que se mueve el coche en cada nodo
 	//constanstes para no tener que calcularlo en cada iteracion

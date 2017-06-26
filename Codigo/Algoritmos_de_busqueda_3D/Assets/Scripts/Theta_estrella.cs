@@ -22,8 +22,8 @@ public class Theta_estrella  : A_estrella {
 			sucesor [i].vector = n_actual.vector + movimientos[i];
 
 			if (n_actual.padre != null) { //El nodo inicial, su padre es null
-				if (mapa.lineaVision (sucesor [i].vector, n_actual.padre.vector) && mapa.lineaVision (n_actual.padre.vector, sucesor [i].vector)) {
-					//if (mapa.lineaVision (n_actual.padre.vector, sucesor[i].vector)){
+				//if (mapa.lineaVision (sucesor [i].vector, n_actual.padre.vector) && mapa.lineaVision (n_actual.padre.vector, sucesor [i].vector)) {
+				if (mapa.lineaVision (n_actual.padre.vector, sucesor[i].vector)){
 					sucesor [i].padre = n_actual.padre;		
 				} else {
 					sucesor [i].padre = n_actual;		
