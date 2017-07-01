@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Hybrid_a_estrella  : A_estrella {
+public class Hybrid_a_estrella : A_estrella {
 	protected int ancho;
 	protected int largo;
-	protected List<NodoObstaculo> mapa_obstaculos;
+	//protected List<NodoObstaculo> mapa_obstaculos;
 	protected int [,,] array_mapa_obstaculos;
 	protected int [,,] array_mapa_distancias;
 	protected int [,,] array_heuristica_obstaculos;
@@ -67,9 +67,6 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		mapa.setRadio (0.5f); //
 
-		//mapa_obstaculos = new SortedDictionary<Vector3, int>(new ComparadorVectores());
-		//mapa_obstaculos = new SortedList<Vector3, int>(new ComparadorVectores ());
-		mapa_obstaculos = new List<NodoObstaculo>();
 		array_mapa_obstaculos = new int[ancho+1, largo+1, 1];
 
 		tiempo_inicio = Time.realtimeSinceStartup;
@@ -78,34 +75,6 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		Debug.Log ("Mapa de obstaculos creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
 
-		/*
-		foreach (NodoObstaculo n in mapa_obstaculos) {
-			parrilla.crearCasilla (n.vector, n.obstaculo);
-		}
-		*/
-
-		/*
-		int inicio_ancho = (ancho / 2) * (-1);
-		int inicio_largo = (largo / 2) * (-1);
-
-
-		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
-			for (int j = inicio_largo; j <= (largo / 2); j++) {
-				Vector3 n = new Vector3 (i, 0.0f, j);
-				parrilla.crearCasilla (n , array_mapa_obstaculos[i+(ancho/2), j+(largo/2), 0]);
-
-				
-				//if (array_mapa_obstaculos [i + (ancho / 2), j + (largo / 2), 0] == Constantes._ABIERTOS) {
-				//	parrilla.crearCasilla (n, Constantes._CERRADOS);
-				//} else {
-				//	parrilla.crearCasilla (n, Constantes._ABIERTOS);
-				//}
-
-			}
-		}
-		*/
-
-
 
 		tiempo_inicio = Time.realtimeSinceStartup;
 		array_mapa_distancias = crearMapaDistancias ();
@@ -113,27 +82,6 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		Debug.Log ("Mapa de Distancias creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
 
-		/*
-		int inicio_ancho = (ancho / 2) * (-1);
-		int inicio_largo = (largo / 2) * (-1);
-
-
-		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
-			for (int j = inicio_largo; j <= (largo / 2); j++) {
-				Vector3 n = new Vector3 (i, 0.0f, j);
-				//Debug.Log ("Vector: " + n + " | distancia: " + array_mapa_distancias [i + (ancho / 2), j + (largo / 2), 0] / 10);
-				parrilla.crearCasillaDistancias (n , (array_mapa_distancias [i+(ancho/2), j+(largo/2), 0]) / 10);
-
-				
-				//if (array_mapa_obstaculos [i + (ancho / 2), j + (largo / 2), 0] == Constantes._ABIERTOS) {
-				//	parrilla.crearCasilla (n, Constantes._CERRADOS);
-				//} else {
-				//	parrilla.crearCasilla (n, Constantes._ABIERTOS);
-				//}
-
-			}
-		}
-		*/
 
 		tiempo_inicio = Time.realtimeSinceStartup;
 		array_heuristica_obstaculos = crearMapaHeuristicaObstaculos ();
@@ -141,36 +89,11 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		Debug.Log ("Mapa de heuristica de obstaculos creado en: " + (tiempo_final - tiempo_inicio) + " segs.");
 
-		int inicio_ancho = (ancho / 2) * (-1);
-		int inicio_largo = (largo / 2) * (-1);
-
-
-		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
-			for (int j = inicio_largo; j <= (largo / 2); j++) {
-				if (array_heuristica_obstaculos [i+(ancho/2), j+(largo/2), 0] == int.MaxValue) {
-					if (array_mapa_obstaculos [i+(ancho/2), j+(largo/2), 0] == Constantes._LIBRE) {
-						Debug.Log ("Error heuristica: x=" + i + " | z=" + j + " | H=" + array_heuristica_obstaculos [i+(ancho/2), j+(largo/2), 0]);
-					}
-				}
-			}
-		}
-
 		radio_giro_rad = ((Constantes.distancia / Constantes.coche_largo) * Mathf.Tan (Mathf.Deg2Rad * Constantes.coche_max_angulo));
 		radio_giro = Mathf.Rad2Deg * radio_giro_rad;
+
 		Debug.Log ("Radio giro rad: " + radio_giro_rad);
 		Debug.Log ("Radio giro: " + radio_giro);
-
-		//Prueba de generar un nuevo nodo del Hybrid
-		//La casilla sera la misma que con el A*, la diferencia es que dentro del nodo de esa casilla guardamos la ruta
-		// continua. El vector discreto sirve para identificar la casilla
-		//Nodo n_padre = new Nodo();
-		//n_padre.vector = new Vector3 (1.0f, 0.0f, 1.0f);
-		//n_padre.vector_hybrid = n_padre.vector;
-		//n_padre.padre = null;
-		//n_padre.sentido = 1;
-		//n_padre.angulo_hybrid = 0.0f;
-
-		//sucesores = CalcularSucesores (n_padre, vector_meta, mapa);
 	}
 
 	private void crearMapaObstaculos (){
@@ -185,14 +108,11 @@ public class Hybrid_a_estrella  : A_estrella {
 
 				if (mapa.esRecorrible (vector)) {
 					ocupado = Constantes._LIBRE;
-					//parrilla.crearCasilla (vector, 1);
 				} else {
 					ocupado = Constantes._OBSTACULO;
-					//parrilla.crearCasilla (vector, 0);
 				}
 
 				array_mapa_obstaculos [i+(ancho/2), j+(largo/2), 0] = ocupado;
-				mapa_obstaculos.Add ( new NodoObstaculo(vector, ocupado));
 			}
 		}
 	}
@@ -209,7 +129,7 @@ public class Hybrid_a_estrella  : A_estrella {
 		Nodo[] sucesores_validos;
 		List <Nodo> sucesores_discretos = new List<Nodo>();
 		List <Nodo> sucesores_seleccionados = new List<Nodo>();
-		List <Nodo> final = new List<Nodo> ();
+		//List <Nodo> final = new List<Nodo> ();
 
 		float angulo_coche = n_actual.angulo_hybrid;
 		float angulo_coche_rad = (Mathf.Deg2Rad * angulo_coche);
@@ -326,8 +246,6 @@ public class Hybrid_a_estrella  : A_estrella {
 		List <Nodo> sucesores = new List<Nodo> ();
 
 		foreach (Nodo sucesor_valido in sucesor) {
-			//Comprobamos las dos direcciones porque hemos encontrado que no siempre, aunque deberia, da el mismo resultado
-			//Asi evitamos bugs debido a que sea visible/alcanzable desde una direccion pero no desde la otra
 			if ( mapa.lineaVision (sucesor_valido.padre.vector_hybrid, sucesor_valido.vector_hybrid) ){
 					sucesores.Add (sucesor_valido);	
 			}
@@ -356,28 +274,42 @@ public class Hybrid_a_estrella  : A_estrella {
 		// Si va en linea recta es menos costoso que girar
 		if (Mathf.Approximately (nodo.padre.angulo_hybrid, nodo.angulo_hybrid)) {
 			coste *= 1.0f;
-			//coste *= 1.2f;
 		} else {
+			/*
+			 * El multiplicador debe ser pequeño para que pueda girar y encuentre una ruta
+			 * pero no tan pequeño que resulte en rutas que trazen circulor
+			*/
+
 			//coste *= 1.0f;
-			coste *= 1.009f;
-			//coste *= 1.005f;
+			coste *= 1.0053f;
+			//coste *= 1.009f;
 		}
 
 		//Si hacia atras es mas costoso que hacia adelante
 		if (nodo.sentido == Constantes.hacia_atras) {
-			//coste *= 14.8f;
-			coste *= 5.0f;
+			/*
+			 * El multiplicador debe ser grande porque si no elegiria ir siempre hacia atras
+			 * Ademas si es muy pequeño los nodos de busqueda que tendra en cuenta sera mayor,
+			 *  al tener en cuenta los caminos hacia atras mas a menudo
+			 * Por contra al ser grande es dificil que haga maniobras a medio camino
+			*/
+			//coste *= 1.0f;
+			coste *= 4.545f;
 			//coste *= 5.0f;
 		} else {
 			coste *= 1.0f;
 		}
 
-		//coste += (ancho/10) - ((mapa_distancias)/10);
+
+		/*
+		 * En el mapa de distancias se guardan como enteros multiplicados por 10
+		 *  para que los decimales pasen a la parte entera
+		 * Se hace un porcentaje y se disminuye el coste porque es mejor cuanto mayor sea la distancia
+		*/
 		penalizacion_distancias = (100-(distancia_obstaculo/10));
 		penalizacion_distancias /= 100;
 		coste *= penalizacion_distancias;
 
-		//coste *= 0.10f;
 		return coste;
 	}
 
@@ -406,7 +338,7 @@ public class Hybrid_a_estrella  : A_estrella {
 		bool es_meta = false;
 		float distancia = Vector3.Distance (nodo.vector_hybrid, meta);
 
-		if (distancia < 1.5f){
+		if (distancia < 2.0f){
 			es_meta = true;
 		}
 
@@ -426,9 +358,8 @@ public class Hybrid_a_estrella  : A_estrella {
 		} else {
 			redondeo = Mathf.Ceil (numero);
 		}
-
-
-		return numero;
+			
+		return redondeo;
 	}
 
 
@@ -462,30 +393,7 @@ public class Hybrid_a_estrella  : A_estrella {
 			}
 		}
 
-		while (cola.Count > 0) {
-			//Debug.Log ("Cola count: " + cola.Count);
-			ItemMapaDistancias actual = cola.Dequeue ();
-			ItemMapaDistancias[] siguientes = siguienteCeldas (actual);
-
-			foreach (ItemMapaDistancias item_dis in siguientes) {
-				int pos_x = item_dis.x + (ancho / 2);
-				int pos_z = item_dis.z + (largo / 2);
-
-				//Esta dentro de nuestro array
-				if ( pos_x >= 0 && pos_z >=0 && pos_x <= ancho && pos_z <= largo ) {
-					//Debug.Log ("Pos_X: " + pos_x + " | Pos_Z: " + pos_z);
-					if ( array_mapa_obstaculos [pos_x, pos_z, 0] == Constantes._LIBRE ) { //Si es libre aun no esta en la cola
-						if ( mapa_distancias [pos_x, pos_z, 0] > item_dis.distancia ) { //Si es mayor es que hemos enconstrado un obstaculo mas cercano
-							mapa_distancias [pos_x, pos_z, 0] = item_dis.distancia;
-
-							cola.Enqueue (item_dis);
-						}
-					}	
-				}
-				
-			}
-		}
-			
+		brushFire ( cola, mapa_distancias );			
 
 		return mapa_distancias;
 	}
@@ -520,8 +428,14 @@ public class Hybrid_a_estrella  : A_estrella {
 
 		cola.Enqueue (celda_meta);
 
+		brushFire ( cola, mapa_heuristica_obstaculos );
+
+		return mapa_heuristica_obstaculos;
+	}
+
+	private int [,,] brushFire ( Queue <ItemMapaDistancias> cola, int [,,] mapa ) {
 		while (cola.Count > 0) {
-			//Debug.Log ("Cola count: " + cola.Count);
+			
 			ItemMapaDistancias actual = cola.Dequeue ();
 			ItemMapaDistancias[] siguientes = siguienteCeldas (actual);
 
@@ -531,10 +445,10 @@ public class Hybrid_a_estrella  : A_estrella {
 
 				//Esta dentro de nuestro array
 				if ( pos_x >= 0 && pos_z >=0 && pos_x <= ancho && pos_z <= largo ) {
-					//Debug.Log ("Pos_X: " + pos_x + " | Pos_Z: " + pos_z);
-					if ( array_mapa_obstaculos [pos_x, pos_z, 0] == Constantes._LIBRE ) { //Si es libre aun no esta en la cola
-						if ( mapa_heuristica_obstaculos [pos_x, pos_z, 0] > item_dis.distancia ) { //Si es mayor es que hemos enconstrado un obstaculo mas cercano
-							mapa_heuristica_obstaculos [pos_x, pos_z, 0] = item_dis.distancia;
+					
+					if ( array_mapa_obstaculos [pos_x, pos_z, 0] == Constantes._LIBRE ) { //Si es obstaculo no hace falta calcular nada
+						if ( mapa [pos_x, pos_z, 0] > item_dis.distancia ) { //Si es mayor es que hemos enconstrado un obstaculo mas cercano
+							mapa [pos_x, pos_z, 0] = item_dis.distancia;
 
 							cola.Enqueue (item_dis);
 						}
@@ -544,8 +458,7 @@ public class Hybrid_a_estrella  : A_estrella {
 			}
 		}
 
-
-		return mapa_heuristica_obstaculos;
+		return mapa;
 	}
 
 	private class ItemMapaDistancias {
@@ -614,6 +527,14 @@ public class Hybrid_a_estrella  : A_estrella {
 		}
 
 		return siguientes;
+	}
+
+	public override int [,,] getMapaObstaculos () {
+		return array_mapa_obstaculos;
+	}
+
+	public override int [,,] getMapaDistancias () {
+		return array_mapa_distancias;
 	}
 }
 

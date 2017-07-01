@@ -9,14 +9,14 @@ public class MoverCoche : MonoBehaviour {
 	private GameObject coche;
 	private GameObject frontal;
 	private GameObject trasera;
-	private Rigidbody rb_coche;
+	//private Rigidbody rb_coche;
 	private int contador_vector;
 	private Parrilla parrilla;
 	private bool encontrada_meta;
 	private float inicio;
 	private float final;
 	private bool error;
-	private ControladorCoche script_algoritmo;
+	private AlgoritmoRuta script_algoritmo;
 	private Vector3[] trayectoria;
 	private Nodo[] trayectoria_nodos;
 	private Vector3 salida_coche;
@@ -26,6 +26,8 @@ public class MoverCoche : MonoBehaviour {
 	private PID_control pid;
 	private PID_control_hybrid pid_hybrid;
 	private float angulo_coche;
+	private int ancho;
+	private int largo;
 
 	private float input_fuerza;
 	private float input_angulo;
@@ -37,11 +39,13 @@ public class MoverCoche : MonoBehaviour {
 	[SerializeField] private bool a_hybrid_a_estrella = false;
 
 	[SerializeField] private bool a_dibujar_casillas = true;
+	[SerializeField] private bool a_dibujar_mapa_obstaculos = false;
+	[SerializeField] private bool a_dibujar_mapa_distancias = false;
 
 	[SerializeField] private bool control_pid = true;
 	[SerializeField] private float control_pid_param_p = 0.5f;
 	[SerializeField] private float control_pid_param_i = 0.1f;
-	[SerializeField] private float control_pid_param_d = 0.1f;
+	[SerializeField] private float control_pid_param_d = 0.01f;
 	[SerializeField] private bool control_manual = false;
 	[SerializeField] private float coche_max_torque = 1000.0f;
 	[SerializeField] private float coche_max_angulo = 45.0f;
@@ -78,8 +82,6 @@ public class MoverCoche : MonoBehaviour {
 	// Inicializacion
 	void Start () {
 		int tam_parrilla;
-		int ancho;
-		int largo;
 		GameObject suelo;
 
 		error = false;
@@ -95,7 +97,7 @@ public class MoverCoche : MonoBehaviour {
 		mapa = new ObtenerMapa ();
 
 		coche = GameObject.FindGameObjectWithTag ("Coche");
-		rb_coche = coche.GetComponent<Rigidbody> ();
+		//rb_coche = coche.GetComponent<Rigidbody> ();
 
 		frontal = GameObject.FindGameObjectWithTag ("Frontal");
 		trasera = GameObject.FindGameObjectWithTag ("Trasera");
@@ -139,19 +141,17 @@ public class MoverCoche : MonoBehaviour {
 		parrilla.Largo = largo;
 
 		Debug.Log ("Ancho: " + ancho + " | largo: " + largo);
-		//Debug.Log ("Creando parrilla");
-		//float inicio_parrilla = Time.realtimeSinceStartup;
-		//parrilla.crearTodasCasilla ();
-		//float final_parrilla = Time.realtimeSinceStartup;
-		//Debug.Log ("Parrilla creada en: " + (final_parrilla - inicio_parrilla));
 
-
-		//trayectoria = script_algoritmo.CalcularRuta (salida_coche, meta, mapa);
 		encontrada_meta = false;
 
 		inicio = Time.realtimeSinceStartup;
 		script_algoritmo.iniciarCalcularRuta(salida_coche, meta, angulo_coche, mapa, parrilla, a_param_peso_heuristica, tam_parrilla, ancho, largo, a_dibujar_casillas);
-		parrilla.borrarTodasCasillas ();
+
+		if ( a_dibujar_mapa_obstaculos ) {
+			dibujarMapaObstaculos ( script_algoritmo.getMapaObstaculos () );
+		}else if ( a_dibujar_mapa_distancias) {
+			dibujarMapaDistancias ( script_algoritmo.getMapaDistancias () );
+		}
 	}
 	
 	// Se ejecuta cada vez que se calculan las fisicas. Suele ser mas de una vez por frame
@@ -162,34 +162,29 @@ public class MoverCoche : MonoBehaviour {
 
 		}else if (encontrada_meta == true) {
 			if (control_pid) {
+				float[] resultado_pid;
 				if (a_hybrid_a_estrella) {
-					float[] resultado_pid;
 
 					resultado_pid = pid_hybrid.pasoPID (control_pid_param_p, control_pid_param_i, control_pid_param_d);
 
-					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
-						freno ();
-					} else {
-						moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
-					}
 				}else{
-
-					float[] resultado_pid;
-
+					
 					resultado_pid = pid.pasoPID (control_pid_param_p, control_pid_param_i, control_pid_param_d);
 
-					if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
-						freno ();
-					} else {
-						moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
-					}
+				}
+
+				// Ha llegado a la meta y frenamos el coche
+				if ( Mathf.Approximately(resultado_pid[0], 0.0f) && Mathf.Approximately(resultado_pid[1], 360.0f) ) {
+					freno ();
+				} else { // Movemos el coche
+					moverCocheFisicas (resultado_pid[0], resultado_pid[1]);
 				}
 			
 			} else if (contador_vector < trayectoria.Length) {
 				bool llegado = false;
 
 				llegado = moverCocheSinFisicas (trayectoria [contador_vector]);
-				//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
+
 				if (llegado){
 					contador_vector += 1;			
 				}
@@ -202,23 +197,21 @@ public class MoverCoche : MonoBehaviour {
 	void Update (){
 		bool fin;
 
+		// Solo lo usamos en caso de que se seleccione el control manual
 		input_fuerza = Input.GetAxis ("Vertical");
 		input_angulo = Input.GetAxis ("Horizontal");
 
-		//input_fuerza *= Time.deltaTime;
-		//input_angulo *= Time.deltaTime;
-
-		if (error) {
+		if (error) { // No se ha encontrado una ruta hasta la meta
 
 			Debug.Log ("Error: no se ha encontrado un camino");
 
 			parrilla.borrarTodasCasillas ();
 
 		} else if (!encontrada_meta) {
-			//script_algoritmo.MoverCoche (m_WheelColliders, m_WheelMeshes);
+			// Se ejecuta en cada update hasta que se encuentre la meta
 			fin = script_algoritmo.pasoCalcularRuta (out error);
 
-			if (fin) {
+			if (fin) { //Se ha encontrado la meta
 				final = Time.realtimeSinceStartup;
 				encontrada_meta = true;
 				Debug.Log ("Ruta calculada en: " + (final - inicio));
@@ -243,18 +236,15 @@ public class MoverCoche : MonoBehaviour {
 					} else {
 						trayectoria = path_smoothing.eliminarZigZag (trayectoria);
 					}
+						
+				}
 
-					contador_vector = 0;
-					DibujarTrayectoria (trayectoria, trayectoria.Length);
+				contador_vector = 0;
+
+				if (a_hybrid_a_estrella) {
+					DibujarTrayectoria (trayectoria_nodos, trayectoria_nodos.Length);
 				} else {
-					contador_vector = 0;
-
-					if (a_hybrid_a_estrella) {
-						DibujarTrayectoria (trayectoria_nodos, trayectoria_nodos.Length);
-					} else {
-						DibujarTrayectoria (trayectoria, trayectoria.Length);
-					}
-
+					DibujarTrayectoria (trayectoria, trayectoria.Length);
 				}
 
 				pid = new PID_control (coche, trayectoria);
@@ -307,16 +297,14 @@ public class MoverCoche : MonoBehaviour {
 		float fuerza_motor = 0.0f;
 
 		if (Mathf.Approximately (p_fuerza_motor, 0.0f)) { //frenar
-			m_WheelColliders [0].brakeTorque = coche_max_torque;
-			m_WheelColliders [1].brakeTorque = coche_max_torque;
-			m_WheelColliders [2].brakeTorque = coche_max_torque;
-			m_WheelColliders [3].brakeTorque = coche_max_torque;
+			for (int i = 0; i < 4; i++) {
+				m_WheelColliders [i].brakeTorque = coche_max_torque;
+			}
 			
 		} else {
-			m_WheelColliders [0].brakeTorque = 0.0f;
-			m_WheelColliders [1].brakeTorque = 0.0f;
-			m_WheelColliders [2].brakeTorque = 0.0f;
-			m_WheelColliders [3].brakeTorque = 0.0f;
+			for (int i = 0; i < 4; i++) {
+				m_WheelColliders [i].brakeTorque = 0.0f;
+			}
 
 			if (p_angulo_giro > coche_max_angulo) {
 				angulo_giro = coche_max_angulo;
@@ -337,17 +325,19 @@ public class MoverCoche : MonoBehaviour {
 			// Si le damos fuerza a las 4 ruedas: 4x4
 			// Si le damos fuerza a 0 y 1: tracion delantera
 			// Si le damos fuerza a 2 y 3; traccion trasera
-			m_WheelColliders [0].motorTorque = fuerza_motor;
-			m_WheelColliders [1].motorTorque = fuerza_motor;
-			m_WheelColliders [2].motorTorque = fuerza_motor;
-			m_WheelColliders [3].motorTorque = fuerza_motor;
+			for (int i = 0; i < 4; i++) {
+				m_WheelColliders [i].motorTorque = fuerza_motor;
+			}
 		}
 
 		//Solo giramos las ruedas delanteras
-		m_WheelColliders [0].steerAngle = angulo_giro;
-		m_WheelColliders [1].steerAngle = angulo_giro;
-		m_WheelColliders [2].steerAngle = 0f;
-		m_WheelColliders [3].steerAngle = 0f;
+		for (int i = 0; i < 2; i++) {
+			m_WheelColliders [i].steerAngle = angulo_giro;
+		}
+
+		for (int i = 2; i < 4; i++) {
+			m_WheelColliders [i].steerAngle = 0f;
+		}
 
 		// Para actualizar el giro de los modelos de las ruedas
 		for (int i = 0; i < 4; i++) {
@@ -379,15 +369,42 @@ public class MoverCoche : MonoBehaviour {
 
 		}
 
-		//coche.transform.position = posicion;
-
 		return llegado;
 	}
 
 	void freno (){
-		m_WheelColliders [0].brakeTorque = 1000f;
-		m_WheelColliders [1].brakeTorque = 1000f;
-		m_WheelColliders [2].brakeTorque = 1000f;
-		m_WheelColliders [3].brakeTorque = 1000f;
+		for (int i = 0; i < 4; i++) {
+			m_WheelColliders [i].brakeTorque = 1000f;
+		}
+	}
+
+	void dibujarMapaObstaculos (int [,,] mapa_obstaculos) {
+		int inicio_ancho = (ancho / 2) * (-1);
+		int inicio_largo = (largo / 2) * (-1);
+
+
+		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
+			for (int j = inicio_largo; j <= (largo / 2); j++) {
+				Vector3 n = new Vector3 (i, 0.0f, j);
+				parrilla.crearCasilla (n , mapa_obstaculos[i+(ancho/2), j+(largo/2), 0]);
+			}
+		}
+		
+	}
+
+	void dibujarMapaDistancias (int [,,] mapa_distancias) {
+		int inicio_ancho = (ancho / 2) * (-1);
+		int inicio_largo = (largo / 2) * (-1);
+
+
+		for (int i = inicio_ancho; i <= (ancho / 2); i++) {
+			for (int j = inicio_largo; j <= (largo / 2); j++) {
+				Vector3 n = new Vector3 (i, 0.0f, j);
+
+				parrilla.crearCasillaDistancias (n , (mapa_distancias [i+(ancho/2), j+(largo/2), 0]) / 10);
+	
+			}
+		}
+
 	}
 }

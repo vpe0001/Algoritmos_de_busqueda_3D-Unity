@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.5.2)  26 JUN 2017 16:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.5.2)  30 JUN 2017 06:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1715,11 +1715,6 @@ l.15 \subsubsection
 
 
 ]
-
-LaTeX Warning: Command \O invalid in math mode on input line 63.
-
-Missing character: There is no Ø in font cmr10!
-
 Overfull \hbox (20.63054pt too wide) in paragraph at lines 63--64
 [][] 
  []
@@ -1789,7 +1784,7 @@ Package babel Info: Redefining spanish shorthand "!
 (babel)             in language append on input line 68.
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 68.
- [6] <./img/ejemplo_suavizado.png, id=575, 656.4525pt x 430.60875pt>
+ [6] <./img/ejemplo_suavizado.png, id=576, 656.4525pt x 430.60875pt>
 File: ./img/ejemplo_suavizado.png Graphic file (type png)
 
 <use ./img/ejemplo_suavizado.png>
@@ -1822,7 +1817,7 @@ Package babel Info: Redefining spanish shorthand "!
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 85.
  [7 <./img/ejemplo_suavizado.png>]
-<./img/comparacion_a_star_zingzag.png, id=585, 443.6575pt x 563.10374pt>
+<./img/comparacion_a_star_zingzag.png, id=586, 443.6575pt x 563.10374pt>
 File: ./img/comparacion_a_star_zingzag.png Graphic file (type png)
 
 <use ./img/comparacion_a_star_zingzag.png>
@@ -1856,7 +1851,7 @@ Package babel Info: Redefining spanish shorthand "!
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 98.
  [8 <./img/comparacion_a_star_zingzag.png>]
-<./img/comparacion_a_star_descenso.png, id=591, 451.6875pt x 652.4375pt>
+<./img/comparacion_a_star_descenso.png, id=592, 451.6875pt x 652.4375pt>
 File: ./img/comparacion_a_star_descenso.png Graphic file (type png)
 
 <use ./img/comparacion_a_star_descenso.png>
@@ -1923,25 +1918,6 @@ File: ./img/bezier_2_devmag.png Graphic file (type png)
 <use ./img/bezier_2_devmag.png>
 Package pdftex.def Info: ./img/bezier_2_devmag.png used on input line 142.
 (pdftex.def)             Requested size: 151.22427pt x 170.7154pt.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 152.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 152.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 157.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 157.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 159.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 159.
-
 LaTeX Info: Redefining \. on input line 161.
 LaTeX Info: Redefining \% on input line 161.
 Package babel Info: Redefining spanish shorthand <<
@@ -1968,13 +1944,7 @@ Package babel Info: Redefining spanish shorthand "!
 (babel)             in language append on input line 161.
 Package babel Info: Redefining spanish shorthand "?
 (babel)             in language append on input line 161.
-[11 <./img/bezier_2_devmag.png>]
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 161.
-
-
-LaTeX Warning: Command \textendash invalid in math mode on input line 161.
-
+ [11 <./img/bezier_2_devmag.png>]
 <./img/Bezier_2_wikipedia.png, id=620, 1284.8pt x 534.99875pt>
 File: ./img/Bezier_2_wikipedia.png Graphic file (type png)
 
@@ -2337,11 +2307,6 @@ File: ./img/mapa_distancias.png Graphic file (type png)
 <use ./img/mapa_distancias.png>
 Package pdftex.def Info: ./img/mapa_distancias.png used on input line 333.
 (pdftex.def)             Requested size: 323.20596pt x 284.52107pt.
-
-
-LaTeX Warning: Command \O invalid in math mode on input line 374.
-
-Missing character: There is no Ø in font cmr10!
 
 Overfull \hbox (20.63054pt too wide) in paragraph at lines 374--375
 [][] 
@@ -3095,7 +3060,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 483.
 Here is how much of TeX's memory you used:
  12973 strings out of 493029
  185182 string characters out of 6136235
- 338235 words of memory out of 5000000
+ 338236 words of memory out of 5000000
  16099 multiletter control sequences out of 15000+600000
  31468 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -3126,7 +3091,7 @@ m/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on memoria.pdf (48 pages, 4984963 bytes).
+Output written on memoria.pdf (48 pages, 4985201 bytes).
 PDF statistics:
  1709 PDF objects out of 1728 (max. 8388607)
  936 compressed objects within 10 object streams

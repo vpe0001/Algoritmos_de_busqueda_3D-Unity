@@ -5,12 +5,19 @@
 \selectlanguage{spanish}
 \usepackage[utf8]{inputenc}
 \usepackage{placeins}
+\usepackage{mathtools}
 % \usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{eurosym}
 
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
 \RequirePackage{xtab}
 \RequirePackage{multirow}
+
+% Multi-page tables using
+\usepackage{longtable}
+\usepackage{tabularx}
 
 % Links
 \usepackage[colorlinks]{hyperref}
@@ -313,7 +320,8 @@
       \vspace{.5cm}\Large
       \begin{center}
       \textbf{TFG del Grado en Ingeniería Informática}\vspace{.6cm}\\
-      \textbf{\LARGE\@title{}}
+      \textbf{\LARGE\@title{}}\vspace{.6cm}\\
+      \textbf{Documentación técnica}
       \end{center}
       \vspace{.2cm}
     \end{minipage}
@@ -329,7 +337,11 @@
     \noindent\LARGE
     Presentado por \@author{}\\ 
     en Universidad de Burgos --- \@date{}\\
-    Tutor: \@tutor{}\\
+     \begin{tabbing}
+    Tutores: \= \tutorjose \kill
+    Tutores: \= \tutorjose  \\
+    \> \tutorcesar 
+    \end{tabbing}
   }%
   \end{center}%
   \null
@@ -337,11 +349,19 @@
   }
 \makeatother
 
+\newcommand{\nombre}{Víctor Pérez Esteban} % cambio de comando
+\newcommand{\tituloc}{Algoritmos de búsqueda en visor 3D} % cambio de comando
+\newcommand{\tutorjose}{Dr. José Francisco Díez Pastor} % cambio de comando
+\newcommand{\tutorcesar}{Dr. César Ignacio García Osorio} % cambio de comando
+\newcommand{\tutorportada}{\tutorjose , \space \tutorcesar} % cambio de comando
+\newcommand{\dni}{71279579A} % cambio de comando
+\newcommand{\Astar}{A$\!$*\xspace}
+
 
 % Datos de portada
-\title{título del TFG \\Documentación Técnica}
-\author{nombre alumno}
-\tutor{nombre tutor}
+\title{\tituloc}
+\author{\nombre}
+\tutor{\tutorportada}
 \date{\today}
 
 \begin{document}
@@ -387,7 +407,14 @@
 \include{./tex/E_Manual_usuario}
 
 
-\bibliographystyle{plain}
-\bibliography{bibliografiaAnexos}
+%\bibliographystyle{plain}
+%\bibliography{bibliografiaAnexos}
+
+%\bibliographystyle{IEEEtran}
+%\bibliography{bibliografia}
+%\bibliography{IEEEabrv,bibliografia}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bibliografiaAnexos}
 
 \end{document}

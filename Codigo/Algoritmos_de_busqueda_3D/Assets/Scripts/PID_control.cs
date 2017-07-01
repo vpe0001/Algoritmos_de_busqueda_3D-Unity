@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PID_control {
-	private GameObject coche;
+	//private GameObject coche;
 	private GameObject eje_delantero;
 	private GameObject eje_trasero;
 	private Vector3[] trayectoria;
-	//private Rigidbody rb_coche;
 	private float orientacion_coche;
 	private int punto_actual;
 	private int punto_meta;
@@ -17,13 +16,11 @@ public class PID_control {
 	public PID_control (GameObject p_coche, Vector3 [] p_trayectoria) {
 		Vector3 primer_destino;
 
-		coche = p_coche;
+		//coche = p_coche;
 		trayectoria = p_trayectoria;
-		//rb_coche = coche.GetComponent<Rigidbody> ();
+
 		eje_delantero = GameObject.FindGameObjectWithTag ("EjeDelantero");
 		eje_trasero = GameObject.FindGameObjectWithTag ("EjeTrasero");
-		//Debug.Log ("Posicion eje delantero: " + eje_delantero.transform.position.z);
-		//rb_coche.velocity.magnitude;
 
 		punto_actual = 1;
 		punto_meta = trayectoria.Length - 1;
@@ -41,17 +38,8 @@ public class PID_control {
 		float angulo_error;
 		float diferencial_error;
 		float error_interno = 0.0f;
-		//float angulo_aux;
 		Vector3 destino;
-		//Vector3 posicion_coche;
 		float distancia_cambio = 1.9f;
-
-		//destino = trayectoria [punto_actual] - eje_delantero.transform.position;
-		//destino = trayectoria [punto_actual] - eje_trasero.transform.position;
-		//destino = trayectoria [punto_actual];
-		//posicion_coche = eje_delantero.transform.position - eje_trasero.transform.position;
-
-		//Debug.Log ("Posicion coche: " + posicion_coche  + " | Destino: " + destino);
 
 		distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual]);
 		destino = trayectoria [punto_actual] - eje_trasero.transform.position;
@@ -63,8 +51,6 @@ public class PID_control {
 		}
 
 		if (distancia > distancia_cambio) { //Si la distancia al punto es pequeña pasamos al siguiente
-			//angulo_error = calcularAnguloEjeCoche(trayectoria[punto_actual]);
-			//angulo_error *= calcularSentidoGiro (trayectoria[punto_actual]);
 			angulo_error = anguloGiro(destino);
 			diferencial_error = angulo_error - error_anterior;
 			error_anterior = angulo_error;
@@ -89,73 +75,10 @@ public class PID_control {
 			}
 		}
 
-		//Debug.Log ("Angulo giro: " + angulo_giro + " || motor: " + fuerza_motor); 
-
 		retorno [0] = fuerza_motor;
 		retorno [1] = angulo_giro;
 
 		return retorno;
-	}
-
-	public float calcularAnguloEjeCoche (Vector3 vector){
-		float angulo = 0.0f;
-		//Vector3 eje_coche = coche.transform.position;
-		Vector3 eje_coche = eje_delantero.transform.position;
-
-		angulo = Vector3.Angle (vector, eje_coche);
-
-		return angulo;
-	}
-
-	public int calcularSentidoGiro (Vector3 vector){
-		int sentido = 0; //1 sera derecha; -1 izquierda
-		//float angulo = 0.0f;
-		float angulo_trayectoria = 0.0f;
-		float angulo_respecto_coche = 0.0f;
-
-		angulo_trayectoria = calcularAnguloEjeZ (vector);
-		angulo_respecto_coche = anguloRespectoCoche (angulo_trayectoria);
-
-		if (angulo_respecto_coche >= 0.0f) {
-			sentido = 1;
-		} else {
-			sentido = -1;
-		}
-
-		return sentido;
-	}
-
-	public float calcularAnguloEjeZ (Vector3 vector){
-		float angulo = 0.0f;
-		Vector3 eje_Z = Vector3.forward; //Eje Z
-
-		angulo = Vector3.Angle (vector, eje_Z);
-
-		if (vector.x < 0) {
-			angulo = 360.0f - angulo;
-		}
-
-		return angulo;
-	}
-
-	//Positivo: giro hacia la derecha
-	//Negativo: giro hacia la izquierda
-	public float anguloRespectoCoche (float p_angulo) {
-		float angulo_giro = 0.0f;
-		float orientacion_coche = coche.transform.rotation.eulerAngles.y;
-		//float aux = 0.0f;
-		float angulo = p_angulo;
-		//int float_abs = 0;
-
-		angulo_giro = angulo - orientacion_coche;
-
-		if (Mathf.Approximately (angulo, orientacion_coche)) {
-			angulo_giro = 0.0f;
-		} else {
-			angulo_giro = Mathf.DeltaAngle (orientacion_coche, angulo);
-		}
-		
-		return angulo_giro;
 	}
 
 	//

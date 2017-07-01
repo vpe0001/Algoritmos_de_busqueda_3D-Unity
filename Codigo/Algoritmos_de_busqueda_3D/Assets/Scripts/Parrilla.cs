@@ -218,8 +218,8 @@ public class Parrilla {
 		return casilla;
 	}
 
-	private Casilla destruirCasillaArray (Vector3 posicion){
-		GameObject go_casilla;
+	private void destruirCasillaArray (Vector3 posicion){
+		//GameObject go_casilla;
 		Casilla casilla;
 		int x = Mathf.RoundToInt ( posicion.x + (Ancho/2));
 		int z = Mathf.RoundToInt (posicion.z + (Largo/2));
@@ -228,11 +228,11 @@ public class Parrilla {
 
 		GameObject.Destroy (casilla.go_casilla);
 
-		return casilla;
+		//return casilla;
 	}
 
 	public void visualizarCasilla (Vector3 posicion, int tipo) {
-		Vector3 temp;
+		//Vector3 temp;
 		int x = Mathf.RoundToInt (posicion.x + (Ancho / 2));
 		int z = Mathf.RoundToInt (posicion.z + (Largo / 2));
 		Casilla casilla;

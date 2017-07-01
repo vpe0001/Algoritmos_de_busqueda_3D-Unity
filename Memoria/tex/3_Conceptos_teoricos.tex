@@ -24,7 +24,7 @@ Para el \Astar y algunas de sus variantes, el Theta* \ref{referenciaTheta} y el 
 \subsection{Pseudocódigo \Astar}
 \scalebox{1.0}{
 \begin{algorithm}[H]
- abiertos = cerrados = $\O$\;
+ abiertos = cerrados = $\emptyset$\;
  actual = inicio\;
  abiertos.añadir(actual, actual.coste)\;
 
@@ -149,16 +149,16 @@ Hemos usado la función Bézier con tres puntos después de eliminar el zigzag, 
 La función Bézier cuadrática para tres puntos de control y parámetro $t$ es:
 
 \begin{center}
-$[x, y, z] = (1 – t)^2P_0 + 2(1 – t)tP_1 + t^2P_2$
+$[x, y, z] = (1 - t)^2P_0 + 2(1 - t)tP_1 + t^2P_2$
 \end{center}
 
 En formato expandido:
 \begin{center}
-$x = (1 – t)^2x_0 + 2(1 – t)tx_1 + t^2x_2$
+$x = (1 - t)^2x_0 + 2(1 - t)tx_1 + t^2x_2$
 
-$y = (1 – t)^2y_0 + 2(1 – t)ty_1 + t^2y_2$
+$y = (1 - t)^2y_0 + 2(1 - t)ty_1 + t^2y_2$
 
-$z = (1 – t)^2z_0 + 2(1 – t)tz_1 + t^2z_2$
+$z = (1 - t)^2z_0 + 2(1 - t)tz_1 + t^2z_2$
 \end{center}
 
 \begin{figure}[htpb]
@@ -303,7 +303,7 @@ $distanciaRecorrida = distanciaDesdeElPadre + distanciaPadre$
 
 $pObstaculos = (100-(distanciaObstaculo/10))/100$
 
-$coste = (distanciaRecorrida * pgiro * patras) * distanciaObstaculo$
+$coste = (distanciaRecorrida * pgiro * patras) * pObstaculos$
 \end{center}
 
 Siendo $pgiro$ la penalización que se le aplica por realizar un giro, $patras$ la penalización que le aplica por ir marcha atrás y $pObstaculo$ la penalización por pasar cerca de un obstáculo.
@@ -339,7 +339,7 @@ Primero se inicializa con un valor máximo a todas las casillas. Una vez inicial
 \subsubsection{Pseudocódigo \textit{BrushFire} o \textit{GrassFire}} \label{brushfire}
 \scalebox{1.0}{
 \begin{algorithm}[H]
-	abiertos = $\O$\;
+	abiertos = $\emptyset$\;
 
     \ForAll{las casillas del mapa de distancias}{
     		casilla.distancia = valorMáximo\;

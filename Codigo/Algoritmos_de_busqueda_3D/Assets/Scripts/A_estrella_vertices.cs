@@ -17,7 +17,7 @@ public class A_estrella_vertices : A_estrella {
 				nuevo_sucesor.vector = vector;
 				nuevo_sucesor.padre = n_actual;
 
-				nuevo_sucesor.costeG = funcionG (nuevo_sucesor) + nuevo_sucesor.padre.costeG;
+				nuevo_sucesor.costeG = funcionG (nuevo_sucesor);
 				nuevo_sucesor.costeH = funcionH (nuevo_sucesor, meta);
 				nuevo_sucesor.coste = (peso * nuevo_sucesor.costeG) + nuevo_sucesor.costeH;
 

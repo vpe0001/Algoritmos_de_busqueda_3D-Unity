@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Priority_Queue;
 
-public class A_estrella : ControladorCoche {
-	
+public class A_estrella : AlgoritmoRuta {
 	protected Cerrados cerrados;
 	protected List <Nodo> sucesores;
 	protected Abiertos abiertos;
@@ -72,12 +71,6 @@ public class A_estrella : ControladorCoche {
 		if (abiertos.count () > 0 && !meta_encontrada) {
 			nodo_actual = abiertos.getFirst ();
 
-			/*
-			Debug.Log ("Nodo actual: " +  nodo_actual.vector);
-			Debug.Log ("G: " +  nodo_actual.costeG);
-			Debug.Log ("H: " +  nodo_actual.costeH);
-			Debug.Log ("Coste: " +  nodo_actual.coste);
-			*/
 
 			if (esMeta (nodo_actual, vector_meta)) { 
 				meta_encontrada = true;
@@ -88,14 +81,13 @@ public class A_estrella : ControladorCoche {
 
 			} else {
 				cerrados.add ( nodo_actual );
-				//parrilla.crearCasilla (nodo_actual.vector, Constantes._CERRADOS);
+
 				if (dibujar_casillas) {parrilla.visualizarCasilla (nodo_actual.vector, Constantes._CERRADOS);}
 
 				sucesores = CalcularSucesores (nodo_actual, vector_meta, mapa);
 
 				foreach (Nodo sucesor in sucesores) {
 					Nodo anterior;
-					//Nodo mover_padre;
 
 					if (abiertos.find (sucesor, out anterior)) {
 
@@ -117,18 +109,15 @@ public class A_estrella : ControladorCoche {
 						if (cerrados.find (sucesor, out anterior)) {
 
 							if (anterior.coste > sucesor.coste) {
-								//anterior.padre = nodo_actual;
-								//anterior.coste = sucesor.coste;
-
-								//cerrados.find (sucesor.padre, out mover_padre);
+								
 								cerrados.delete (anterior);
 								abiertos.add (sucesor);
-								//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+
 								if (dibujar_casillas) {parrilla.visualizarCasilla (sucesor.vector, Constantes._ABIERTOS);}
 							}
 						} else { //No esta ni en abiertos ni en cerrados
 							abiertos.add (sucesor);
-							//parrilla.crearCasilla (sucesor.vector, Constantes._ABIERTOS);
+
 							if (dibujar_casillas) {parrilla.visualizarCasilla (sucesor.vector, Constantes._ABIERTOS);}
 						}
 					}
@@ -141,8 +130,6 @@ public class A_estrella : ControladorCoche {
 				error = true;
 			}
 		}
-
-		//if (dibujar_casillas) {parrilla.dibujarTodas (abiertos, cerrados);}
 			
 		return meta_encontrada;
 	}
@@ -240,7 +227,7 @@ public class A_estrella : ControladorCoche {
 
 		if (nodo.padre != null) { 
 			distancia = nodo.vector - nodo.padre.vector;
-			coste = distancia.magnitude;
+			coste = distancia.magnitude + nodo.padre.costeG;;
 		}else {
 			distancia = nodo.vector - nodo_inicio.vector;
 
@@ -327,4 +314,11 @@ public class A_estrella : ControladorCoche {
 		return camino_orden;
 	}
 
+	public override int [,,] getMapaObstaculos () {
+		return new int[0,0,0];
+	}
+
+	public override int [,,] getMapaDistancias () {
+		return new int[0,0,0];
+	}
 }

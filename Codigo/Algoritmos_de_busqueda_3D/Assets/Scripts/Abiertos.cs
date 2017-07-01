@@ -64,9 +64,9 @@ public class Abiertos {
 		bool existe = false;
 		encontrado = null;
 
-		//existe = comprobar (nodo);
+		existe = comprobar (nodo);
 
-		//if (existe) {
+		if (existe) {
 			foreach (Nodo n in abiertos) {
 				if (n.vector == nodo.vector) {
 					encontrado = n;
@@ -75,7 +75,7 @@ public class Abiertos {
 					break;
 				}
 			}
-		//}
+		}
 
 		return existe;
 	}

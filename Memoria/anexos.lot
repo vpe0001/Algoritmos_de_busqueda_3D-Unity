@@ -1,7 +1,14 @@
 \select@language {spanish}
 \select@language {spanish}
 \addvspace {10pt}
+\contentsline {table}{\numberline {A.1}{\ignorespaces Tabla de costes de personal}}{12}{table.Alph1.1}
+\contentsline {table}{\numberline {A.2}{\ignorespaces Tabla de otros costes}}{12}{table.Alph1.2}
+\contentsline {table}{\numberline {A.3}{\ignorespaces Costes totales}}{13}{table.Alph1.3}
 \addvspace {10pt}
+\contentsline {table}{\numberline {B.1}{CU-01: Configurar escenario.}}{17}{Item.4}
+\contentsline {table}{\numberline {B.2}{CU-02: Configurar algoritmo.}}{18}{Item.8}
+\contentsline {table}{\numberline {B.3}{CU-03: Ejecutar algoritmo de b\IeC {\'u}squeda de rutas.}}{19}{Item.16}
+\contentsline {table}{\numberline {B.4}{CU-04: Realizar seguimiento de la ruta.}}{20}{Item.23}
 \addvspace {10pt}
 \addvspace {10pt}
 \addvspace {10pt}

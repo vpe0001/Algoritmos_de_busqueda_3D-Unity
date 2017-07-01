@@ -3,13 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Cerrados {
-	//private List <Nodo> cerrados;
 	private SortedDictionary <Vector3, Nodo> cerrados;
 
 	public Cerrados (){
-		//cerrados = new List <Nodo> ();
 		cerrados = new SortedDictionary <Vector3, Nodo> (new ComparadorVectores());
-		//cerrados = new SortedDictionary <Vector3, Nodo> ();
 	}
 
 	public bool add (Nodo nodo) {
