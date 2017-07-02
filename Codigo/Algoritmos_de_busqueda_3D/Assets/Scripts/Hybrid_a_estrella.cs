@@ -282,6 +282,7 @@ public class Hybrid_a_estrella : A_estrella {
 
 			//coste *= 1.0f;
 			coste *= 1.0053f;
+			//coste *= 1.0042f;
 			//coste *= 1.009f;
 		}
 
@@ -316,15 +317,15 @@ public class Hybrid_a_estrella : A_estrella {
 	protected override float funcionH (Nodo nodo, Vector3 meta){
 		float coste = 0.0f;
 		Vector3 distancia;
-		int distancia_array_heuristcia = 0;
+		int distancia_array_heuristica = 0;
 		int x = Mathf.RoundToInt (nodo.vector.x + (ancho / 2));
 		int z = Mathf.RoundToInt (nodo.vector.z + (largo / 2));
 
-		distancia_array_heuristcia = (array_heuristica_obstaculos [x, z, 0] / 10);
+		distancia_array_heuristica = (array_heuristica_obstaculos [x, z, 0] / 10);
 		distancia = nodo.vector_hybrid - meta;
 
-		if (distancia_array_heuristcia > distancia.magnitude) {
-			coste = distancia_array_heuristcia;	
+		if (distancia_array_heuristica > distancia.magnitude) {
+			coste = distancia_array_heuristica;	
 		} else {
 			coste = distancia.magnitude;
 		}
