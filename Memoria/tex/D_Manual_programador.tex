@@ -1,8 +1,28 @@
 \apendice{Documentación técnica de programación}
 
 \section{Introducción}
+En esta sección vamos a detallar como preparar el entorno de desarrollo del proyecto y la estructura que forma.
+
+Hay que tener en cuenta que en parte, también es un manual de usuario, puesto que el proyecto se ha desarrollado pensando en ser ejecutado desde el editor de \textit{Unity}, debido a las facilidades que permite a la hora de modificar la escena, los elementos o las pruebas con diferentes parámetros de una forma rápida y directa.
 
 \section{Estructura de directorios}
+El proyecto tiene la siguiente estructura de directorios:
+
+\begin{itemize}
+\item \textbf{Codigo\textbackslash Algoritmos\_de\_busqueda\_3D}: es el directorio raíz del proyecto en \textit{Unity}.
+\item \textbf{Codigo\textbackslash Algoritmos\_de\_busqueda\_3D\textbackslash Assets}: en este directorio se encuentran todos los elementos que usamos en el proyecto en \textit{Unity}.
+	\begin{itemize}
+	\item \textbf{Editor\textbackslash Tests}: contiene los test del proyecto.
+	\item \textbf{Escenas}: contiene las escenas del proyecto.
+	\item \textbf{Materiales}: contiene los materiales creados.
+	\item \textbf{Modelos}: contiene los modelos 3D usados.
+	\item \textbf{Scripts}: contiene los archivos de código fuente.
+	\item \textbf{Texturas}: contiene los texturas usadas.
+	\end{itemize}
+\item \textbf{Memoria}: contiene los archivos en latex con la memoria y los anexos.
+\end{itemize}
+
+A parte de los mencionados, hay más directorios y ficheros creados por \textit{Unity} para su funcionamiento.
 
 \section{Manual del programador}
 \subsection{Instalación de \textit{Unity}}
@@ -102,5 +122,26 @@ Remarkable lo hemos usando el archivo deb descargado de la página oficial. La v
 También se puede instalar con el comando \textit{dpkg -i nombre-archivo.deb}.
 
 \section{Compilación, instalación y ejecución del proyecto}
+\subsection{Compilación}
+El proceso de compilación de los \textit{scripts} se realiza automáticamente por el editor de \textit{Unity} cada vez que se realiza un cambio en alguno de ellos. Por tanto, no hay ningún comando o manera específica de hacerlo.
+
+Para crear un archivo ejecutable con el proyecto, que irá acompañado de un directorio con los modelos y elementos necesarios para su ejecución, desde el editor de Unity vamos a \textit{File-\textgreater Build Settings}.
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=\textwidth,height=8cm,keepaspectratio=true]{d_build}
+    \caption[Menú de creación del ejecutable]{Ventana con las opciones de creación del ejecutable.}
+    \label{fig:dbuild}
+\end{figure}
+
+Desde el menú de \textit{Build Settings}, elegimos las escenas que queramos incluir en el ejecutable, la plataforma en donde se ejecutará y el tipo de ejecutable que deseemos crear. A continuación, pulsamos en \textit{Build} y nos pedirá un nombre para el archivo y una ruta en donde se creará. Uan vez introducidos, comenzará el proceso de creación del archivo ejecutable.
+
+\subsection{Instalación}
+Para instalar el proyecto, desde el repositorio de Github, cuya dirección es:
+\href{https://github.com/vpe0001/Algoritmos\_de\_busqueda\_3D-Unity}{Repositorio del proyecto}\footnote{Repositorio del proyecto: \url{https://github.com/vpe0001/Algoritmos\_de\_busqueda\_3D-Unity}}
+
+Con git o a través de la descarga del archivo zip, creamos una directorio con los archivos del proyecto.
+
+\subsection{Ejecución}
 
 \section{Pruebas del sistema}
