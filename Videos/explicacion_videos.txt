@@ -1,0 +1,18 @@
+En la escena de los vídeos podemos ver como
+los valores del coste afectan a las rutas obtenidas.
+
+Si el valor de la penalización de ir marcha atrás es muy bajo,
+no irá hacia adelante, irá hacia la meta hacia atras. A parte de
+no ser realista, el movimiento resultamás inestable.
+
+El valor de la penalización por ir hacia atrás debe ser suficientemente
+alto para que no decida ir siempre hacia atrás,
+pero no tan alto que nunca retroceda.
+
+La penalización al giro tambíen es importante. 
+Debe ser baja para que busque el mayor número
+de caminos posibles, y que no se pase de la meta por no
+girar alejándose en vez de terminar la búsqueda.
+
+Si es muy alta, termina dando
+más vueltas al escenario.
