@@ -10,6 +10,7 @@
 \contentsline {figure}{\numberline {A.7}{\ignorespaces Gr\IeC {\'a}fico burndown de la iteraci\IeC {\'o}n 6}}{8}{figure.Alph1.7}
 \contentsline {figure}{\numberline {A.8}{\ignorespaces Gr\IeC {\'a}fico burndown de la iteraci\IeC {\'o}n 7}}{9}{figure.Alph1.8}
 \contentsline {figure}{\numberline {A.9}{\ignorespaces Gr\IeC {\'a}fico burndown de la iteraci\IeC {\'o}n 8}}{10}{figure.Alph1.9}
+\contentsline {figure}{\numberline {A.10}{\ignorespaces Gr\IeC {\'a}fico burndown de la iteraci\IeC {\'o}n 9}}{11}{figure.Alph1.10}
 \addvspace {10pt}
 \contentsline {figure}{\numberline {B.1}{\ignorespaces Diagrama de casos de uso}}{17}{figure.Alph2.1}
 \addvspace {10pt}
@@ -21,4 +22,8 @@
 \contentsline {figure}{\numberline {D.1}{\ignorespaces \textit {Debugger} para \textit {Unity Editor} de MonoDevelop}}{28}{figure.Alph4.1}
 \contentsline {figure}{\numberline {D.2}{\ignorespaces Enlace del\textit {Debugger} con \textit {Unity Editor} de MonoDevelop}}{29}{figure.Alph4.2}
 \contentsline {figure}{\numberline {D.3}{\ignorespaces Men\IeC {\'u} de creaci\IeC {\'o}n del ejecutable}}{31}{figure.Alph4.3}
+\contentsline {figure}{\numberline {D.4}{\ignorespaces Botones de ejecuci\IeC {\'o}n en \textit {Unity}}}{32}{figure.Alph4.4}
+\contentsline {figure}{\numberline {D.5}{\ignorespaces Ejecuci\IeC {\'o}n de tests en \textit {Unity}}}{32}{figure.Alph4.5}
 \addvspace {10pt}
+\contentsline {figure}{\numberline {E.1}{\ignorespaces Pantalla de la interfaz de \textit {Unity}}}{36}{figure.Alph5.1}
+\contentsline {figure}{\numberline {E.2}{\ignorespaces Pantalla del men\IeC {\'u} del ejecutable}}{37}{figure.Alph5.2}

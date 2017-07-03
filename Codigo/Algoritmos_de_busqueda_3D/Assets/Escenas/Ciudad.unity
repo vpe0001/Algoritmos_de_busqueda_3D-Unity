@@ -68,7 +68,7 @@ LightmapSettings:
     m_ReflectionCompression: 2
   m_LightingDataAsset: {fileID: 112000630, guid: 0aec018e04a8a407899d43e06b224570,
     type: 2}
-  m_RuntimeCPUUsage: 75
+  m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -166,10 +166,6 @@ GameObject:
   - 4: {fileID: 20116586}
   - 114: {fileID: 20116587}
   - 54: {fileID: 20116588}
-  - 114: {fileID: 20116590}
-  - 114: {fileID: 20116589}
-  - 114: {fileID: 20116591}
-  - 114: {fileID: 20116592}
   m_Layer: 0
   m_Name: Coche
   m_TagString: Coche
@@ -265,50 +261,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &20116589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20116585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88d01c65fea7044fab6478029281ef2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &20116590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20116585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2b65969fd58e4ea3b5c48adf5c09081, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &20116591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20116585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37c3ea897af9f49f4a72b7173dbad4af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &20116592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20116585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 324ddedffc0b44b0d9faae1fdbc2e879, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &29564291
 Prefab:
   m_ObjectHideFlags: 0

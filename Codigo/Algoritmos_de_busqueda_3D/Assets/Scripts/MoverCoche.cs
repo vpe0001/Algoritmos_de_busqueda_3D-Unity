@@ -109,7 +109,7 @@ public class MoverCoche : MonoBehaviour {
 		// Elegir algoritmo
 		if (a_hybrid_a_estrella) {
 			Debug.Log ("Usando Hybrid A Estrella");
-			script_algoritmo = GetComponent<Hybrid_a_estrella> ();
+			script_algoritmo = new Hybrid_a_estrella ();
 
 			salida_coche = salida_frontal;
 
@@ -122,13 +122,13 @@ public class MoverCoche : MonoBehaviour {
 
 		} else if (a_A_estrella) {
 			Debug.Log ("Usando A Estrella");
-			script_algoritmo = GetComponent<A_estrella> ();
+			script_algoritmo = new A_estrella ();
 		} else if (a_A_estrella_vertices) {
 			Debug.Log ("Usando A Estrella con vertices");
-			script_algoritmo = GetComponent<A_estrella_vertices> ();
+			script_algoritmo = new A_estrella_vertices ();
 		}else if (a_theta_estrella) {
 			Debug.Log ("Usando Theta Estrella");
-			script_algoritmo = GetComponent<Theta_estrella> ();
+			script_algoritmo = new Theta_estrella ();
 		}
 
 

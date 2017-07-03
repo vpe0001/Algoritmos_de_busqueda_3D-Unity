@@ -283,7 +283,7 @@ public class Hybrid_a_estrella : A_estrella {
 			//coste *= 1.0f;
 			coste *= 1.0053f;
 			//coste *= 1.0042f;
-			//coste *= 1.009f;
+			//coste *= 2.009f;
 		}
 
 		//Si hacia atras es mas costoso que hacia adelante

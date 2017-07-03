@@ -6,4 +6,24 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Escenas/Menu.unity
+  - enabled: 0
     path: Assets/Escenas/Ciudad.unity
+  - enabled: 0
+    path: Assets/Escenas/Ciudad_hybrid.unity
+  - enabled: 1
+    path: Assets/Escenas/Aestrella.unity
+  - enabled: 1
+    path: Assets/Escenas/Thetaestrella.unity
+  - enabled: 1
+    path: Assets/Escenas/Aestrellavertices.unity
+  - enabled: 1
+    path: Assets/Escenas/Hybridcomparacion.unity
+  - enabled: 1
+    path: Assets/Escenas/Hybridhaciaatras.unity
+  - enabled: 1
+    path: Assets/Escenas/Hybridhaciaatras2.unity
+  - enabled: 1
+    path: Assets/Escenas/Hybridhaciaatrascerca.unity
+  - enabled: 1
+    path: Assets/Escenas/Hybridmaniobras.unity

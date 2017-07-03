@@ -16,15 +16,15 @@
 \contentsline {subsection}{Iteraci\IeC {\'o}n 7: de 15-06-2017 hasta 19-06-2017}{9}{section*.11}
 \contentsline {subsection}{Iteraci\IeC {\'o}n 8: de 20-06-2017 hasta 26-06-2017}{10}{section*.12}
 \contentsline {subsection}{Iteraci\IeC {\'o}n 9: de 27-06-2017 hasta 3-07-2017}{11}{section*.13}
-\contentsline {section}{\numberline {A.3}Estudio de viabilidad}{11}{section.Alph1.3}
-\contentsline {subsection}{Viabilidad econ\IeC {\'o}mica}{11}{section*.14}
-\contentsline {subsubsection}{Costes de personal}{11}{section*.15}
+\contentsline {section}{\numberline {A.3}Estudio de viabilidad}{12}{section.Alph1.3}
+\contentsline {subsection}{Viabilidad econ\IeC {\'o}mica}{12}{section*.14}
+\contentsline {subsubsection}{Costes de personal}{12}{section*.15}
 \contentsline {subsubsection}{Costes de \textit {hardware}}{12}{section*.16}
-\contentsline {subsubsection}{Costes de \textit {software}}{12}{section*.17}
-\contentsline {subsubsection}{Otros costes}{12}{section*.18}
+\contentsline {subsubsection}{Costes de \textit {software}}{13}{section*.17}
+\contentsline {subsubsection}{Otros costes}{13}{section*.18}
 \contentsline {subsubsection}{Total costes del proyecto}{13}{section*.19}
 \contentsline {subsubsection}{Ingresos}{13}{section*.20}
-\contentsline {subsection}{Viabilidad legal}{13}{section*.21}
+\contentsline {subsection}{Viabilidad legal}{14}{section*.21}
 \contentsline {appendix}{\chapternumberline {B}Especificaci\IeC {\'o}n de Requisitos}{15}{appendix.Alph2}
 \contentsline {section}{\numberline {B.1}Introducci\IeC {\'o}n}{15}{section.Alph2.1}
 \contentsline {section}{\numberline {B.2}Objetivos generales}{15}{section.Alph2.2}
@@ -43,17 +43,19 @@
 \contentsline {section}{\numberline {D.3}Manual del programador}{27}{section.Alph4.3}
 \contentsline {subsection}{Instalaci\IeC {\'o}n de \textit {Unity}}{27}{section*.24}
 \contentsline {subsection}{Instalaci\IeC {\'o}n SmartGit}{29}{section*.25}
-\contentsline {subsection}{Instalaci\IeC {\'o}n de Texmaker}{29}{section*.26}
+\contentsline {subsection}{Instalaci\IeC {\'o}n de Texmaker}{30}{section*.26}
 \contentsline {subsection}{Instalaci\IeC {\'o}n ZenHub}{30}{section*.27}
 \contentsline {subsection}{Instalaci\IeC {\'o}n de Remarkable}{30}{section*.28}
 \contentsline {section}{\numberline {D.4}Compilaci\IeC {\'o}n, instalaci\IeC {\'o}n y ejecuci\IeC {\'o}n del proyecto}{30}{section.Alph4.4}
 \contentsline {subsection}{Compilaci\IeC {\'o}n}{30}{section*.29}
 \contentsline {subsection}{Instalaci\IeC {\'o}n}{31}{section*.30}
-\contentsline {subsection}{Ejecuci\IeC {\'o}n}{31}{section*.31}
-\contentsline {section}{\numberline {D.5}Pruebas del sistema}{31}{section.Alph4.5}
-\contentsline {appendix}{\chapternumberline {E}Documentaci\IeC {\'o}n de usuario}{32}{appendix.Alph5}
-\contentsline {section}{\numberline {E.1}Introducci\IeC {\'o}n}{32}{section.Alph5.1}
-\contentsline {section}{\numberline {E.2}Requisitos de usuarios}{32}{section.Alph5.2}
-\contentsline {section}{\numberline {E.3}Instalaci\IeC {\'o}n}{32}{section.Alph5.3}
-\contentsline {section}{\numberline {E.4}Manual del usuario}{32}{section.Alph5.4}
-\contentsline {chapter}{Bibliograf\'{\i }a}{33}{section*.33}
+\contentsline {subsection}{Ejecuci\IeC {\'o}n}{32}{section*.31}
+\contentsline {section}{\numberline {D.5}Pruebas del sistema}{32}{section.Alph4.5}
+\contentsline {appendix}{\chapternumberline {E}Documentaci\IeC {\'o}n de usuario}{34}{appendix.Alph5}
+\contentsline {section}{\numberline {E.1}Introducci\IeC {\'o}n}{34}{section.Alph5.1}
+\contentsline {section}{\numberline {E.2}Requisitos de usuarios}{34}{section.Alph5.2}
+\contentsline {section}{\numberline {E.3}Instalaci\IeC {\'o}n}{35}{section.Alph5.3}
+\contentsline {section}{\numberline {E.4}Manual del usuario}{35}{section.Alph5.4}
+\contentsline {subsection}{Manual para \textit {Unity}}{35}{section*.32}
+\contentsline {subsection}{Manual para el ejecutable}{37}{section*.33}
+\contentsline {chapter}{Bibliograf\'{\i }a}{39}{section*.35}

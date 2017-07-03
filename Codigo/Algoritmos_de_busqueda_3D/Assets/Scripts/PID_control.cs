@@ -12,9 +12,12 @@ public class PID_control {
 	private int punto_meta;
 	private float error_anterior;
 	private Parrilla parrilla;
+	bool fin;
 
 	public PID_control (GameObject p_coche, Vector3 [] p_trayectoria) {
 		Vector3 primer_destino;
+
+		fin = false;
 
 		//coche = p_coche;
 		trayectoria = p_trayectoria;
@@ -41,38 +44,47 @@ public class PID_control {
 		Vector3 destino;
 		float distancia_cambio = 1.9f;
 
-		distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual]);
-		destino = trayectoria [punto_actual] - eje_trasero.transform.position;
+		if (!fin){
 
-		if (punto_actual == punto_meta) {
-			distancia_cambio = 2.9f;
-		} else {
-			distancia_cambio = 1.9f;
-		}
+			distancia = Vector3.Distance (eje_delantero.transform.position, trayectoria [punto_actual]);
+			destino = trayectoria [punto_actual] - eje_trasero.transform.position;
 
-		if (distancia > distancia_cambio) { //Si la distancia al punto es pequeña pasamos al siguiente
-			angulo_error = anguloGiro(destino);
-			diferencial_error = angulo_error - error_anterior;
-			error_anterior = angulo_error;
-			error_interno += angulo_error;
+			if (punto_actual == punto_meta) {
+				distancia_cambio = 2.9f;
+			} else {
+				distancia_cambio = 1.9f;
+			}
 
-			angulo_giro = (angulo_error * parametro_p) - (diferencial_error * parametro_d) - (error_interno * parametro_i);
+			if (distancia > distancia_cambio) { //Si la distancia al punto es pequeña pasamos al siguiente
+				angulo_error = anguloGiro(destino);
+				diferencial_error = angulo_error - error_anterior;
+				error_anterior = angulo_error;
+				error_interno += angulo_error;
 
-			fuerza_motor = (7.0f * distancia) + (0.5f * Mathf.Abs(angulo_giro));
+				angulo_giro = (angulo_error * parametro_p) - (diferencial_error * parametro_d) - (error_interno * parametro_i);
 
-			if (fuerza_motor > 40.0f) {
-				fuerza_motor = 40.0f + (0.5f * Mathf.Abs(angulo_giro));
+				fuerza_motor = (7.0f * distancia) + (0.5f * Mathf.Abs(angulo_giro));
+
+				if (fuerza_motor > 40.0f) {
+					fuerza_motor = 40.0f + (0.5f * Mathf.Abs(angulo_giro));
+				}
+				
+			}else{
+				if (punto_actual == punto_meta) { //Si hemos llegado a la meta
+					fuerza_motor = 0.0f;
+					angulo_giro = 360.0f;	
+					Debug.Log ("Destino alcanzado");
+					fin = true;
+				}else{ //Si estamos en un destino parcial pero aun no hemos llegado a la meta
+					punto_actual++;	
+					parrilla.crearCasilla (trayectoria[punto_actual], 0);
+				}
 			}
 				
-		}else{
-			if (punto_actual == punto_meta) { //Si hemos llegado a la meta
-				fuerza_motor = 0.0f;
-				angulo_giro = 360.0f;	
-				Debug.Log ("Destino alcanzado");
-			}else{ //Si estamos en un destino parcial pero aun no hemos llegado a la meta
-				punto_actual++;	
-				parrilla.crearCasilla (trayectoria[punto_actual], 0);
-			}
+		} else {
+			fuerza_motor = 0.0f;
+			angulo_giro = 360.0f;	
+			
 		}
 
 		retorno [0] = fuerza_motor;
