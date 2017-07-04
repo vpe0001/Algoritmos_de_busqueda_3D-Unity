@@ -24,13 +24,13 @@ También hay un ejecutable que permite observar en escenas prefijadas a los dist
 
 Los algoritmos implementados han sido:
 
-- ***A\****: [The A* Algorithm](http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html#the-a-star-algorithm) El algoritmo *A\** original.
+- ** *A\** **: [The A* Algorithm](http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html#the-a-star-algorithm) El algoritmo *A\** original.
 
-- ***Theta\****: [Theta*: any angle paths](http://aigamedev.com/open/tutorials/theta-star-any-angle-paths/) Es una variación del *A\** que mejora los caminos encontrados.
+- ** *Theta\** **: [Theta*: any angle paths](http://aigamedev.com/open/tutorials/theta-star-any-angle-paths/) Es una variación del *A\** que mejora los caminos encontrados.
 
-- ***A** con vértices**: Una versión del *A\** que usa los vértices del [*Nav Mesh*](https://docs.unity3d.com/ScriptReference/AI.NavMesh.html) para mejorar su rendimiento.
+- ** *A\** con vértices **: Una versión del *A\** que usa los vértices del [*Nav Mesh*](https://docs.unity3d.com/ScriptReference/AI.NavMesh.html) para mejorar su rendimiento.
 
-- ***Hybrid A\****: [Practical Search Techniques in Path Planning for Autonomous Driving](https://ai.stanford.edu/~ddolgov/papers/dolgov_gpp_stair08.pdf) Es una evolución del *A\** que tiene en cuenta las limitaciones de los vehículos no holonómicos, calculando los estados continuos a los que se pueden desplazar.
+- ** *Hybrid A\** **: [Practical Search Techniques in Path Planning for Autonomous Driving](https://ai.stanford.edu/~ddolgov/papers/dolgov_gpp_stair08.pdf) Es una evolución del *A\** que tiene en cuenta las limitaciones de los vehículos no holonómicos, calculando los estados continuos a los que se pueden desplazar.
 
 Para el desplazamiento autónomo del vehículo se ha utilizado un [*PID Controller*](https://en.wikipedia.org/wiki/PID_controller).
 
